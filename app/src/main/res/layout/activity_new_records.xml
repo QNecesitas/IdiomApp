@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityNewRecords">
+
+    <!--Toolbar-->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/AppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnPrimary"
+            android:fitsSystemWindows="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/registro"
+                android:textSize="20sp"
+                android:textColor="?attr/colorPrimary"
+                android:layout_gravity="center">
+
+            </TextView>
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivIconSetting"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/baseline_menu_24"
+                android:visibility="visible"
+                app:tint="?attr/colorPrimary" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/AppBar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:cardMaxElevation="8dp"
+            app:contentPadding="0dp"
+            android:layout_gravity="center"
+            android:id="@+id/cv_add_image">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_add_photo_alternate_24"
+                android:contentDescription="@string/adicionar_imagen" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/traducciones"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_margin="12dp">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="12dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:id="@+id/rv_language">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/a_adir_otro_idioma"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            android:textStyle="normal"
+            android:id="@+id/add_language"
+            android:textSize="16sp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categor_as"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="12dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:id="@+id/rv_label">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/a_adir_otra_etiqueta"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            android:textStyle="normal"
+            android:id="@+id/add_label"
+            android:textSize="16sp">
+
+        </TextView>
+
+
+
+    </LinearLayout>
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/crear_registro"
+        android:layout_margin="12dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:background="@drawable/button_redonded"
+        android:textSize="16sp"
+        android:id="@+id/addRecord">
+
+    </com.google.android.material.button.MaterialButton>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
