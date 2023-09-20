@@ -7,55 +7,42 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val TIEMPO_DE_ESPERA: Long = 2000
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        private val delayTime: Long = 2000
 
 
-        val escondedor = window.decorView
-        escondedor.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
 
-        //Handler
 
-        //Handler
-        @SuppressLint("HandlerLeak") val handler: Handler = object : Handler() {
-            override fun handleMessage(message: Message) {
-                if (message.arg1 == 1) {
-                    val intent = Intent(this@MainActivity , ActivityHome::class.java)
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+
+
+
+
+            //Full Screen code and default night mode
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            val controller = WindowInsetsControllerCompat(window, window.decorView)
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+
+
+            //Change activity in a time
+            lifecycleScope.launch {
+                delay(delayTime)
+                    val intent = Intent(this@MainActivity, ActivityHome::class.java)
                     startActivity(intent)
-                }
             }
+
         }
-
-
-        //Thread
-
-
-        //Thread
-        val thread = Thread {
-            try {
-                Thread.sleep(TIEMPO_DE_ESPERA)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            val message = Message.obtain()
-            message.arg1 = 1
-            handler.sendMessage(message)
-        }
-        thread.start()
-
-
     }
-
-
-}

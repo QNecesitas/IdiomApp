@@ -61,17 +61,21 @@
             </LinearLayout>
 
 
-            <!--recycler categories-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="0dp"
+            <!--Chip group-->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_toolbar" />
+                app:layout_constraintTop_toBottomOf="@id/ll_toolbar"
+                app:singleSelection="false">
+
+
+            </com.google.android.material.chip.ChipGroup>
 
 
             <!--til-->
@@ -86,7 +90,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_add"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler">
+                app:layout_constraintTop_toBottomOf="@id/chipGroup">
 
                 <!--tiet-->
                 <com.google.android.material.textfield.TextInputEditText
@@ -106,9 +110,9 @@
                 app:layout_constraintStart_toEndOf="@id/til"
                 app:layout_constraintTop_toTopOf="@id/til"
                 app:layout_constraintBottom_toBottomOf="@id/til"
-                android:tint="?attr/colorPrimary"
                 android:src="@drawable/baseline_add_24"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="?attr/colorPrimary" />
 
 
 
