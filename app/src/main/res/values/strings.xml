@@ -10,4 +10,24 @@
     <string name="a_adir_otro_idioma">+ Añadir otro idioma</string>
     <string name="categor_as">Categorías</string>
     <string name="a_adir_otra_etiqueta">+ Añadir otra etiqueta</string>
+    <string name="seleccionar">Seleccionar</string>
+    <string name="Registro">Registro</string>
+    <string name="Emparejar">Emparejar</string>
+    <string name="Escritura">Escritura</string>
+    <string name="tarjeta">Tarjeta</string>
+    <string name="IDIOMAS">IDIOMAS</string>
+    <string name="no_aplica_al_apartado_de_registros">No aplica al apartado de Registros</string>
+    <string name="de">De</string>
+    <string name="a">a</string>
+    <string name="CATEGORIAS">CATEGORIAS</string>
+    <string name="introCate">Introducir categorias</string>
+    <string name="anadirCategorias">Anadir categorias</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="Aceptar">Aceptar</string>
+    <string name="anadir_categorias">Anadir Categorias</string>
+    <string name="escriba_una_categoria">Escriba una categoria</string>
+    <string name="Banderas">Banderas</string>
+    <string name="bandera">Bandera</string>
+    <string name="Categoria">Categoria</string>
+    <string name="idiomapp">IDIOMAPP</string>
 </resources>
