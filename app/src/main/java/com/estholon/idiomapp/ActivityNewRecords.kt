@@ -2,20 +2,17 @@ package com.estholon.idiomapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import com.estholon.idiomapp.adapters.SpinnerAdapter
-import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.databinding.ActivityNewRecordsBinding
 import com.estholon.idiomapp.viewmodels.NewRecordViewModel
 import com.estholon.idiomapp.viewmodels.NewRecordViewModelFactory
-import kotlin.math.log
 
 class ActivityNewRecords : AppCompatActivity() {
 
-    private lateinit var binding:ActivityNewRecordsBinding
+    private lateinit var binding: ActivityNewRecordsBinding
 
 
     //View Model
@@ -30,10 +27,9 @@ class ActivityNewRecords : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val spinnerPersonalizado=binding.spinnerPersonalizado
+        val spinnerPersonalizado = binding.spinnerPersonalizado
 
         viewModel.listIdioms.observe(this) { items ->
-            Log.e("XXX1", viewModel.listIdioms.value.toString())
             // Actualiza el adaptador del Spinner cuando cambian los elementos
             val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
@@ -44,9 +40,9 @@ class ActivityNewRecords : AppCompatActivity() {
 
         spinnerPersonalizado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
+                parent: AdapterView<*>? ,
+                view: View? ,
+                position: Int ,
                 id: Long
             ) {
                 // Maneja la selección del elemento del Spinner aquí
@@ -61,7 +57,6 @@ class ActivityNewRecords : AppCompatActivity() {
 
         viewModel.getAllIdioms()
     }
-
 
 
 }
