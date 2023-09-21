@@ -1,3 +1,7 @@
 package com.estholon.idiomapp.database
- interface TranslationsDao {
+
+import androidx.room.Dao
+
+@Dao
+interface TranslationsDao {
 }

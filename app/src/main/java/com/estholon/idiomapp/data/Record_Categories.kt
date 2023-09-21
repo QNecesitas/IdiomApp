@@ -21,6 +21,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class Record_Categories(
-    var idRecords:Int,
+    var idRecord:Int,
     var idCategories:Int
 )

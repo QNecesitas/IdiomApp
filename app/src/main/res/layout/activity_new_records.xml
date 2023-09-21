@@ -71,6 +71,15 @@
                 android:contentDescription="@string/adicionar_imagen" />
         </androidx.cardview.widget.CardView>
 
+
+
+        <Spinner
+            android:id="@+id/spinner_personalizado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_margin="12dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,6 +145,8 @@
             android:textSize="16sp">
 
         </TextView>
+
+
 
 
 
