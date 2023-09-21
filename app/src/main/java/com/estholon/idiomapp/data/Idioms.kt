@@ -8,5 +8,4 @@ import androidx.room.PrimaryKey
 data class Idioms (
     @PrimaryKey(autoGenerate = false) var id:String,
     @ColumnInfo(name = "idiom") var idiom:String,
-    @ColumnInfo(name = "image") var image:String
     )

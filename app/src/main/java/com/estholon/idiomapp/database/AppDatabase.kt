@@ -26,6 +26,7 @@ import com.estholon.idiomapp.data.Translations
         companion object {
             @Volatile
             private var INSTANCE: AppDatabase? = null
+            private val callback = RoomDatabaseImport()
 
             fun getDatabase(context: Context): AppDatabase {
                 return INSTANCE ?: synchronized(this) {
@@ -35,6 +36,7 @@ import com.estholon.idiomapp.data.Translations
                         "app_database"
                     )
                         .fallbackToDestructiveMigration()
+                        .addCallback(callback)
                         .build()
                     INSTANCE = instance
 
