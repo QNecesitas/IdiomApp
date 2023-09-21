@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.databinding.ActivityHomeBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
-import com.estholon.idiomapp.databinding.LiFlagBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
 import com.estholon.idiomapp.viewmodels.HomeViewModelFactory
 import com.google.android.material.chip.Chip
@@ -25,7 +24,6 @@ class ActivityHome : AppCompatActivity() {
     private lateinit var binding : ActivityHomeBinding
 
     private var li_category_binding: LiAddCategoryBinding? = null
-    private var li_flag_binding: LiFlagBinding? = null
 
     //View Model
     private val viewModel: HomeViewModel by viewModels {
@@ -57,11 +55,11 @@ class ActivityHome : AppCompatActivity() {
         }
 
         binding.ivPais1.setOnClickListener{
-            li_flag()
+
         }
 
         binding.ivPais2.setOnClickListener{
-            li_flag()
+
         }
 
         viewModel.refresh()
@@ -96,27 +94,6 @@ class ActivityHome : AppCompatActivity() {
 
     }
 
-    fun li_flag(){
-        val inflater = LayoutInflater.from(binding.root.context)
-        li_flag_binding = LiFlagBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(li_flag_binding!!.root)
-        val alertDialog = builder.create()
-
-
-        li_flag_binding!!.ivClose.setOnClickListener{
-            alertDialog.dismiss()
-        }
-
-
-
-        //Finished
-        alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-
-    }
 
     fun refreshChipGroup(list : MutableList<Category>){
         li_category_binding?.chipGroup?.removeAllViews()
