@@ -13,7 +13,7 @@ import androidx.room.ForeignKey
             onDelete = ForeignKey.CASCADE
         ),
     ForeignKey(
-        entity = Categories::class,
+        entity = Category::class,
         parentColumns = ["id"],
         childColumns = ["idCategories"],
         onDelete = ForeignKey.CASCADE
@@ -21,6 +21,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class Record_Categories(
-    var idRecords:Int,
+    var idRecord:Int,
     var idCategories:Int
 )

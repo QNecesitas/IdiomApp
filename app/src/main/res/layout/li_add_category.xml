@@ -7,11 +7,13 @@
 
     <!--cv container-->
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="8dp"
         app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,43 +24,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--ll container-->
-            <LinearLayout
-                android:id="@+id/ll_toolbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <!--cl container-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:background="?attr/colorPrimary"
+                    android:id="@+id/cl_toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <!--tv add categories-->
+                    <TextView
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/tv_addCat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/categor_a"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="16sp" />
 
-                <!--tv add categories-->
-                <TextView
-                    android:id="@+id/tv_addCat"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:paddingEnd="12dp"
-                    android:paddingStart="32dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/anadir_categorias"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="16sp" />
+                    <!--iv close-->
+                    <ImageView
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:id="@+id/iv_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/baseline_close_24"
+                        app:tint="?attr/colorOnPrimary" />
 
-                <!--iv close-->
-                <ImageView
-                    android:id="@+id/iv_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_close_24"
-                    android:layout_marginEnd="12dp"
-                    app:tint="?attr/colorOnPrimary" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            </LinearLayout>
 
 
             <!--Chip group-->
@@ -71,7 +74,7 @@
                 android:layout_marginEnd="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_toolbar"
+                app:layout_constraintTop_toBottomOf="@id/cl_toolbar"
                 app:singleSelection="false">
 
 
@@ -97,7 +100,7 @@
                     android:id="@+id/tiet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/escriba_una_categoria"/>
+                    android:hint="Agregue una categoría" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,14 +110,12 @@
                 android:id="@+id/iv_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/baseline_add_24"
+                app:layout_constraintBottom_toBottomOf="@id/til"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/til"
                 app:layout_constraintTop_toTopOf="@id/til"
-                app:layout_constraintBottom_toBottomOf="@id/til"
-                android:src="@drawable/baseline_add_24"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/colorPrimary" />
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
