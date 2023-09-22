@@ -33,7 +33,6 @@ class ActivityNewRecords : AppCompatActivity() {
         val spinnerPersonalizado=binding.spinnerPersonalizado
 
         viewModel.listIdioms.observe(this) { items ->
-            Log.e("XXX1", viewModel.listIdioms.value.toString())
             // Actualiza el adaptador del Spinner cuando cambian los elementos
             val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
