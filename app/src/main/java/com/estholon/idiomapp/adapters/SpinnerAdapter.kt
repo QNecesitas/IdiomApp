@@ -2,6 +2,7 @@ package com.estholon.idiomapp.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import com.estholon.idiomapp.data.Idioms
 class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
     ArrayAdapter<Idioms>(context, resource, objects) {
 
+    private var click: ITouch? = null
+
     @SuppressLint("ViewHolder" , "MissingInflatedId" , "UseCompatLoadingForDrawables")
     override fun getView(position: Int , convertView: View? , parent: ViewGroup): View {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -21,6 +24,7 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
         val imageView = vista.findViewById<ImageView>(R.id.iv_idioms)
 
         imageView.setImageDrawable(context.getDrawable(getImage(position))) // Assume que 'image' es un recurso drawable
+
 
 
 
@@ -34,8 +38,7 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
         val vista = inflater.inflate(R.layout.custom_spinner_dropdown, parent, false)
         val imageView = vista.findViewById<ImageView>(R.id.imageView)
         imageView.setImageDrawable(context.getDrawable(getImage(position))) // Assume que 'image' es un recurso drawable
-
-
+        imageView.setOnClickListener{ getItem(position)?.let { it1 -> click?.onClick(it1) } }
 
         return vista
     }
@@ -65,5 +68,15 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
             }
         }
     }
+
+    interface ITouch {
+        fun onClick(idioms: Idioms)
+    }
+
+    fun setClick(click: ITouch?) {
+        this.click = click
+    }
+
+
 
 }

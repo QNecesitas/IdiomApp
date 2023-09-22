@@ -144,12 +144,13 @@
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp" />
 
-        <!--iv Pais 1-->
-        <ImageView
-            android:id="@+id/iv_pais1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/spain" />
+        <!--spinner Pais 1-->
+        <Spinner
+            android:id="@+id/spinnerIdiom1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_margin="12dp"/>
 
 
         <!--tv a-->
@@ -163,12 +164,13 @@
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp" />
 
-        <!--iv Pais 2-->
-        <ImageView
-            android:id="@+id/iv_pais2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/unite" />
+        <!--spinner Pais 2-->
+        <Spinner
+            android:id="@+id/spinnerIdiom2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_margin="12dp"/>
 
     </LinearLayout>
 

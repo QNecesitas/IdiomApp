@@ -7,15 +7,73 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.estholon.idiomapp.data.Category
+import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.database.CategoriesDao
+import com.estholon.idiomapp.database.IdiomsDao
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val categoriesDao: CategoriesDao) : ViewModel() {
+class HomeViewModel(private val categoriesDao: CategoriesDao,
+                    private val idiomsDao: IdiomsDao) : ViewModel() {
 
     //List category
     private val _listCategory = MutableLiveData<MutableList<Category>>()
     val listCategory: LiveData<MutableList<Category>> get() = _listCategory
 
+    //List Idiom
+    private val _listIdioms = MutableLiveData<MutableList<Idioms>>()
+    val listIdioms: LiveData<MutableList<Idioms>> get() = _listIdioms
+
+    //List Idiom Right
+    private val _listIdiomsRight = MutableLiveData<MutableList<Idioms>>()
+    val listIdiomsRight: LiveData<MutableList<Idioms>> get() = _listIdiomsRight
+
+    //List Idiom Left
+    private val _listIdiomsLeft = MutableLiveData<MutableList<Idioms>>()
+    val listIdiomsLeft: LiveData<MutableList<Idioms>> get() = _listIdiomsLeft
+
+    var itemIdiomRight = Idioms("FR","Français")
+
+    var itemIdiomLeft = Idioms("ES","Español")
+
+    fun getAllIdioms() {
+        viewModelScope.launch {
+            _listIdioms.value= mutableListOf ()
+            _listIdioms.value= idiomsDao.fetchIdioms()
+            filterIdioms()
+        }
+    }
+
+    fun filterIdioms(){
+        val tempListLeft = mutableListOf<Idioms>()
+        val tempListRight = mutableListOf<Idioms>()
+
+        _listIdioms.value?.let {
+            tempListLeft.addAll(it)
+        }
+        _listIdioms.value?.let {
+            tempListRight.addAll(it)
+        }
+
+        tempListLeft.remove(itemIdiomRight)
+        tempListRight.remove(itemIdiomLeft)
+
+        _listIdiomsLeft.value = tempListLeft
+        _listIdiomsRight.value = tempListRight
+    }
+
+    fun selectedIdiomRight(idioms: Idioms){
+        if (_listIdioms.value != null){
+            itemIdiomRight = idioms
+        }
+        Log.e("gg",idioms.toString())
+        filterIdioms()
+    }
+
+    fun selectedIdiomLeft(idioms: Idioms){
+        if (_listIdioms.value != null) itemIdiomLeft = idioms
+        Log.e("gg1",idioms.toString())
+        filterIdioms()
+    }
 
     fun addCategory(newCategory: String){
         viewModelScope.launch {
@@ -41,13 +99,14 @@ class HomeViewModel(private val categoriesDao: CategoriesDao) : ViewModel() {
 
 
 class HomeViewModelFactory(
-    private val categoryDao: CategoriesDao
+    private val categoryDao: CategoriesDao,
+    private val idiomsDao: IdiomsDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(categoryDao) as T
+            return HomeViewModel(categoryDao, idiomsDao ) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }

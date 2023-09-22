@@ -8,10 +8,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.estholon.idiomapp.adapters.SpinnerAdapter
+import com.estholon.idiomapp.auxiliary.TextToSpeech
 import com.estholon.idiomapp.data.Category
+import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.databinding.ActivityHomeBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
@@ -25,10 +30,18 @@ class ActivityHome : AppCompatActivity() {
 
     private var li_category_binding: LiAddCategoryBinding? = null
 
+    private lateinit var textToSpeech: TextToSpeech
+
     //View Model
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory((application as IdiomApp).database.categoriesDao())
+        HomeViewModelFactory((application as IdiomApp).database.categoriesDao(),
+            (application as IdiomApp).database.idiomsDao())
     }
+
+    //Spinner
+    private var spinnerLIsOpen = false
+
+    private var spinnerRIsOpen = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +56,12 @@ class ActivityHome : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
 
+        textToSpeech = TextToSpeech(this){}
+
+        binding.btnRegistro.setOnClickListener{
+            val textToRead = "Gregor no quitas mijo, mama huevo"
+            textToSpeech.speak(textToRead)
+        }
 
         //Observe
         viewModel.listCategory.observe(this) {
@@ -54,16 +73,42 @@ class ActivityHome : AppCompatActivity() {
             li_add_category()
         }
 
-        binding.ivPais1.setOnClickListener{
 
+
+        viewModel.listIdiomsLeft.observe(this) { items ->
+            val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
+            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+            binding.spinnerIdiom1.adapter = adapter
+            adapter.setClick(object : SpinnerAdapter.ITouch{
+                override fun onClick(idioms: Idioms) {
+                    if(idioms != viewModel.itemIdiomLeft){
+                        viewModel.selectedIdiomLeft(idioms)
+                    }
+                }
+
+            })
         }
 
-        binding.ivPais2.setOnClickListener{
+        viewModel.listIdiomsRight.observe(this) { items ->
+            val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
+            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+            binding.spinnerIdiom2.adapter = adapter
+            adapter.setClick(object : SpinnerAdapter.ITouch{
+                override fun onClick(idioms: Idioms) {
+                    if(idioms !=viewModel.itemIdiomRight){
+                        viewModel.selectedIdiomRight(idioms)
+                    }
+                }
 
+            })
         }
 
+
+        viewModel.getAllIdioms()
         viewModel.refresh()
     }
+
+
 
 
     fun li_add_category(){
