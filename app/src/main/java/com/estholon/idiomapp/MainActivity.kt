@@ -1,12 +1,8 @@
 package com.estholon.idiomapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.view.View
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -36,17 +32,8 @@ class MainActivity : AppCompatActivity() {
         //Change activity in a time
         lifecycleScope.launch {
             delay(delayTime)
-            val intent = Intent(this@MainActivity , ActivityHome::class.java)
-            //Handler
-            @SuppressLint("HandlerLeak") val handler: Handler = object : Handler() {
-                override fun handleMessage(message: Message) {
-                    if (message.arg1 == 1) {
-                        val intent = Intent(this@MainActivity , ActivityRecords::class.java)
-                        startActivity(intent)
-                    }
-
-                }
+            val intent = Intent(this@MainActivity , ActivityRecords::class.java)
+           startActivity(intent)
             }
         }
     }
-}

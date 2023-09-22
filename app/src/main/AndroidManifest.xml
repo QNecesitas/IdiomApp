@@ -15,13 +15,19 @@
         android:name=".IdiomApp">
         <activity
             android:name=".ActivityNewRecords"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".ActivityRecords"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".ActivityHome"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

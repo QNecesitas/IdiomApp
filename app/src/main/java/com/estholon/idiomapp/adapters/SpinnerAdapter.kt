@@ -57,6 +57,9 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
             "EN" ->{
                 return R.drawable.unite
             }
+            "ALL" ->{
+                return R.drawable.worldall
+            }
             else ->{
                 return R.drawable.spain
             }
