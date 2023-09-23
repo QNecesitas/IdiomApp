@@ -58,8 +58,8 @@ class SentenceAdapter(private val context: Context) :
 
 
 
-            binding.sentence.text = sentence
-            binding.ivSound.setOnClickListener { clickSound?.onClickSound() }
+            binding.tvSentence.text = sentence
+            binding.ivSound.setOnClickListener { clickSound?.onClickSound(record) }
 
         }
     }
@@ -101,7 +101,7 @@ class SentenceAdapter(private val context: Context) :
     }
 
     interface ITouchSound {
-        fun onClickSound()
+        fun onClickSound(record: Records)
     }
 
     fun setClickSound(clickSound: ITouchSound?) {

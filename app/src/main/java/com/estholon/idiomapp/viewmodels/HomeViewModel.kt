@@ -65,13 +65,11 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
         if (_listIdioms.value != null){
             itemIdiomRight = idioms
         }
-        Log.e("gg",idioms.toString())
         filterIdioms()
     }
 
     fun selectedIdiomLeft(idioms: Idioms){
         if (_listIdioms.value != null) itemIdiomLeft = idioms
-        Log.e("gg1",idioms.toString())
         filterIdioms()
     }
 
