@@ -33,4 +33,9 @@
     <string name="categor_a">Categorías</string>
     <string name="Borrar">Borrar</string>
     <string name="al_borrar">Se perderá la categoría</string>
+    <string name="a_adir_de_galer_a">Añadir de galería</string>
+    <string name="a_adir_de_c_mara">Añadir de cámara</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="error_al_obtener_la_imagen">"Error al obtener la imagen "</string>
+    <string name="error">Error</string>
 </resources>

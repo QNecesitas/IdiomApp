@@ -61,6 +61,8 @@ class ActivityHome : AppCompatActivity() {
         binding.btnRegistro.setOnClickListener{
             val textToRead = "Gregor no quitas mijo, mama huevo"
             textToSpeech.speak(textToRead)
+            val intent=Intent(this,ActivityRecords::class.java)
+            startActivity(intent)
         }
 
         //Observe

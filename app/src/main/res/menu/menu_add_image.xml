@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/a_adir_de_galer_a"
+        android:id="@+id/menu_add_gallery"
+        />
+    <item
+        android:title="@string/a_adir_de_c_mara"
+        android:id="@+id/menu_add_camera"
+        />
+    <item
+        android:title="@string/eliminar"
+        android:id="@+id/menu_delete"
+        />
+
+</menu>

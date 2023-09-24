@@ -38,7 +38,6 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
         val vista = inflater.inflate(R.layout.custom_spinner_dropdown, parent, false)
         val imageView = vista.findViewById<ImageView>(R.id.imageView)
         imageView.setImageDrawable(context.getDrawable(getImage(position))) // Assume que 'image' es un recurso drawable
-        imageView.setOnClickListener{ getItem(position)?.let { it1 -> click?.onClick(it1) } }
 
         return vista
     }
