@@ -38,11 +38,6 @@ class ActivityHome : AppCompatActivity() {
             (application as IdiomApp).database.idiomsDao())
     }
 
-    //Spinner
-    private var spinnerLIsOpen = false
-
-    private var spinnerRIsOpen = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +51,10 @@ class ActivityHome : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
 
-        textToSpeech = TextToSpeech(this){}
+        textToSpeech = TextToSpeech(this,{})
 
         binding.btnRegistro.setOnClickListener{
-            val textToRead = "Gregor no quitas mijo, mama huevo"
-            textToSpeech.speak(textToRead)
-            val intent=Intent(this,ActivityRecords::class.java)
+            val intent = Intent(this@ActivityHome , ActivityRecords::class.java)
             startActivity(intent)
         }
 
