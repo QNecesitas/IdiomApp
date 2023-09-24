@@ -12,12 +12,18 @@ import com.estholon.idiomapp.R
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.RecyclerGetSentencesBinding
 import com.estholon.idiomapp.adapters.SentenceAdapter.*
+import com.estholon.idiomapp.auxiliary.TextToSpeech
+import java.util.Locale
 
 class SentenceAdapter(private val context: Context) :
     ListAdapter<Records , SentenceViewHolder>(DiffCallback) {
 
-    private var clickSound: ITouchSound? = null
-
+    //Speech
+    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES")){}
+    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US")){}
+    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE")){}
+    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR")){}
+    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR")){}
 
     class SentenceViewHolder(private var binding: RecyclerGetSentencesBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -25,41 +31,63 @@ class SentenceAdapter(private val context: Context) :
         @SuppressLint("SimpleDateFormat")
         fun bind(
             record: Records ,
-            context: Context ,
-            clickSound: ITouchSound?
+            context: Context,
+            textToSpeechEs: TextToSpeech,
+            textToSpeechEn: TextToSpeech,
+            textToSpeechDe: TextToSpeech,
+            textToSpeechPt: TextToSpeech,
+            textToSpeechFr: TextToSpeech
         ) {
 
             //Declare
             val sentence = record.sentence
+            var textToSpeech = textToSpeechEs
             when (record.idIdiom) {
-                "ES" -> binding.ivImage.setImageDrawable(
-                    AppCompatResources.getDrawable(context , R.drawable.spain)
-                )
+                "ES" -> {
+                    binding.ivImage.setImageDrawable(
+                        AppCompatResources.getDrawable(context , R.drawable.spain)
+                    )
+                    textToSpeech = textToSpeechEs
+                }
 
-                "FR" -> binding.ivImage.setImageDrawable(
-                    AppCompatResources.getDrawable(context , R.drawable.france)
-                )
+                "FR" -> {
+                    binding.ivImage.setImageDrawable(
+                        AppCompatResources.getDrawable(context, R.drawable.france)
+                    )
+                    textToSpeech = textToSpeechFr
+                }
 
-                "DE" -> binding.ivImage.setImageDrawable(
-                    AppCompatResources.getDrawable(context , R.drawable.germany)
-                )
+                "DE" -> {
+                    binding.ivImage.setImageDrawable(
+                        AppCompatResources.getDrawable(context, R.drawable.germany)
+                    )
+                    textToSpeech = textToSpeechDe
+                }
 
-                "PT" -> binding.ivImage.setImageDrawable(
-                    AppCompatResources.getDrawable(context , R.drawable.portugal)
-                )
+                "PT" -> {
+                    binding.ivImage.setImageDrawable(
+                        AppCompatResources.getDrawable(context, R.drawable.portugal)
+                    )
+                    textToSpeech = textToSpeechPt
+                }
 
-                "EN" -> binding.ivImage.setImageDrawable(
-                    AppCompatResources.getDrawable(context , R.drawable.unite)
-                )
+                "EN" -> {
+                    binding.ivImage.setImageDrawable(
+                        AppCompatResources.getDrawable(context, R.drawable.unite)
+                    )
+                    textToSpeech = textToSpeechEn
+                }
 
 
             }
 
 
 
+            binding.ivSound.setOnClickListener {
+                textToSpeech.speak(record.sentence)
+            }
 
             binding.sentence.text = sentence
-            binding.ivSound.setOnClickListener { clickSound?.onClickSound() }
 
         }
     }
@@ -82,8 +110,12 @@ class SentenceAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: SentenceViewHolder , position: Int) {
         holder.bind(
             getItem(position) ,
-            context ,
-            clickSound
+            context,
+            textToSpeechEs,
+            textToSpeechEn,
+            textToSpeechDe,
+            textToSpeechPt,
+            textToSpeechFr
         )
     }
 
@@ -98,14 +130,6 @@ class SentenceAdapter(private val context: Context) :
             }
 
         }
-    }
-
-    interface ITouchSound {
-        fun onClickSound()
-    }
-
-    fun setClickSound(clickSound: ITouchSound?) {
-        this.clickSound = clickSound
     }
 
 

@@ -14,7 +14,7 @@
     <string name="Registro">Registro</string>
     <string name="Emparejar">Emparejar</string>
     <string name="Escritura">Escritura</string>
-    <string name="tarjeta">Tarjeta</string>
+    <string name="tarjetas">Tarjetas</string>
     <string name="IDIOMAS">IDIOMAS</string>
     <string name="no_aplica_al_apartado_de_registros">No aplica al apartado de Registros</string>
     <string name="de">De</string>
@@ -33,4 +33,7 @@
     <string name="categor_a">Categorías</string>
     <string name="Borrar">Borrar</string>
     <string name="al_borrar">Se perderá la categoría</string>
+    <string name="imagen_de_idiomapp">Imagen de IdiomApp</string>
+    <string name="Anadir">Añadir</string>
+    <string name="su_dispositivo_no_permite_este_lenguaje">Su dispositivo no admite el lenguaje: %s</string>
 </resources>

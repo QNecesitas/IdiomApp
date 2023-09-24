@@ -22,6 +22,7 @@ import com.estholon.idiomapp.databinding.LiAddCategoryBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
 import com.estholon.idiomapp.viewmodels.HomeViewModelFactory
 import com.google.android.material.chip.Chip
+import java.util.Locale
 
 class ActivityHome : AppCompatActivity() {
 
@@ -29,8 +30,6 @@ class ActivityHome : AppCompatActivity() {
     private lateinit var binding : ActivityHomeBinding
 
     private var li_category_binding: LiAddCategoryBinding? = null
-
-    private lateinit var textToSpeech: TextToSpeech
 
     //View Model
     private val viewModel: HomeViewModel by viewModels {
@@ -56,12 +55,7 @@ class ActivityHome : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
 
-        textToSpeech = TextToSpeech(this){}
 
-        binding.btnRegistro.setOnClickListener{
-            val textToRead = "Gregor no quitas mijo, mama huevo"
-            textToSpeech.speak(textToRead)
-        }
 
         //Observe
         viewModel.listCategory.observe(this) {

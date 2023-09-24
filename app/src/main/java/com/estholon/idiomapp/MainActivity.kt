@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         //Change activity in a time
         lifecycleScope.launch {
             delay(delayTime)
-            val intent = Intent(this@MainActivity , ActivityRecords::class.java)
+            val intent = Intent(this@MainActivity , ActivityNewRecords::class.java)
            startActivity(intent)
             }
         }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group >
+        <item android:id="@+id/menu_record" android:title="@string/Registro" android:icon="@drawable/baseline_format_list_bulleted_24"/>
+        <item android:id="@+id/menu_new_record" android:title="@string/Anadir" android:icon="@drawable/baseline_edit_note_24"/>
+        <item android:id="@+id/menu_writing" android:title="@string/Escritura" android:icon="@drawable/baseline_edit_24"/>
+        <item android:id="@+id/menu_cards" android:title="@string/tarjetas" android:icon="@drawable/baseline_view_comfy_alt_24"/>
+        <item android:id="@+id/menu_match" android:title="@string/Emparejar" android:icon="@drawable/baseline_ballot_24"/>
+    </group>
+
+</menu>
