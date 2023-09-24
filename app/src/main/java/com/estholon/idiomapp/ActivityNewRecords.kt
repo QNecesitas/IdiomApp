@@ -2,10 +2,8 @@ package com.estholon.idiomapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.PopupMenu
@@ -14,6 +12,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.auxiliary.ImageTools
 import com.estholon.idiomapp.databinding.ActivityNewRecordsBinding
 import com.estholon.idiomapp.viewmodels.NewRecordViewModel
@@ -29,6 +29,7 @@ class ActivityNewRecords : AppCompatActivity() {
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
 
     private var uriImageCut: Uri? = null
+
     //Edit photo
     private var processPhotoInCourse = false;
 
@@ -47,6 +48,47 @@ class ActivityNewRecords : AppCompatActivity() {
 
         val imageUri = intent.getStringExtra("imageUri")
 
+        //NavigationDrawer
+        binding.ivIconSetting.setOnClickListener {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        }
+        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_new_record)
+        itemToInvisible.isVisible = false
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_record -> {
+                    val intent = Intent(this@ActivityNewRecords, ActivityRecords::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.menu_new_record -> {
+                    val intent = Intent(this@ActivityNewRecords, ActivityNewRecords::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.menu_cards -> {
+                    val intent = Intent(this@ActivityNewRecords, ActivityCards::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.menu_match -> {
+                    val intent = Intent(this@ActivityNewRecords, ActivityMatch::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.menu_writing -> {
+                    val intent = Intent(this@ActivityNewRecords, ActivityWriting::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
+
+
         // Comprobar si la URI no es nula
         if (imageUri != null) {
             // Cargar la imagen en la ImageView
@@ -61,16 +103,16 @@ class ActivityNewRecords : AppCompatActivity() {
             }
 
         binding.ivAddimage.setOnClickListener {
-            val popupMenu = PopupMenu(applicationContext , binding.cvAddImage)
-            popupMenu.menuInflater.inflate(R.menu.menu_add_image , popupMenu.menu)
+            val popupMenu = PopupMenu(applicationContext, binding.cvAddImage)
+            popupMenu.menuInflater.inflate(R.menu.menu_add_image, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 if (menuItem.itemId == R.id.menu_add_gallery) {
                     choiceGalleryImage()
                 } else if (menuItem.itemId == R.id.menu_delete) {
                     binding.ivAddimage.setImageDrawable(this.getDrawable(R.drawable.baseline_add_photo_alternate_24))
                     uriImageCut = null
-                } else if (menuItem.itemId==R.id.menu_add_camera){
-                   val intent=Intent(this,ActivityCamera::class.java)
+                } else if (menuItem.itemId == R.id.menu_add_camera) {
+                    val intent = Intent(this, ActivityCamera::class.java)
                     startActivity(intent)
                 }
                 false
@@ -78,18 +120,16 @@ class ActivityNewRecords : AppCompatActivity() {
             popupMenu.show()
         }
         binding.addLanguage.setOnClickListener {
-            val intent=Intent(this,ActivityCard::class.java)
+            val intent = Intent(this, ActivityCard::class.java)
             startActivity(intent)
         }
-
-
 
 
     }
 
     private fun choiceGalleryImage() {
         val galleryIntent =
-            Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         galleryLauncher.launch(galleryIntent)
     }
 
@@ -102,18 +142,18 @@ class ActivityNewRecords : AppCompatActivity() {
                 ImageTools.getHoraActual("yyMMddHHmmss")
             )
             if (contentUri != null) {
-                cutImage(contentUri , Uri.fromFile(file))
+                cutImage(contentUri, Uri.fromFile(file))
             } else {
                 Toast.makeText(
-                    this@ActivityNewRecords ,
+                    this@ActivityNewRecords,
                     R.string.error_al_obtener_la_imagen,
                     Toast.LENGTH_SHORT
                 ).show()
             }
         } else {
             Toast.makeText(
-                this@ActivityNewRecords ,
-                R.string.error_al_obtener_la_imagen ,
+                this@ActivityNewRecords,
+                R.string.error_al_obtener_la_imagen,
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -121,17 +161,17 @@ class ActivityNewRecords : AppCompatActivity() {
 
     private fun cutImage(uri1: Uri, uri2: Uri) {
         try {
-            UCrop.of(uri1 , uri2)
-                .withAspectRatio(3f , 3f)
+            UCrop.of(uri1, uri2)
+                .withAspectRatio(3f, 3f)
                 .withMaxResultSize(
-                    ImageTools.ANCHO_DE_FOTO_A_SUBIR ,
+                    ImageTools.ANCHO_DE_FOTO_A_SUBIR,
                     ImageTools.ALTO_DE_FOTO_A_SUBIR
                 )
                 .start(this)
         } catch (e: Exception) {
             Toast.makeText(
-                this@ActivityNewRecords ,
-                getString(R.string.error) ,
+                this@ActivityNewRecords,
+                getString(R.string.error),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -145,12 +185,11 @@ class ActivityNewRecords : AppCompatActivity() {
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int , resultCode: Int , data: Intent?) {
-        super.onActivityResult(requestCode , resultCode , data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_CANCELED) {
             return
         }
-
 
         //UCrop
         if (requestCode == UCrop.REQUEST_CROP) {
@@ -160,20 +199,29 @@ class ActivityNewRecords : AppCompatActivity() {
                 imageCropped(data)
             } else {
                 Toast.makeText(
-                    this@ActivityNewRecords ,
-                    getString(R.string.error_al_obtener_la_imagen) ,
+                    this@ActivityNewRecords,
+                    getString(R.string.error_al_obtener_la_imagen),
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
         if (requestCode == UCrop.RESULT_ERROR) {
             FancyToast.makeText(
-                this@ActivityNewRecords ,
-                getString(R.string.error_al_obtener_la_imagen) ,
-                FancyToast.LENGTH_SHORT ,
-                FancyToast.ERROR ,
+                this@ActivityNewRecords,
+                getString(R.string.error_al_obtener_la_imagen),
+                FancyToast.LENGTH_SHORT,
+                FancyToast.ERROR,
                 false
             ).show()
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            finish()
         }
     }
 

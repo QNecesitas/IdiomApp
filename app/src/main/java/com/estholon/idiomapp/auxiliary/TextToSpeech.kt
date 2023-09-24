@@ -6,40 +6,48 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.os.PersistableBundle
 import android.speech.tts.TextToSpeech
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatCallback
+import com.estholon.idiomapp.R
 import java.util.Locale
 
-open class TextToSpeech(private val context: Context,private val onInitCallback:
-    ()-> Unit) : TextToSpeech.OnInitListener {
+open class TextToSpeech(
+    private val context: Context, private val idiomLocale: Locale, private val onInitCallback:
+        () -> Unit
+) : TextToSpeech.OnInitListener {
 
-    private lateinit var textToSpeech: TextToSpeech
-
-    init{
-        textToSpeech = TextToSpeech(context, this)
-    }
-
+    private var textToSpeech: TextToSpeech = TextToSpeech(context, this)
+    private var isAvailable = true
 
     override fun onInit(status: Int) {
-        if (status==TextToSpeech.SUCCESS) {
-            val locale = Locale.getDefault()
-            val result = textToSpeech.setLanguage(locale)
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(idiomLocale)
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                //Manejo de errores relacionado con idiomas
-            } else {
-                //El TextToSpech se realizo con exito, se puede utilizar aqui
+                isAvailable = false
             }
-        }else{
-                //Manejo de errores de initialization
-            }
-
+        } else {
+            isAvailable = false
         }
 
-    fun speak(text:String){
-        textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
-    fun shutdown(){
+    fun speak(text: String) {
+        if (isAvailable) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(
+                    R.string.su_dispositivo_no_permite_este_lenguaje,
+                    idiomLocale.displayName
+                ),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    fun shutdown() {
         textToSpeech.stop()
         textToSpeech.shutdown()
     }

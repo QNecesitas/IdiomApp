@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.SearchView
 import androidx.activity.viewModels
+import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.SentenceAdapter
 import com.estholon.idiomapp.adapters.SpinnerAdapter
 import com.estholon.idiomapp.auxiliary.TextToSpeech
@@ -16,6 +17,7 @@ import com.estholon.idiomapp.databinding.ActivityRecordsBinding
 import com.estholon.idiomapp.databinding.RecyclerGetSentencesBinding
 import com.estholon.idiomapp.viewmodels.RecordViewModel
 import com.estholon.idiomapp.viewmodels.RecordViewModelFactory
+import java.util.Locale
 
 class ActivityRecords : AppCompatActivity() {
 
@@ -38,11 +40,50 @@ class ActivityRecords : AppCompatActivity() {
         binding = ActivityRecordsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        //NavigationDrawer
+        binding.ivIconSetting.setOnClickListener {
+            if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+            }else{
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            }
+        }
+        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_record)
+        itemToInvisible.isVisible = false
+        binding.navigationView.setNavigationItemSelectedListener {menuItem ->
+            when(menuItem.itemId){
+                R.id.menu_record -> {
+                    val intent = Intent(this@ActivityRecords, ActivityRecords::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_new_record -> {
+                    val intent = Intent(this@ActivityRecords, ActivityNewRecords::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_cards -> {
+                    val intent = Intent(this@ActivityRecords, ActivityCards::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_match -> {
+                    val intent = Intent(this@ActivityRecords, ActivityMatch::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_writing -> {
+                    val intent = Intent(this@ActivityRecords, ActivityWriting::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
+
+
         //Recycler
         binding.recycler.setHasFixedSize(true)
         alRecord = mutableListOf()
         adapterSentence = SentenceAdapter(this)
         binding.recycler.adapter = adapterSentence
+
 
 
         //Observe
@@ -53,6 +94,8 @@ class ActivityRecords : AppCompatActivity() {
         viewModel.listRecordFilter.observe(this) {
             adapterSentence.submitList(it)
         }
+
+
 
         //SearchView
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -69,6 +112,9 @@ class ActivityRecords : AppCompatActivity() {
 
         })
 
+
+
+        //Spinner
         val spinnerPersonalizado = binding.spinnerPersonalizado
 
         viewModel.listIdioms.observe(this) { items ->
@@ -78,7 +124,6 @@ class ActivityRecords : AppCompatActivity() {
             spinnerPersonalizado.adapter = adapter
 
         }
-
 
         spinnerPersonalizado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -106,16 +151,32 @@ class ActivityRecords : AppCompatActivity() {
             }
         }
 
+
+
+        //Listeners
         binding.addRecord.setOnClickListener {
             val intent=Intent(this,ActivityNewRecords::class.java)
             startActivity(intent)
         }
 
 
+
+        //Thread
         viewModel.getAllIdioms()
 
         viewModel.getAllRecord()
 
 
     }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            finish()
+        }
+    }
+
 }
