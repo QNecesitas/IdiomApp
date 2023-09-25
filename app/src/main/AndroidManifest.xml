@@ -34,9 +34,6 @@
             android:name=".ActivityWriting"
             android:exported="false" />
         <activity
-            android:name=".ActivityCards"
-            android:exported="false" />
-        <activity
             android:name=".ActivityNewRecords"
             android:configChanges="screenSize|orientation"
             android:exported="false"

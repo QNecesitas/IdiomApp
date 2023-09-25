@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import com.estholon.idiomapp.R
 import com.estholon.idiomapp.data.Idioms
 
-class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
+class SpinnerAdapter(context: Context, resource: Int,val objects: List<Idioms>) :
     ArrayAdapter<Idioms>(context, resource, objects) {
-
-    private var click: ITouch? = null
 
     @SuppressLint("ViewHolder" , "MissingInflatedId" , "UseCompatLoadingForDrawables")
     override fun getView(position: Int , convertView: View? , parent: ViewGroup): View {
@@ -25,11 +24,10 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
 
         imageView.setImageDrawable(context.getDrawable(getImage(position))) // Assume que 'image' es un recurso drawable
 
-
-
-
         return vista
     }
+
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun getDropDownView(position: Int , convertView: View? , parent: ViewGroup): View {
@@ -66,14 +64,6 @@ class SpinnerAdapter(context: Context, resource: Int, objects: List<Idioms>) :
                 return R.drawable.spain
             }
         }
-    }
-
-    interface ITouch {
-        fun onClick(idioms: Idioms)
-    }
-
-    fun setClick(click: ITouch?) {
-        this.click = click
     }
 
 

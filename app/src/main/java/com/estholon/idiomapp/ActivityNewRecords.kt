@@ -71,7 +71,7 @@ class ActivityNewRecords : AppCompatActivity() {
                 }
 
                 R.id.menu_cards -> {
-                    val intent = Intent(this@ActivityNewRecords, ActivityCards::class.java)
+                    val intent = Intent(this@ActivityNewRecords, ActivityCard::class.java)
                     startActivity(intent)
                 }
 

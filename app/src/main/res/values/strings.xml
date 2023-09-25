@@ -41,4 +41,11 @@
     <string name="eliminar">Eliminar</string>
     <string name="error_al_obtener_la_imagen">"Error al obtener la imagen "</string>
     <string name="error">Error</string>
+    <string name="Tarjetas">Tarjetas</string>
+    <string name="Cargando">Cargando</string>
+    <string name="escuchar">Escuchar</string>
+    <string name="Anterior">Anterior</string>
+    <string name="Siguiente">Siguiente</string>
+    <string name="Comprobar">Comprobar</string>
+    <string name="Resolver">Resolver</string>
 </resources>

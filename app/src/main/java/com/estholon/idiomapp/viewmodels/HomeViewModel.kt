@@ -1,6 +1,5 @@
 package com.estholon.idiomapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,9 +30,13 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
     private val _listIdiomsLeft = MutableLiveData<MutableList<Idioms>>()
     val listIdiomsLeft: LiveData<MutableList<Idioms>> get() = _listIdiomsLeft
 
-    var itemIdiomRight = Idioms("FR","Français")
+    private var itemIdiomRight = Idioms("FR","Français")
 
-    var itemIdiomLeft = Idioms("ES","Español")
+    private var lastPositionRight = 0;
+
+    private var itemIdiomLeft = Idioms("ES","Español")
+
+    private var lastPositionLeft = 0;
 
     fun getAllIdioms() {
         viewModelScope.launch {
@@ -43,7 +46,7 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
         }
     }
 
-    fun filterIdioms(){
+    private fun filterIdioms(){
         val tempListLeft = mutableListOf<Idioms>()
         val tempListRight = mutableListOf<Idioms>()
 
@@ -55,20 +58,27 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
         }
 
         tempListLeft.remove(itemIdiomRight)
+        tempListLeft.remove(itemIdiomLeft)
+        tempListLeft.add(lastPositionLeft,itemIdiomLeft)
+
         tempListRight.remove(itemIdiomLeft)
+        tempListRight.remove(itemIdiomRight)
+        tempListRight.add(lastPositionRight,itemIdiomRight)
 
         _listIdiomsLeft.value = tempListLeft
         _listIdiomsRight.value = tempListRight
     }
 
-    fun selectedIdiomRight(idioms: Idioms){
+    fun selectedIdiomRight(idioms: Idioms, position: Int){
+        lastPositionRight = position
         if (_listIdioms.value != null){
             itemIdiomRight = idioms
         }
         filterIdioms()
     }
 
-    fun selectedIdiomLeft(idioms: Idioms){
+    fun selectedIdiomLeft(idioms: Idioms, position: Int){
+        lastPositionLeft = position
         if (_listIdioms.value != null) itemIdiomLeft = idioms
         filterIdioms()
     }
@@ -81,14 +91,13 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
 
             categoriesDao.insertCategory(category)
 
-            refresh()
+            refreshCategories()
 
         }
     }
-    fun refresh() {
+    fun refreshCategories() {
         viewModelScope.launch {
             _listCategory.value = mutableListOf()
-
             _listCategory.value = categoriesDao.fetchCategories()
         }
     }

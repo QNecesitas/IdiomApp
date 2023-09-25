@@ -10,26 +10,22 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.estholon.idiomapp.adapters.SpinnerAdapter
-import com.estholon.idiomapp.auxiliary.TextToSpeech
 import com.estholon.idiomapp.data.Category
-import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.databinding.ActivityHomeBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
 import com.estholon.idiomapp.viewmodels.HomeViewModelFactory
 import com.google.android.material.chip.Chip
-import java.util.Locale
 
 class ActivityHome : AppCompatActivity() {
 
 
     private lateinit var binding : ActivityHomeBinding
 
-    private var li_category_binding: LiAddCategoryBinding? = null
+    private var liCategoryBinding: LiAddCategoryBinding? = null
 
     //View Model
     private val viewModel: HomeViewModel by viewModels {
@@ -46,81 +42,109 @@ class ActivityHome : AppCompatActivity() {
 
         //Toolbar
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
+
+
+        //Adapter
+        val adapterLeft = SpinnerAdapter(this , R.layout.custom_spinner, mutableListOf())
+        adapterLeft.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+        binding.spinnerIdiom1.adapter = adapterLeft
+        val adapterRight = SpinnerAdapter(this , R.layout.custom_spinner , mutableListOf())
+        adapterRight.setDropDownViewResource(R.layout.custom_spinner_dropdown)
+        binding.spinnerIdiom2.adapter = adapterRight
+
+
+
+        //Adapter Listeners
+        binding.spinnerIdiom1.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                viewModel.selectedIdiomLeft(adapterLeft.objects[p2],p2)
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+        binding.spinnerIdiom2.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                viewModel.selectedIdiomRight(adapterRight.objects[p2],p2)
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+
+
+        //Listeners
+        binding.tvIntroCate.setOnClickListener{
+            liAddCategory()
+        }
 
         binding.btnRegistro.setOnClickListener{
             val intent = Intent(this@ActivityHome , ActivityRecords::class.java)
             startActivity(intent)
         }
 
+        binding.btnMatch.setOnClickListener {
+            val intent = Intent(this@ActivityHome , ActivityMatch::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnWriting.setOnClickListener {
+            val intent = Intent(this@ActivityHome , ActivityWriting::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnCards.setOnClickListener {
+            val intent = Intent(this@ActivityHome , ActivityCard::class.java)
+            startActivity(intent)
+        }
+
+
+
         //Observe
         viewModel.listCategory.observe(this) {
             refreshChipGroup(it)
         }
 
-
-        binding.tvIntroCate.setOnClickListener{
-            li_add_category()
-        }
-
-
-
         viewModel.listIdiomsLeft.observe(this) { items ->
-            val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
-            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
-            binding.spinnerIdiom1.adapter = adapter
-            adapter.setClick(object : SpinnerAdapter.ITouch{
-                override fun onClick(idioms: Idioms) {
-                    if(idioms != viewModel.itemIdiomLeft){
-                        viewModel.selectedIdiomLeft(idioms)
-                    }
-                }
-
-            })
+            adapterLeft.clear()
+            adapterLeft.addAll(items)
+            adapterLeft.notifyDataSetChanged()
         }
 
         viewModel.listIdiomsRight.observe(this) { items ->
-            val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
-            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
-            binding.spinnerIdiom2.adapter = adapter
-            adapter.setClick(object : SpinnerAdapter.ITouch{
-                override fun onClick(idioms: Idioms) {
-                    if(idioms !=viewModel.itemIdiomRight){
-                        viewModel.selectedIdiomRight(idioms)
-                    }
-                }
-
-            })
+            adapterRight.clear()
+            adapterRight.addAll(items)
+            adapterRight.notifyDataSetChanged()
         }
 
 
         viewModel.getAllIdioms()
-        viewModel.refresh()
+
     }
 
 
 
 
-    fun li_add_category(){
+    private fun liAddCategory(){
         val inflater = LayoutInflater.from(binding.root.context)
-        li_category_binding = LiAddCategoryBinding.inflate(inflater)
+        liCategoryBinding = LiAddCategoryBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(li_category_binding!!.root)
+        builder.setView(liCategoryBinding!!.root)
         val alertDialog = builder.create()
 
-        viewModel.refresh()
+        viewModel.refreshCategories()
 
-        li_category_binding!!.ivAdd.setOnClickListener{
-            if(li_category_binding!!.tiet.text.toString().isNotEmpty()){
-                li_category_binding!!.tiet.setText("")
-                viewModel.addCategory(li_category_binding!!.tiet.text.toString())
+        liCategoryBinding?.ivAdd?.setOnClickListener{
+            if(liCategoryBinding?.tiet?.text.toString().isNotEmpty()){
+                viewModel.addCategory(liCategoryBinding?.tiet?.text.toString())
+                liCategoryBinding?.tiet?.setText("")
             }
         }
 
-        li_category_binding!!.ivClose.setOnClickListener{
+        liCategoryBinding!!.ivClose.setOnClickListener{
             alertDialog.dismiss()
         }
 
@@ -133,8 +157,8 @@ class ActivityHome : AppCompatActivity() {
     }
 
 
-    fun refreshChipGroup(list : MutableList<Category>){
-        li_category_binding?.chipGroup?.removeAllViews()
+    private fun refreshChipGroup(list : MutableList<Category>){
+        liCategoryBinding?.chipGroup?.removeAllViews()
         for (e in list){
             val chip = Chip(this)
             chip.text = e.categories
@@ -143,7 +167,7 @@ class ActivityHome : AppCompatActivity() {
             chip.setOnCloseIconClickListener{
                 alert_borrar(chip)
             }
-            li_category_binding?.chipGroup?.addView(chip)
+            liCategoryBinding?.chipGroup?.addView(chip)
         }
     }
 
@@ -169,7 +193,7 @@ class ActivityHome : AppCompatActivity() {
     }
 
     private fun borrar_chip(chip: Chip){
-        li_category_binding?.chipGroup?.removeView(chip)
+        liCategoryBinding?.chipGroup?.removeView(chip)
     }
 
 

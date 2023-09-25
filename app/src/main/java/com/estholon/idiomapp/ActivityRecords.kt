@@ -62,7 +62,7 @@ class ActivityRecords : AppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.menu_cards -> {
-                    val intent = Intent(this@ActivityRecords, ActivityCards::class.java)
+                    val intent = Intent(this@ActivityRecords, ActivityCard::class.java)
                     startActivity(intent)
                 }
                 R.id.menu_match -> {
