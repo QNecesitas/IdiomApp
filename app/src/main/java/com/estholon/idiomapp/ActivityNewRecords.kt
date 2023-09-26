@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
@@ -176,7 +175,9 @@ class ActivityNewRecords : AppCompatActivity() {
         }
         binding.addRecord.setOnClickListener {
             if (viewModel.listRecords.value!=null) {
-                Log.e("XXX", viewModel.listRecords.value!!.get(0).sentence)
+                if(this.uriImageCut==null){
+                    this.uriImageCut= Uri.parse("no")
+                }
                 addRecordToBD(
                     this.uriImageCut.toString() ,
                     viewModel.listRecords.value!![0].sentence ,
@@ -184,9 +185,16 @@ class ActivityNewRecords : AppCompatActivity() {
 
                 )
                 val intent=Intent(this,ActivityRecords::class.java)
+                finish()
                 startActivity(intent)
             }
         }
+        adapterSentence.setClickDelete(object :AddSentenceAdapter.ITouchDelete{
+            override fun onClickDelete(record: Records,position:Int) {
+                viewModel.deleteSentence(record.id)
+            }
+
+        })
 
         viewModel.getAllIdioms()
 

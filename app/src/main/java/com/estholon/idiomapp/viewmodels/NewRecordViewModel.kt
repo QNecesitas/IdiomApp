@@ -57,6 +57,17 @@ class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesD
                 _listRecords.value=addListRecord
             }
         }
+    fun deleteSentence(id:Int){
+        viewModelScope.launch {
+            val deleteSentences = mutableListOf<Records>()
+            _listRecords.value?.let { deleteSentences.addAll(it) }
+            val sentenceAEliminar = deleteSentences.find { it.id == id }
+            if (sentenceAEliminar!=null){
+                deleteSentences.remove(sentenceAEliminar)
+            }
+            _listRecords.value=deleteSentences
+        }
+    }
 
     fun refreshCategories() {
         viewModelScope.launch {

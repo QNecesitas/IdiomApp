@@ -34,6 +34,7 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
 
     private var textChanged:ITouchTextChanged?=null
     private var onSpinnerListener:SpinnerListener?=null
+    private var clickDelete: ITouchDelete? = null
 
 
     class AddSentenceViewHolder(private var binding: RecyclerSentenceBinding) :
@@ -50,7 +51,8 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
             textToSpeechPt: TextToSpeech ,
             textToSpeechFr: TextToSpeech,
             textChanged: ITouchTextChanged?,
-            onSpinnerListener: SpinnerListener?
+            onSpinnerListener: SpinnerListener?,
+            clickDelete: ITouchDelete?
 
         ) {
 
@@ -62,6 +64,7 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
             binding.ivSound.setOnClickListener {
                 textToSpeech.speak(binding.etSentence.text.toString())
             }
+            binding.ivClose.setOnClickListener { clickDelete?.onClickDelete(record,adapterPosition) }
 
             val adapter = SpinnerAdapter(context , R.layout.custom_spinner , idioms)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
@@ -152,7 +155,8 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
             textToSpeechPt,
             textToSpeechFr,
             textChanged,
-            onSpinnerListener
+            onSpinnerListener,
+            clickDelete
         )
     }
 
@@ -183,6 +187,14 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
 
     fun setTextChanged(textChanged: ITouchTextChanged?) {
         this.textChanged = textChanged
+    }
+
+    interface ITouchDelete {
+        fun onClickDelete(record: Records,position: Int)
+    }
+
+    fun setClickDelete(clickDelete: ITouchDelete?) {
+        this.clickDelete = clickDelete
     }
 
 

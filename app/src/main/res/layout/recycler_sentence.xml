@@ -48,6 +48,16 @@
                 app:layout_constraintTop_toTopOf="parent">
 
             </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_close_24"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="2dp"
+                android:id="@+id/iv_close">
+
+            </ImageView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
