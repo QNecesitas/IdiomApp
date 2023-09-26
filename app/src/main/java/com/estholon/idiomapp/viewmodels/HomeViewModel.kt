@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.database.CategoriesDao
@@ -20,7 +21,6 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
 
     //List Idiom
     private val _listIdioms = MutableLiveData<MutableList<Idioms>>()
-    val listIdioms: LiveData<MutableList<Idioms>> get() = _listIdioms
 
     //List Idiom Right
     private val _listIdiomsRight = MutableLiveData<MutableList<Idioms>>()
@@ -30,11 +30,7 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
     private val _listIdiomsLeft = MutableLiveData<MutableList<Idioms>>()
     val listIdiomsLeft: LiveData<MutableList<Idioms>> get() = _listIdiomsLeft
 
-    private var itemIdiomRight = Idioms("FR","Français")
-
     private var lastPositionRight = 0;
-
-    private var itemIdiomLeft = Idioms("ES","Español")
 
     private var lastPositionLeft = 0;
 
@@ -57,13 +53,13 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
             tempListRight.addAll(it)
         }
 
-        tempListLeft.remove(itemIdiomRight)
-        tempListLeft.remove(itemIdiomLeft)
-        tempListLeft.add(lastPositionLeft,itemIdiomLeft)
+        tempListLeft.remove(InformationIntent.itemIdiomRight)
+        tempListLeft.remove(InformationIntent.itemIdiomLeft)
+        tempListLeft.add(lastPositionLeft,InformationIntent.itemIdiomLeft)
 
-        tempListRight.remove(itemIdiomLeft)
-        tempListRight.remove(itemIdiomRight)
-        tempListRight.add(lastPositionRight,itemIdiomRight)
+        tempListRight.remove(InformationIntent.itemIdiomLeft)
+        tempListRight.remove(InformationIntent.itemIdiomRight)
+        tempListRight.add(lastPositionRight,InformationIntent.itemIdiomRight)
 
         _listIdiomsLeft.value = tempListLeft
         _listIdiomsRight.value = tempListRight
@@ -72,14 +68,14 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
     fun selectedIdiomRight(idioms: Idioms, position: Int){
         lastPositionRight = position
         if (_listIdioms.value != null){
-            itemIdiomRight = idioms
+            InformationIntent.itemIdiomRight = idioms
         }
         filterIdioms()
     }
 
     fun selectedIdiomLeft(idioms: Idioms, position: Int){
         lastPositionLeft = position
-        if (_listIdioms.value != null) itemIdiomLeft = idioms
+        if (_listIdioms.value != null) InformationIntent.itemIdiomLeft = idioms
         filterIdioms()
     }
 

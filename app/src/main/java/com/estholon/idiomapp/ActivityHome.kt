@@ -9,13 +9,16 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.estholon.idiomapp.adapters.SpinnerAdapter
+import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.databinding.ActivityHomeBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
+import com.estholon.idiomapp.databinding.LiAllCategoryBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
 import com.estholon.idiomapp.viewmodels.HomeViewModelFactory
 import com.google.android.material.chip.Chip
@@ -25,7 +28,7 @@ class ActivityHome : AppCompatActivity() {
 
     private lateinit var binding : ActivityHomeBinding
 
-    private var liCategoryBinding: LiAddCategoryBinding? = null
+    private var liCategoryBinding: LiAllCategoryBinding? = null
 
     //View Model
     private val viewModel: HomeViewModel by viewModels {
@@ -78,7 +81,7 @@ class ActivityHome : AppCompatActivity() {
 
         //Listeners
         binding.tvIntroCate.setOnClickListener{
-            liAddCategory()
+            liAllCategory()
         }
 
         binding.btnRegistro.setOnClickListener{
@@ -128,21 +131,14 @@ class ActivityHome : AppCompatActivity() {
 
 
 
-    private fun liAddCategory(){
+    private fun liAllCategory(){
         val inflater = LayoutInflater.from(binding.root.context)
-        liCategoryBinding = LiAddCategoryBinding.inflate(inflater)
+        liCategoryBinding = LiAllCategoryBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
         builder.setView(liCategoryBinding!!.root)
         val alertDialog = builder.create()
 
         viewModel.refreshCategories()
-
-        liCategoryBinding?.ivAdd?.setOnClickListener{
-            if(liCategoryBinding?.tiet?.text.toString().isNotEmpty()){
-                viewModel.addCategory(liCategoryBinding?.tiet?.text.toString())
-                liCategoryBinding?.tiet?.setText("")
-            }
-        }
 
         liCategoryBinding!!.ivClose.setOnClickListener{
             alertDialog.dismiss()
@@ -164,8 +160,18 @@ class ActivityHome : AppCompatActivity() {
             chip.text = e.categories
             chip.isCheckable = true
             chip.isCloseIconVisible = true
+            if(InformationIntent.categoriesSelectedList.contains(e.categories)){
+                chip.isChecked = true
+            }
             chip.setOnCloseIconClickListener{
                 alert_borrar(chip)
+            }
+            chip.setOnCheckedChangeListener { compoundButton, b ->
+                if(b){
+                    InformationIntent.categoriesSelectedList.add(chip.text.toString())
+                }else{
+                    InformationIntent.categoriesSelectedList.remove(chip.text.toString())
+                }
             }
             liCategoryBinding?.chipGroup?.addView(chip)
         }

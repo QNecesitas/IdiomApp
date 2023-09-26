@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/adicionar_imagen"
-                    android:src="@drawable/baseline_add_photo_alternate_24" />
+                    android:src="@drawable/outline_image_24" />
             </androidx.cardview.widget.CardView>
 
             <!--Translations-->
