@@ -9,7 +9,7 @@
     <string name="traducciones">Traducciones</string>
     <string name="a_adir_otro_idioma">+ Añadir otro idioma</string>
     <string name="categor_as">Categorías</string>
-    <string name="a_adir_otra_etiqueta">+ Añadir otra etiqueta</string>
+    <string name="a_adir_otra_etiqueta">+ Añadir etiqueta</string>
     <string name="seleccionar">Seleccionar</string>
     <string name="Registro">Registro</string>
     <string name="Emparejar">Emparejar</string>
@@ -48,4 +48,5 @@
     <string name="Siguiente">Siguiente</string>
     <string name="Comprobar">Comprobar</string>
     <string name="Resolver">Resolver</string>
+    <string name="agregue_traducci_n">Agregue traducción</string>
 </resources>

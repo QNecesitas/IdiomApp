@@ -16,4 +16,7 @@ interface CategoriesDao {
     @Query("SELECT * FROM Category")
     suspend fun fetchCategories(): MutableList<Category>
 
+    @Query("DELETE FROM Category WHERE id=:id")
+    suspend fun deleteCategory(id:Int)
+
 }
