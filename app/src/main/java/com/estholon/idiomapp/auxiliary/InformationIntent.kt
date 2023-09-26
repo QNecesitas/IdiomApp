@@ -1,5 +1,6 @@
 package com.estholon.idiomapp.auxiliary
 
+import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 
 class InformationIntent {
@@ -7,6 +8,6 @@ class InformationIntent {
         var itemIdiomLeft = Idioms("ES","Español")
         var itemIdiomRight = Idioms("FR","Français")
 
-        var categoriesSelectedList = mutableListOf<String>()
+        var categoriesSelectedList = mutableListOf<Category>()
     }
 }

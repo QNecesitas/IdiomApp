@@ -160,7 +160,7 @@ class ActivityHome : AppCompatActivity() {
             chip.text = e.categories
             chip.isCheckable = true
             chip.isCloseIconVisible = true
-            if(InformationIntent.categoriesSelectedList.contains(e.categories)){
+            if(InformationIntent.categoriesSelectedList.contains(e)){
                 chip.isChecked = true
             }
             chip.setOnCloseIconClickListener{
@@ -168,9 +168,9 @@ class ActivityHome : AppCompatActivity() {
             }
             chip.setOnCheckedChangeListener { compoundButton, b ->
                 if(b){
-                    InformationIntent.categoriesSelectedList.add(chip.text.toString())
+                    InformationIntent.categoriesSelectedList.add(e)
                 }else{
-                    InformationIntent.categoriesSelectedList.remove(chip.text.toString())
+                    InformationIntent.categoriesSelectedList.remove(e)
                 }
             }
             liCategoryBinding?.chipGroup?.addView(chip)
