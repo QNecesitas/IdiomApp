@@ -48,5 +48,7 @@
     <string name="Siguiente">Siguiente</string>
     <string name="Comprobar">Comprobar</string>
     <string name="Resolver">Resolver</string>
+    <string name="Bandera">Bandera</string>
+    <string name="Pronunciar">Pronunciar</string>
     <string name="agregue_traducci_n">Agregue traducción</string>
 </resources>
