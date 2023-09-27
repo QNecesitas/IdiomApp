@@ -23,6 +23,8 @@ import com.estholon.idiomapp.data.Translations
     abstract fun recordsDao():RecordsDao
     abstract fun translationsDao():TranslationsDao
 
+    abstract fun cardDao():CardDao
+
         companion object {
             @Volatile
             private var INSTANCE: AppDatabase? = null

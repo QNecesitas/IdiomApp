@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
@@ -129,7 +130,7 @@ class ActivityCamera : AppCompatActivity() {
 
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    val msg = "Foto guardada en: ${output.savedUri}"
                     val file = ImageTools.createTempImageFile(
                         this@ActivityCamera,
                         ImageTools.getHoraActual("yyMMddHHmmss")
@@ -277,7 +278,8 @@ class ActivityCamera : AppCompatActivity() {
         if (data != null) {
             this.uriImageCut = UCrop.getOutput(data)
             val intent = Intent(this, ActivityNewRecords::class.java)
-            intent.putExtra("imageUri", uriImageCut.toString())
+            intent.putExtra("imageUri", this.uriImageCut.toString())
+            Log.e("XXX","${this.uriImageCut}")
             startActivity(intent)
         }
     }
