@@ -56,6 +56,7 @@ class ActivityWriting : AppCompatActivity() {
         
     }
 
+    //TODO Hay que hacer que al terminar se reinicie por si regresas de resultGame
     
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
