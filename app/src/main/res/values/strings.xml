@@ -51,6 +51,7 @@
     <string name="Bandera">Bandera</string>
     <string name="Pronunciar">Pronunciar</string>
     <string name="agregue_traducci_n">Agregue traducción</string>
+    <string name="no_existen_palabras_con_los_datos_introducidos">No existen registros con los idiomas o categorías seleccionadas</string>
     <string name="nuevo_registro">Nuevo Registro</string>
     <string name="editar_registro">Editar registro</string>
     <string name="Felicidades">¡Felicidades!</string>

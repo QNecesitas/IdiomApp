@@ -3,6 +3,7 @@ package com.estholon.idiomapp.auxiliary
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
+import android.os.Environment
 import android.util.Base64
 import android.util.Log
 import java.io.ByteArrayOutputStream
@@ -37,13 +38,17 @@ class ImageTools {
 
         @Throws(IOException::class)
         fun createTempImageFile(context: Context , nombre: String): File {
-            val storageDir = context.externalCacheDir
+            val carpeta="IdiomApp"
+            val storageDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),carpeta)
+            if (!storageDir.exists()) {
+                storageDir.mkdirs() // Crea la carpeta si no existe
+            }
             return File.createTempFile(nombre, ".png", storageDir)
         }
 
         @Throws(IOException::class)
         fun obtenerTempImageFile(context: Context , nombre: String): File {
-            val storageDir = context.externalCacheDir
+            val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             return File(storageDir, nombre)
         }
 

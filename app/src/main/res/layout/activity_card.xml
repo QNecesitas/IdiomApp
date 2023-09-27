@@ -94,17 +94,103 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/adicionar_imagen"
-                    android:src="@drawable/baseline_add_photo_alternate_24" />
+                    android:src="@drawable/outline_image_24" />
             </androidx.cardview.widget.CardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_language"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="20dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-            </androidx.recyclerview.widget.RecyclerView>
+
+               <androidx.constraintlayout.widget.ConstraintLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="60dp"
+                   android:layout_marginStart="24dp"
+                   android:layout_marginEnd="24dp">
+
+
+                   <ImageView
+                       android:layout_width="48dp"
+                       android:layout_height="48dp"
+                       android:src="@drawable/spain"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toTopOf="parent"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       android:layout_margin="8dp"
+                       android:id="@+id/iv_idiom">
+
+                   </ImageView>
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="@string/Cargando"
+                       android:textStyle="bold"
+                       app:layout_constraintTop_toTopOf="parent"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toEndOf="@id/iv_sound"
+                       android:textSize="16sp"
+                       android:layout_marginStart="12dp"
+                       android:id="@+id/tv_sentence"/>
+
+                   <ImageView
+                       android:id="@+id/iv_sound"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="8dp"
+                       android:src="@drawable/baseline_volume_up_24"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toEndOf="@id/iv_idiom"
+                       app:layout_constraintTop_toTopOf="parent">
+
+                   </ImageView>
+
+               </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp">
+
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/spain"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_margin="8dp"
+                        android:id="@+id/iv_idiom1">
+
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Cargando"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_sound1"
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp"
+                        android:id="@+id/tv_sentence1"/>
+
+                    <ImageView
+                        android:id="@+id/iv_sound1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/baseline_volume_up_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_idiom1"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </ImageView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <View
                 android:layout_width="match_parent"
@@ -112,6 +198,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="12dp"
                 android:background="?attr/colorPrimary">
 
             </View>
@@ -127,7 +214,8 @@
                     android:layout_height="40dp"
                     android:background="@drawable/button_redonded"
                     android:src="@drawable/baseline_skip_previous_24"
-                    app:tint="?attr/colorOnPrimary">
+                    app:tint="?attr/colorOnPrimary"
+                    android:id="@+id/last">
 
                 </ImageButton>
 
@@ -137,7 +225,8 @@
                     android:layout_marginStart="20dp"
                     android:background="@drawable/button_redonded"
                     android:src="@drawable/baseline_play_arrow_24"
-                    app:tint="?attr/colorOnPrimary">
+                    app:tint="?attr/colorOnPrimary"
+                    android:id="@+id/play">
 
                 </ImageButton>
 
@@ -147,11 +236,52 @@
                     android:layout_marginStart="20dp"
                     android:background="@drawable/button_redonded"
                     android:src="@drawable/baseline_skip_next_24"
-                    app:tint="?attr/colorOnPrimary">
+                    app:tint="?attr/colorOnPrimary"
+                    android:id="@+id/next">
 
                 </ImageButton>
             </LinearLayout>
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/AppBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="?attr/colorOnPrimary"
+            android:visibility="gone"
+            android:id="@+id/cl_list_null">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_existen_palabras_con_los_datos_introducidos"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mb_return"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/button_redonded"
+                android:text="Volver"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            </com.google.android.material.button.MaterialButton>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

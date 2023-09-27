@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
@@ -142,6 +143,7 @@ class ActivityNewRecords : AppCompatActivity() {
             // Cargar la imagen en la ImageView
             this.uriImageCut = Uri.parse(imageUri)
             binding.ivAddimage.setImageURI(this.uriImageCut)
+            Log.e("YYY","${this.uriImageCut}")
         }
 
         //Results launchers
@@ -184,9 +186,7 @@ class ActivityNewRecords : AppCompatActivity() {
                     viewModel.listRecords.value!![0].idIdiom
 
                 )
-                val intent=Intent(this,ActivityRecords::class.java)
                 finish()
-                startActivity(intent)
             }
         }
         adapterSentence.setClickDelete(object :AddSentenceAdapter.ITouchDelete{
