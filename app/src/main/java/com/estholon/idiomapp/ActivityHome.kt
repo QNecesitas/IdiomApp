@@ -13,6 +13,7 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.SpinnerAdapter
 import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
@@ -202,6 +203,32 @@ class ActivityHome : AppCompatActivity() {
         liCategoryBinding?.chipGroup?.removeView(chip)
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        showAlertDialogExit()
+    }
+
+    private fun showAlertDialogExit() {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle(R.string.salir)
+        builder.setMessage(R.string.seguro_desea_salir)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Si) { _, _ ->
+            //finish the activity
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+        builder.setNegativeButton(R.string.No) { dialog, _ ->
+            //dialog gone
+            dialog.dismiss()
+        }
+        //create the alert dialog and show it
+        builder.create().show()
+    }
 
 
 }

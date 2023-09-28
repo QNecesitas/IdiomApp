@@ -22,6 +22,12 @@
         android:theme="@style/Theme.IdiomApp"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityResultGame"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityEditRecord"
+            android:exported="false" />
+        <activity
             android:name=".ActivityCard"
             android:exported="false" />
         <activity
