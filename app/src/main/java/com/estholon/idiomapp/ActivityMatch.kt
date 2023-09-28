@@ -57,6 +57,8 @@ class ActivityMatch : AppCompatActivity() {
 
 
     }
+
+    //TODO Hay que hacer que al finalizar se reincicie el progreso de ResultGame
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {

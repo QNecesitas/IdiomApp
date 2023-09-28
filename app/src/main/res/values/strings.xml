@@ -63,4 +63,10 @@
     <string name="seguro_desea_salir">¿Desea salir de la aplicación?</string>
     <string name="Si">Sí</string>
     <string name="No">No</string>
+    <string name="felicidades">¡Felicidades!</string>
+    <string name="La_respuesta_es_correcta">La respuesta es correcta</string>
+    <string name="La_respuesta_es_incorrecta">La respuesta es incorrecta</string>
+    <string name="Errores_aciertos">Hasta ahora Errores: %d  Aciertos: %d</string>
+    <string name="lo_sentimos">¡Ups!</string>
+    <string name="ups">¡Ups!</string>
 </resources>

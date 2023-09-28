@@ -1,6 +1,6 @@
 package com.estholon.idiomapp.data
 
-data class Card (
+data class WritingCard (
     val id:Int,
     val sentence:String,
     val translation:String,

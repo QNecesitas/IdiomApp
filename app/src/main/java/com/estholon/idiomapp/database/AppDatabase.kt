@@ -23,7 +23,7 @@ import com.estholon.idiomapp.data.Translations
     abstract fun recordsDao():RecordsDao
     abstract fun translationsDao():TranslationsDao
 
-    abstract fun cardDao():CardDao
+    abstract fun cardDao():WritingCardDao
 
         companion object {
             @Volatile

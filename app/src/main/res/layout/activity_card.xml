@@ -61,6 +61,7 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <!--Content-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -132,8 +133,8 @@
 
                    <ImageView
                        android:id="@+id/iv_sound"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
+                       android:layout_width="40dp"
+                       android:layout_height="40dp"
                        android:layout_marginStart="8dp"
                        android:src="@drawable/baseline_volume_up_24"
                        app:layout_constraintBottom_toBottomOf="parent"
@@ -179,8 +180,8 @@
 
                     <ImageView
                         android:id="@+id/iv_sound1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_marginStart="8dp"
                         android:src="@drawable/baseline_volume_up_24"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -243,6 +244,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!--View to Empty case-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -255,14 +257,17 @@
             android:id="@+id/cl_list_null">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/no_existen_palabras_con_los_datos_introducidos"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_m"
                 android:textStyle="bold"/>
 
             <com.google.android.material.button.MaterialButton
@@ -294,5 +299,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/navigation_menu" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

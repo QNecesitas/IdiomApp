@@ -21,10 +21,11 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/seleccionar"
+                android:text="@string/idiomapp"
                 android:textColor="@color/seed"
                 android:textSize="20sp" />
 
@@ -33,175 +34,215 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--View-->
-    <View
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="0dp"
-        android:layout_height="0.5dp"
+    <!--Container buttons-->
+    <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@id/AppBar"
-        android:background="?attr/colorPrimary"/>
-
-    <!--Button Registro-->
-    <Button
-        android:id="@+id/btn_registro"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/almostredonded_price_red"
-        android:padding="12dp"
-        android:text="@string/Registro"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/AppBar" />
+        android:maxWidth="600dp"
+        android:id="@+id/containerButtons"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content">
+
+        <!--Button Register-->
+        <Button
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/btn_registro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/almost_redonded_price_red"
+            android:padding="12dp"
+            android:text="@string/Registro"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
-    <!--Button Tarjeta-->
-    <Button
-        android:id="@+id/btn_cards"
+        <!--Button Card-->
+        <Button
+            android:id="@+id/btn_cards"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/almost_redonded_price_red"
+            android:padding="12dp"
+            android:text="@string/tarjetas"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_registro" />
+
+
+        <!--Button Writing-->
+        <Button
+            android:id="@+id/btn_writing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/almost_redonded_price_red"
+            android:padding="12dp"
+            android:text="@string/Escritura"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_cards" />
+
+
+        <!--Button Match-->
+        <Button
+            android:id="@+id/btn_match"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/almost_redonded_price_red"
+            android:padding="12dp"
+            android:text="@string/Emparejar"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_writing" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Container idioms-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintBottom_toTopOf="@id/container_categories"
+        android:id="@+id/container_idiom"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/almostredonded_price_red"
-        android:padding="12dp"
-        android:text="@string/tarjetas"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:maxWidth="600dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_registro" />
-
-
-    <!--Button Escritura-->
-    <Button
-        android:id="@+id/btn_writing"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/almostredonded_price_red"
-        android:padding="12dp"
-        android:text="@string/Escritura"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/containerButtons"
+        android:layout_height="wrap_content">
+
+        <!--tv idioms-->
+        <TextView
+            android:id="@+id/tv_idiomas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="@string/IDIOMAS"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/ll_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--ll container spinner-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+
+            <!--tv de-->
+            <TextView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom1"
+                android:id="@+id/tvDe"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/de"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp" />
+
+            <!--spinner Pais 1-->
+            <Spinner
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvA"
+                app:layout_constraintStart_toEndOf="@id/tvDe"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/spinnerIdiom1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"/>
+
+            <!--tv a-->
+            <TextView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom2"
+                app:layout_constraintStart_toEndOf="@id/spinnerIdiom1"
+                android:id="@+id/tvA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/a"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp" />
+
+            <!--spinner Pais 2-->
+            <Spinner
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvA"
+                android:id="@+id/spinnerIdiom2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Container categories-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_categories"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_cards" />
-
-
-    <!--Button Emparejar-->
-    <Button
-        android:id="@+id/btn_match"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/almostredonded_price_red"
-        android:padding="12dp"
-        android:text="@string/Emparejar"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_writing" />
-
-
-    <!--tv idiomas-->
-    <TextView
-        android:id="@+id/tv_idiomas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="@string/IDIOMAS"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/ll_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!--ll container-->
-    <LinearLayout
-        android:id="@+id/ll_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/container_idiom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_match">
+        android:layout_width="0sp"
+        android:maxWidth="600dp"
+        android:layout_height="wrap_content">
 
-        <!--tv de-->
+        <!--tv idioms-->
         <TextView
+            android:id="@+id/tv_categorias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="20dp"
-            android:text="@string/de"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp" />
+            android:layout_marginTop="20dp"
+            android:text="@string/CATEGORIAS"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!--spinner Pais 1-->
-        <Spinner
-            android:id="@+id/spinnerIdiom1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_margin="12dp"/>
-
-
-        <!--tv a-->
+        <!--tv idioms-->
         <TextView
+            android:id="@+id/tv_introCate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/a"
+            android:layout_marginTop="8dp"
+            android:text="@string/introCate"
             android:textColor="?attr/colorPrimary"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_categorias" />
 
-        <!--spinner Pais 2-->
-        <Spinner
-            android:id="@+id/spinnerIdiom2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_margin="12dp"/>
-
-    </LinearLayout>
-
-
-    <!--tv idiomas-->
-    <TextView
-        android:id="@+id/tv_categorias"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/CATEGORIAS"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_container" />
-
-
-    <!--tv idiomas-->
-    <TextView
-        android:id="@+id/tv_introCate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/introCate"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_categorias" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
