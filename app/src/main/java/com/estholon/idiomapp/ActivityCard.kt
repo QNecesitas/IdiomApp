@@ -36,8 +36,7 @@ class ActivityCard : AppCompatActivity() {
         CardViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)   {
         super.onCreate(savedInstanceState)
         binding = ActivityCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -50,19 +49,18 @@ class ActivityCard : AppCompatActivity() {
         textToSpeechFr= TextToSpeech(this, Locale("fr","FR")){}
         textToSpeech=textToSpeechEs
         textToSpeech1=textToSpeechEs
-
         textToSpeech=textToSpeechEs
 
 
         //Observe
-        viewModel.cardSelected.observe(this){
+        viewModel.writingCardSelected.observe(this){
             fillOutCard()
         }
 
-        viewModel.listCard.observe(this){
-            if (viewModel.listCard.value!!.isEmpty()){
+        viewModel.listWritingCard.observe(this){
+            if (viewModel.listWritingCard.value?.isEmpty() == true){
                 binding.clListNull.visibility=View.VISIBLE
-        }
+            }
         }
 
         viewModel.state.observe(this){
@@ -87,11 +85,11 @@ class ActivityCard : AppCompatActivity() {
             finish()
         }
         binding.ivSound.setOnClickListener {
-            viewModel.cardSelected.value?.get(0)
+            viewModel.writingCardSelected.value?.get(0)
                 ?.let { it1 -> textToSpeech.speak(it1.sentence) }
         }
         binding.ivSound1.setOnClickListener {
-            viewModel.cardSelected.value?.get(0)
+            viewModel.writingCardSelected.value?.get(0)
                 ?.let { it1 -> textToSpeech1.speak(it1.translation) }
         }
         binding.next.setOnClickListener {
@@ -159,11 +157,11 @@ class ActivityCard : AppCompatActivity() {
 
     }
     private fun fillOutCard(){
-        val image=viewModel.cardSelected.value?.get(0)?.image
+        val image=viewModel.writingCardSelected.value?.get(0)?.image
         val imageUri=Uri.parse(image)
         binding.ivAddimage.setImageURI(imageUri)
-        if (InformationIntent.itemIdiomLeft.id==viewModel.cardSelected.value?.get(0)?.idiomSentence) {
-            when (viewModel.cardSelected.value?.get(0)?.idiomSentence) {
+        if (InformationIntent.itemIdiomLeft.id==viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
+            when (viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
                 "ES" -> {
 
                     textToSpeech = textToSpeechEs
@@ -207,7 +205,7 @@ class ActivityCard : AppCompatActivity() {
 
             }
 
-            when (viewModel.cardSelected.value?.get(0)?.idiomTranslation) {
+            when (viewModel.writingCardSelected.value?.get(0)?.idiomTranslation) {
                 "ES" -> {
 
                     textToSpeech1 = textToSpeechEs
@@ -251,10 +249,10 @@ class ActivityCard : AppCompatActivity() {
 
             }
 
-            binding.tvSentence.text = viewModel.cardSelected.value?.get(0)?.sentence
-            binding.tvSentence1.text = viewModel.cardSelected.value?.get(0)?.translation
+            binding.tvSentence.text = viewModel.writingCardSelected.value?.get(0)?.sentence
+            binding.tvSentence1.text = viewModel.writingCardSelected.value?.get(0)?.translation
         }else{
-            when (viewModel.cardSelected.value?.get(0)?.idiomTranslation) {
+            when (viewModel.writingCardSelected.value?.get(0)?.idiomTranslation) {
                 "ES" -> {
 
                     textToSpeech = textToSpeechEs
@@ -298,7 +296,7 @@ class ActivityCard : AppCompatActivity() {
 
             }
 
-            when (viewModel.cardSelected.value?.get(0)?.idiomSentence) {
+            when (viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
                 "ES" -> {
 
                     textToSpeech1 = textToSpeechEs
@@ -342,11 +340,12 @@ class ActivityCard : AppCompatActivity() {
 
             }
 
-            binding.tvSentence.text = viewModel.cardSelected.value?.get(0)?.translation
-            binding.tvSentence1.text = viewModel.cardSelected.value?.get(0)?.sentence
+            binding.tvSentence.text = viewModel.writingCardSelected.value?.get(0)?.translation
+            binding.tvSentence1.text = viewModel.writingCardSelected.value?.get(0)?.sentence
         }
 
     }
+
     fun nextCard(){
         viewModel.nextCard()
     }
