@@ -1,13 +1,11 @@
 package com.estholon.idiomapp
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageCapture
@@ -25,6 +23,7 @@ import com.estholon.idiomapp.auxiliary.ImageTools
 import com.google.common.util.concurrent.ListenableFuture
 import com.shashank.sony.fancytoastlib.FancyToast
 import com.yalantis.ucrop.UCrop
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -101,47 +100,47 @@ class ActivityCamera : AppCompatActivity() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
 
-        // Create time stamped name and MediaStore entry.
+        // Create a time stamped name for the image
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
+
+        // Get the cache directory for your application
+        val cacheDir = this.cacheDir
+
+        // Create a subdirectory within the cache directory if it doesn't exist
+        val cacheSubDir = File(cacheDir, "IdiomApp")
+        if (!cacheSubDir.exists()) {
+            cacheSubDir.mkdirs()
         }
 
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
+        // Create a File object to represent the output file in the cache
+        val imageFile = File(cacheSubDir, "$name.png")
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        // Create output options object with the file in cache
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(imageFile).build()
+
+        // Set up the image capture listener, which is triggered after the photo is taken
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
+                    // Handle the error
                 }
 
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Foto guardada en: ${output.savedUri}"
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Foto guardada en: ${imageFile.absolutePath}"
                     val file = ImageTools.createTempImageFile(
                         this@ActivityCamera,
                         ImageTools.getHoraActual("yyMMddHHmmss")
                     )
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    cutImage(output.savedUri!! ,Uri.fromFile(file))
+                    cutImage(Uri.fromFile(imageFile), Uri.fromFile(file))
                 }
             }
         )
-
     }
+
 
     private fun startCamera() {
 
@@ -279,7 +278,6 @@ class ActivityCamera : AppCompatActivity() {
             this.uriImageCut = UCrop.getOutput(data)
             val intent = Intent(this, ActivityNewRecords::class.java)
             intent.putExtra("imageUri", this.uriImageCut.toString())
-            Log.e("XXX","${this.uriImageCut}")
             startActivity(intent)
         }
     }

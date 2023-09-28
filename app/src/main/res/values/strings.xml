@@ -52,4 +52,6 @@
     <string name="Pronunciar">Pronunciar</string>
     <string name="agregue_traducci_n">Agregue traducción</string>
     <string name="no_existen_palabras_con_los_datos_introducidos">No existen registros con los idiomas o categorías seleccionadas</string>
+    <string name="no_hay_suficientes_registros">No existen registros suficientes con los idiomas o categorías seleccionadas</string>
+    <string name="volver">Volver</string>
 </resources>

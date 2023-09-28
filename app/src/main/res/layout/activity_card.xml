@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ActivityCard">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ActivityCard">
+        android:layout_height="match_parent">
 
         <!--Toolbar-->
         <com.google.android.material.appbar.AppBarLayout
@@ -33,20 +33,18 @@
                     android:layout_gravity="center"
                     android:text="@string/Tarjetas"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="20sp">
+                    android:textSize="20sp"/>
 
-                </TextView>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="20dp"
-                    android:text="2.0X"
+                    android:text="1.0X"
                     android:textSize="20sp"
-                    android:textStyle="bold">
-
-                </TextView>
+                    android:textStyle="bold"
+                    android:id="@+id/tv_speed"/>
 
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -87,7 +85,8 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="8dp"
                 app:cardMaxElevation="8dp"
-                app:contentPadding="0dp">
+                app:contentPadding="0dp"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/iv_addimage"
@@ -103,7 +102,9 @@
                    android:layout_width="match_parent"
                    android:layout_height="60dp"
                    android:layout_marginStart="24dp"
-                   android:layout_marginEnd="24dp">
+                   android:layout_marginEnd="24dp"
+                   android:id="@+id/cl_sentence"
+                   android:visibility="invisible">
 
 
                    <ImageView
@@ -150,7 +151,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp">
+                    android:layout_marginEnd="24dp"
+                    android:id="@+id/cl_sentence1"
+                    android:visibility="invisible">
 
 
                     <ImageView

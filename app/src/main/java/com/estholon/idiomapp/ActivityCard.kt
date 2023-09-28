@@ -1,5 +1,6 @@
 package com.estholon.idiomapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,7 @@ class ActivityCard : AppCompatActivity() {
         CardViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCardBinding.inflate(layoutInflater)
@@ -63,6 +65,24 @@ class ActivityCard : AppCompatActivity() {
         }
         }
 
+        viewModel.state.observe(this){
+            when(it){
+                CardViewModel.StateTime.START -> binding.cvAddImage.visibility=View.VISIBLE
+                CardViewModel.StateTime.FIRST_WORLD -> binding.clSentence.visibility=View.VISIBLE
+                CardViewModel.StateTime.SECOND_WORLD -> binding.clSentence1.visibility=View.VISIBLE
+                CardViewModel.StateTime.FINISH ->{
+                    binding.cvAddImage.visibility=View.INVISIBLE
+                    binding.clSentence.visibility=View.INVISIBLE
+                    binding.clSentence1.visibility=View.INVISIBLE
+                    viewModel.nextCard()
+                    viewModel.timeToShow()
+                }
+            }
+        }
+        viewModel.speed.observe(this){
+            binding.tvSpeed.text = "${viewModel.speed.value}" + "x"
+        }
+
         binding.mbReturn.setOnClickListener {
             finish()
         }
@@ -79,6 +99,15 @@ class ActivityCard : AppCompatActivity() {
         }
         binding.last.setOnClickListener {
             lastCard()
+        }
+        binding.play.setOnClickListener {
+            if(viewModel.playStop.value == true){
+                viewModel.timeToShow()
+            }
+            viewModel.timeToShow()
+        }
+        binding.tvSpeed.setOnClickListener {
+            viewModel.speed()
         }
 
 

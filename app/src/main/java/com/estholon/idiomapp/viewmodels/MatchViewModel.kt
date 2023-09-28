@@ -8,12 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.estholon.idiomapp.data.Card
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
+import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.database.CardDao
 import com.estholon.idiomapp.database.Record_CategoriesDao
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class CardViewModel(private val cardDao: CardDao,private val recordCategoriesdao: Record_CategoriesDao):ViewModel() {
+class MatchViewModel(private val cardDao: CardDao , private val recordCategoriesdao: Record_CategoriesDao):ViewModel() {
 
     //List category
     private val _listCard = MutableLiveData<MutableList<Card>>()
@@ -21,27 +21,17 @@ class CardViewModel(private val cardDao: CardDao,private val recordCategoriesdao
 
     private val _listRecordCategory = MutableLiveData<MutableList<Record_Categories>>()
     val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
-    var iterador = 0
 
     private val _cardSelected = MutableLiveData<MutableList<Card>>()
     val cardSelected: LiveData<MutableList<Card>> get() = _cardSelected
 
-    enum class StateTime { START , FIRST_WORLD , SECOND_WORLD , FINISH }
-
-    private val _state = MutableLiveData<StateTime>()
-    val state: LiveData<StateTime> get() = _state
-
-    private val _speed = MutableLiveData<Double>()
-    val speed: LiveData<Double> get() = _speed
-
-    private val _playStop = MutableLiveData<Boolean>()
-    val playStop: LiveData<Boolean> get() = _playStop
+    private val _matchRecord = MutableLiveData<MutableList<Records>>()
+    val matchRecord: LiveData<MutableList<Records>> get() = _matchRecord
 
 
-    init {
-        _speed.value = 1.0
-        _playStop.value=true
-    }
+
+
+
 
 
     //Obtain info
@@ -110,103 +100,56 @@ class CardViewModel(private val cardDao: CardDao,private val recordCategoriesdao
             _listCard.value = listCardFilter
             if (listCard.value!!.isNotEmpty()) {
                 listCard.value?.shuffle()
-                val cardSelectedList = mutableListOf<Card>()
-                listCard.value?.let { cardSelectedList.add(it.get(0)) }
-                _cardSelected.value = cardSelectedList
+                if (listCard.value!!.size>=4){
+                    val cardSelectedList = mutableListOf<Card>()
+                    for (i in 0 until 4){
+                        listCard.value?.let { cardSelectedList.add(it.get(i)) }
+                    }
+                    _cardSelected.value = cardSelectedList
+                }
+
+
             }
+            listGetMatch()
         }
     }
+
 
     fun getWithOutCategories() {
-        listCard.value?.shuffle()
-        val cardSelectedList = mutableListOf<Card>()
-        listCard.value?.let { cardSelectedList.add(it.get(0)) }
-        _cardSelected.value = cardSelectedList
-    }
-
-    fun nextCard() {
-        iterador++
-        if (iterador < listCard.value!!.size) {
-            _cardSelected.value?.clear()
-            val nextCardList = mutableListOf<Card>()
-            listCard.value?.get(iterador)?.let { nextCardList.add(it) }
-            _cardSelected.value = nextCardList
-        } else {
-            iterador = 0
+        if (listCard.value!!.isNotEmpty()) {
             listCard.value?.shuffle()
-            _cardSelected.value?.clear()
-            val cardSelectedList = mutableListOf<Card>()
-            listCard.value?.let { cardSelectedList.add(it.get(iterador)) }
-            _cardSelected.value = cardSelectedList
-        }
-    }
-
-    fun lastCard() {
-        iterador--
-        if (iterador >= 0) {
-            _cardSelected.value?.clear()
-            val lastCardList = mutableListOf<Card>()
-            listCard.value?.get(iterador)?.let { lastCardList.add(it) }
-            _cardSelected.value = lastCardList
-        } else {
-            iterador = listCard.value!!.size - 1
-            listCard.value?.shuffle()
-            _cardSelected.value?.clear()
-            val cardSelectedList = mutableListOf<Card>()
-            listCard.value?.let { cardSelectedList.add(it.get(iterador)) }
-            _cardSelected.value = cardSelectedList
-        }
-    }
-
-    fun timeToShow() {
-        viewModelScope.launch {
-            val time = 2000 / speed.value!!
-            val delayTime: Long = time.toLong()
-            _state.value = StateTime.START
-            delay(delayTime)
-            _state.value = StateTime.FIRST_WORLD
-            delay(delayTime)
-            _state.value = StateTime.SECOND_WORLD
-            delay(delayTime)
-            _state.value = StateTime.FINISH
-            delay(delayTime)
-        }
-
-    }
-
-    fun speed() {
-        when (speed.value) {
-            1.0 -> {
-                _speed.value = 2.0
+            if (listCard.value!!.size>=4){
+                val cardSelectedList = mutableListOf<Card>()
+                for (i in 0 until 4){
+                    listCard.value?.let { cardSelectedList.add(it.get(i)) }
+                }
+                _cardSelected.value = cardSelectedList
             }
 
-            2.0 -> {
-                _speed.value = 0.5
-            }
 
-            0.5 -> {
-                _speed.value = 1.0
-            }
         }
+        listGetMatch()
+    }
+
+    fun listGetMatch(){
+         val listMatch= mutableListOf<Records>()
+        for (matchRandom in cardSelected.value!!){
+            listMatch.add(Records(matchRandom.id,matchRandom.sentence,"no",matchRandom.idiomSentence))
+            listMatch.add(Records(matchRandom.id,matchRandom.translation,"no",matchRandom.idiomTranslation))
+        }
+        listMatch.shuffle()
+        _matchRecord.value =listMatch
     }
 }
-
-
-
-
-
-
-
-
-class CardViewModelFactory(
+class MatchViewModelFactory(
     private val cardDao: CardDao ,
     private val recordCategoriesdao: Record_CategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CardViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MatchViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CardViewModel(cardDao,recordCategoriesdao ) as T
+            return MatchViewModel(cardDao,recordCategoriesdao ) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }

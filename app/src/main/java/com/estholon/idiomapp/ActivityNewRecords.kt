@@ -143,7 +143,6 @@ class ActivityNewRecords : AppCompatActivity() {
             // Cargar la imagen en la ImageView
             this.uriImageCut = Uri.parse(imageUri)
             binding.ivAddimage.setImageURI(this.uriImageCut)
-            Log.e("YYY","${this.uriImageCut}")
         }
 
         //Results launchers
