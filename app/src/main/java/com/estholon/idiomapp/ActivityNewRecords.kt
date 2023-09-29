@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
@@ -210,10 +209,12 @@ class ActivityNewRecords : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             val contentUri = data?.data
+
             val file = ImageTools.createTempImageFile(
                 this@ActivityNewRecords,
                 ImageTools.getHoraActual("yyMMddHHmmss")
             )
+
             if (contentUri != null) {
                 cutImage(contentUri, Uri.fromFile(file))
             } else {
@@ -223,6 +224,7 @@ class ActivityNewRecords : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
         } else {
             Toast.makeText(
                 this@ActivityNewRecords,
@@ -337,7 +339,7 @@ class ActivityNewRecords : AppCompatActivity() {
                 chip.isChecked=true
             }
             chip.setOnCloseIconClickListener{
-                alert_borrar(chip,e.id)
+                alertDelete(chip,e.id)
             }
             chip.setOnClickListener {
                 if (chip.isChecked){
@@ -351,16 +353,16 @@ class ActivityNewRecords : AppCompatActivity() {
         }
     }
 
-    private fun alert_borrar(chip: Chip,id:Int) {
+    private fun alertDelete(chip: Chip, id:Int) {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(this)
         builder.setCancelable(false)
-        builder.setTitle(getString(R.string.Borrar))
+        builder.setTitle(getString(R.string.Esta_seguro_borrar))
         builder.setMessage(R.string.al_borrar)
         //set listeners for dialog buttons
         builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
             //finish the activity
-            borrar_chip(chip,id)
+            deleteChip(chip,id)
             dialog.dismiss()
         }
         builder.setNegativeButton(R.string.Cancelar){ dialog , _ ->
@@ -372,7 +374,7 @@ class ActivityNewRecords : AppCompatActivity() {
         builder.create().show()
     }
 
-    private fun borrar_chip(chip: Chip,id:Int){
+    private fun deleteChip(chip: Chip, id:Int){
         liCategoryBinding.chipGroup.removeView(chip)
         viewModel.deleteCategoryRecord(id)
         viewModel.deleteCategories(id)

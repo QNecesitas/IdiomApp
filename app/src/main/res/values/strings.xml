@@ -32,7 +32,7 @@
     <string name="idiomapp">IDIOMAPP</string>
     <string name="categor_a">Categorías</string>
     <string name="Borrar">Borrar</string>
-    <string name="al_borrar">Se perderá la categoría</string>
+    <string name="al_borrar">Se eliminará esta categoría de cada expresión guardada</string>
     <string name="imagen_de_idiomapp">Imagen de IdiomApp</string>
     <string name="Anadir">Añadir</string>
     <string name="su_dispositivo_no_permite_este_lenguaje">Su dispositivo no admite el lenguaje: %s</string>
@@ -71,4 +71,10 @@
     <string name="ups">¡Ups!</string>
     <string name="no_hay_suficientes_registros">No existen registros suficientes con los idiomas o categorías seleccionadas</string>
     <string name="volver">Volver</string>
+    <string name="Esta_seguro_borrar">¿Desea realmente eliminar la categoría?</string>
+    <string name="hablar">Pronunciar</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="Traduccion">Traducción</string>
+    <string name="idioma">Idioma</string>
+    <string name="MenuPrincipal">Menú Principal</string>
 </resources>

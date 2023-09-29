@@ -10,14 +10,11 @@ import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.SentenceAdapter
 import com.estholon.idiomapp.adapters.SpinnerAdapter
-import com.estholon.idiomapp.auxiliary.TextToSpeech
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.ActivityRecordsBinding
-import com.estholon.idiomapp.databinding.RecyclerGetSentencesBinding
 import com.estholon.idiomapp.viewmodels.RecordViewModel
 import com.estholon.idiomapp.viewmodels.RecordViewModelFactory
-import java.util.Locale
 
 class ActivityRecords : AppCompatActivity() {
 
@@ -26,8 +23,14 @@ class ActivityRecords : AppCompatActivity() {
 
     //View Model
     private val viewModel: RecordViewModel by viewModels {
-        RecordViewModelFactory((application as IdiomApp).database.recordsDao(),(application as IdiomApp).database.idiomsDao())
+        RecordViewModelFactory(
+            (application as IdiomApp).database.recordsDao(),
+            (application as IdiomApp).database.idiomsDao(),
+            (application as IdiomApp).database.translationsDao(),
+        )
     }
+
+
 
     //Recycler
     private lateinit var alRecord: MutableList<Records>
@@ -44,9 +47,9 @@ class ActivityRecords : AppCompatActivity() {
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
             }else{
-                binding.drawerLayout.openDrawer(GravityCompat.START);
+                binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
         val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_record)
@@ -115,17 +118,17 @@ class ActivityRecords : AppCompatActivity() {
 
 
         //Spinner
-        val spinnerPersonalizado = binding.spinnerPersonalizado
+        val customSpinner = binding.customSpinner
 
         viewModel.listIdioms.observe(this) { items ->
-            // Actualiza el adaptador del Spinner cuando cambian los elementos
+            // Updating the adapter
             val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
-            spinnerPersonalizado.adapter = adapter
+            customSpinner.adapter = adapter
 
         }
 
-        spinnerPersonalizado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        customSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>? ,
                 view: View? ,
@@ -133,7 +136,7 @@ class ActivityRecords : AppCompatActivity() {
                 id: Long
             ) {
 
-                val selectedItem = spinnerPersonalizado.selectedItem as Idioms
+                val selectedItem = customSpinner.selectedItem as Idioms
 
                 binding.search.setQuery("",false)
                 // Accede al ID del objeto seleccionado
@@ -173,7 +176,7 @@ class ActivityRecords : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         }else{
             finish()
         }

@@ -37,13 +37,9 @@ class ImageTools {
         }
 
         @Throws(IOException::class)
-        fun createTempImageFile(context: Context , nombre: String): File {
-            val carpeta="IdiomApp"
-            val storageDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),carpeta)
-            if (!storageDir.exists()) {
-                storageDir.mkdirs() // Crea la carpeta si no existe
-            }
-            return File.createTempFile(nombre, ".png", storageDir)
+        fun createTempImageFile(context: Context, name: String): File {
+            val storageDir = context.filesDir
+            return File.createTempFile(name, ".png", storageDir)
         }
 
         @Throws(IOException::class)

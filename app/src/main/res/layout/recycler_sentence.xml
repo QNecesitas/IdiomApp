@@ -9,53 +9,59 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="1dp"
-        android:translationZ="8dp"
-        app:cardElevation="8dp">
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
+        app:cardElevation="@dimen/cardview_default_elevation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <Spinner
-                android:id="@+id/spinner_personalizado"
+                android:id="@+id/custom_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="200dp"
-                android:layout_marginStart="12dp"
-                app:layout_constraintStart_toEndOf="@id/iv_sound"
-                android:hint="@string/agregue_traducci_n"
+                android:layout_marginStart="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:id="@+id/et_sentence">
-            </EditText>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_sound"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:contentDescription="@string/hablar"
                 android:src="@drawable/baseline_volume_up_24"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/spinner_personalizado"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toEndOf="@id/custom_spinner"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </ImageView>
+            <EditText
+                android:id="@+id/et_sentence"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:autofillHints="none"
+                android:hint="@string/Traduccion"
+                android:inputType="text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_close"
+                app:layout_constraintStart_toEndOf="@id/iv_sound" />
+
+
             <ImageView
+                android:id="@+id/iv_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_close_24"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="2dp"
-                android:id="@+id/iv_close">
+                android:contentDescription="@string/cerrar"
+                android:src="@drawable/baseline_close_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
             </ImageView>
 

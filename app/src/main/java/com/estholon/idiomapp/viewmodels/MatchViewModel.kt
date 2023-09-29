@@ -5,25 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.estholon.idiomapp.data.Card
+import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
 import com.estholon.idiomapp.data.Records
-import com.estholon.idiomapp.database.CardDao
+import com.estholon.idiomapp.database.WritingCardDao
 import com.estholon.idiomapp.database.Record_CategoriesDao
 import kotlinx.coroutines.launch
 
-class MatchViewModel(private val cardDao: CardDao , private val recordCategoriesdao: Record_CategoriesDao):ViewModel() {
+class MatchViewModel(private val cardDao: WritingCardDao , private val recordCategoriesdao: Record_CategoriesDao):ViewModel() {
 
     //List category
-    private val _listCard = MutableLiveData<MutableList<Card>>()
-    val listCard: LiveData<MutableList<Card>> get() = _listCard
+    private val _listCard = MutableLiveData<MutableList<WritingCard>>()
+    val listCard: LiveData<MutableList<WritingCard>> get() = _listCard
 
     private val _listRecordCategory = MutableLiveData<MutableList<Record_Categories>>()
     val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
 
-    private val _cardSelected = MutableLiveData<MutableList<Card>>()
-    val cardSelected: LiveData<MutableList<Card>> get() = _cardSelected
+    private val _cardSelected = MutableLiveData<MutableList<WritingCard>>()
+    val cardSelected: LiveData<MutableList<WritingCard>> get() = _cardSelected
 
     private val _matchRecord = MutableLiveData<MutableList<Records>>()
     val matchRecord: LiveData<MutableList<Records>> get() = _matchRecord
@@ -84,11 +84,11 @@ class MatchViewModel(private val cardDao: CardDao , private val recordCategories
     }
 
     fun getCardFilteredRandom(
-        card: MutableList<Card> ,
+        card: MutableList<WritingCard> ,
         recorCategory: MutableList<Record_Categories>
     ) {
         viewModelScope.launch {
-            val listCardFilter = mutableListOf<Card>()
+            val listCardFilter = mutableListOf<WritingCard>()
             for (list in card) {
                 for (element in recorCategory) {
                     if (list.id == element.idRecord) {
@@ -101,7 +101,7 @@ class MatchViewModel(private val cardDao: CardDao , private val recordCategories
             if (listCard.value!!.isNotEmpty()) {
                 listCard.value?.shuffle()
                 if (listCard.value!!.size>=4){
-                    val cardSelectedList = mutableListOf<Card>()
+                    val cardSelectedList = mutableListOf<WritingCard>()
                     for (i in 0 until 4){
                         listCard.value?.let { cardSelectedList.add(it.get(i)) }
                     }
@@ -119,7 +119,7 @@ class MatchViewModel(private val cardDao: CardDao , private val recordCategories
         if (listCard.value!!.isNotEmpty()) {
             listCard.value?.shuffle()
             if (listCard.value!!.size>=4){
-                val cardSelectedList = mutableListOf<Card>()
+                val cardSelectedList = mutableListOf<WritingCard>()
                 for (i in 0 until 4){
                     listCard.value?.let { cardSelectedList.add(it.get(i)) }
                 }
@@ -142,7 +142,7 @@ class MatchViewModel(private val cardDao: CardDao , private val recordCategories
     }
 }
 class MatchViewModelFactory(
-    private val cardDao: CardDao ,
+    private val cardDao: WritingCardDao ,
     private val recordCategoriesdao: Record_CategoriesDao
 ) : ViewModelProvider.Factory {
 

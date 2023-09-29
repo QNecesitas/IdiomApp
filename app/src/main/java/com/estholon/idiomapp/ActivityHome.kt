@@ -3,22 +3,19 @@ package com.estholon.idiomapp
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.GravityCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.estholon.idiomapp.adapters.SpinnerAdapter
 import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.databinding.ActivityHomeBinding
-import com.estholon.idiomapp.databinding.LiAddCategoryBinding
 import com.estholon.idiomapp.databinding.LiAllCategoryBinding
 import com.estholon.idiomapp.viewmodels.HomeViewModel
 import com.estholon.idiomapp.viewmodels.HomeViewModelFactory
@@ -34,7 +31,8 @@ class ActivityHome : AppCompatActivity() {
     //View Model
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory((application as IdiomApp).database.categoriesDao(),
-            (application as IdiomApp).database.idiomsDao())
+            (application as IdiomApp).database.idiomsDao(),
+            (application as IdiomApp).database.record_categoriesDao())
     }
 
 
@@ -131,7 +129,7 @@ class ActivityHome : AppCompatActivity() {
 
 
 
-
+    //Categories
     private fun liAllCategory(){
         val inflater = LayoutInflater.from(binding.root.context)
         liCategoryBinding = LiAllCategoryBinding.inflate(inflater)
@@ -140,6 +138,7 @@ class ActivityHome : AppCompatActivity() {
         val alertDialog = builder.create()
 
         viewModel.refreshCategories()
+        Log.e("test1",InformationIntent.categoriesSelectedList.toString())
 
         liCategoryBinding!!.ivClose.setOnClickListener{
             alertDialog.dismiss()
@@ -153,7 +152,6 @@ class ActivityHome : AppCompatActivity() {
 
     }
 
-
     private fun refreshChipGroup(list : MutableList<Category>){
         liCategoryBinding?.chipGroup?.removeAllViews()
         for (e in list){
@@ -165,9 +163,9 @@ class ActivityHome : AppCompatActivity() {
                 chip.isChecked = true
             }
             chip.setOnCloseIconClickListener{
-                alert_borrar(chip)
+                alertDelete(chip, e.id)
             }
-            chip.setOnCheckedChangeListener { compoundButton, b ->
+            chip.setOnCheckedChangeListener { _, b ->
                 if(b){
                     InformationIntent.categoriesSelectedList.add(e)
                 }else{
@@ -178,7 +176,7 @@ class ActivityHome : AppCompatActivity() {
         }
     }
 
-    private fun alert_borrar(chip: Chip) {
+    private fun alertDelete(chip: Chip, id: Int) {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(this)
         builder.setCancelable(false)
@@ -187,7 +185,7 @@ class ActivityHome : AppCompatActivity() {
         //set listeners for dialog buttons
         builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
             //finish the activity
-            borrar_chip(chip)
+            deleteChip(chip, id)
             dialog.dismiss()
         }
         builder.setNegativeButton(R.string.Cancelar){ dialog , _ ->
@@ -199,10 +197,15 @@ class ActivityHome : AppCompatActivity() {
         builder.create().show()
     }
 
-    private fun borrar_chip(chip: Chip){
+    private fun deleteChip(chip: Chip, id:Int){
         liCategoryBinding?.chipGroup?.removeView(chip)
+        InformationIntent.categoriesSelectedList.removeIf {it.id == id}
+        viewModel.deleteCategoryRecord(id)
+        viewModel.deleteCategories(id)
     }
 
+
+    //Exit app
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         showAlertDialogExit()
