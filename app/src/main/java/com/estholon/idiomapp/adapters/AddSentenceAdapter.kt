@@ -57,7 +57,7 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
         ) {
 
             //Declare
-            val spinnerPersonalizado = binding.spinnerPersonalizado
+            val spinnerPersonalizado = binding.customSpinner
             var textToSpeech = textToSpeechEs
 
 

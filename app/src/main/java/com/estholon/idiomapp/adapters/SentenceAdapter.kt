@@ -37,7 +37,7 @@ class SentenceAdapter(private val context: Context) :
             textToSpeechDe: TextToSpeech,
             textToSpeechPt: TextToSpeech,
             textToSpeechFr: TextToSpeech
-        ) {
+        )   {
 
             //Declare
             val sentence = record.sentence

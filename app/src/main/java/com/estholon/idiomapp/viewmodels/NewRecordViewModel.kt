@@ -17,7 +17,13 @@ import com.estholon.idiomapp.database.RecordsDao
 import com.estholon.idiomapp.database.TranslationsDao
 import kotlinx.coroutines.launch
 
-class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesDao: CategoriesDao,private val recordCategoriesdao: Record_CategoriesDao,private val recordsDao: RecordsDao,private val translationsDao: TranslationsDao):ViewModel() {
+class NewRecordViewModel(
+    private val idiomsDao: IdiomsDao,
+    private val categoriesDao: CategoriesDao,
+    private val recordCategoriesdao: Record_CategoriesDao,
+    private val recordsDao: RecordsDao,
+    private val translationsDao: TranslationsDao
+) : ViewModel() {
 
     //List Idiom
     private val _listIdioms = MutableLiveData<MutableList<Idioms>>()
@@ -30,7 +36,8 @@ class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesD
     //List category
     private val _listCategory = MutableLiveData<MutableList<Category>>()
     val listCategory: LiveData<MutableList<Category>> get() = _listCategory
-    private var i=2
+    private var i = 2
+
     //List category
     private val _selectedCategory = MutableLiveData<MutableList<Category>>()
     val selectedCategory: LiveData<MutableList<Category>> get() = _selectedCategory
@@ -39,33 +46,36 @@ class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesD
     val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
     fun getAllIdioms() {
         viewModelScope.launch {
-            _listIdioms.value= mutableListOf ()
-            _listIdioms.value= idiomsDao.fetchIdioms()
+            _listIdioms.value = mutableListOf()
+            _listIdioms.value = idiomsDao.fetchIdioms()
         }
     }
+
     fun getAllSentences() {
         viewModelScope.launch {
             _listRecords.value = mutableListOf()
-            _listRecords.value?.add(Records(1 , "" , "no" , "ES"))
+            _listRecords.value?.add(Records(1, "", "no", "ES"))
         }
     }
-        fun addDateLIstSentence(){
-            viewModelScope.launch {
-               val addListRecord= mutableListOf<Records>()
-                _listRecords.value?.let { addListRecord.addAll(it) }
-                addListRecord.add(Records(i++,"","no","ES"))
-                _listRecords.value=addListRecord
-            }
+
+    fun addDateLIstSentence() {
+        viewModelScope.launch {
+            val addListRecord = mutableListOf<Records>()
+            _listRecords.value?.let { addListRecord.addAll(it) }
+            addListRecord.add(Records(i++, "", "no", "ES"))
+            _listRecords.value = addListRecord
         }
-    fun deleteSentence(id:Int){
+    }
+
+    fun deleteSentence(id: Int) {
         viewModelScope.launch {
             val deleteSentences = mutableListOf<Records>()
             _listRecords.value?.let { deleteSentences.addAll(it) }
             val sentenceAEliminar = deleteSentences.find { it.id == id }
-            if (sentenceAEliminar!=null){
+            if (sentenceAEliminar != null) {
                 deleteSentences.remove(sentenceAEliminar)
             }
-            _listRecords.value=deleteSentences
+            _listRecords.value = deleteSentences
         }
     }
 
@@ -75,11 +85,12 @@ class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesD
             _listCategory.value = categoriesDao.fetchCategories()
         }
     }
-    fun addCategory(newCategory: String){
+
+    fun addCategory(newCategory: String) {
         viewModelScope.launch {
 
 
-            val category = Category( 0, newCategory)
+            val category = Category(0, newCategory)
 
             categoriesDao.insertCategory(category)
 
@@ -88,78 +99,87 @@ class NewRecordViewModel(private val idiomsDao:IdiomsDao,private val categoriesD
         }
     }
 
-    fun selectedCategory(id: Int,categories:String){
+    fun selectedCategory(id: Int, categories: String) {
         viewModelScope.launch {
-            val listSelectedCategories= mutableListOf<Category>()
-            _selectedCategory.value?.add(Category(id,categories))
+            val listSelectedCategories = mutableListOf<Category>()
+            _selectedCategory.value?.add(Category(id, categories))
             _selectedCategory.value?.let { listSelectedCategories.addAll(it) }
-            _selectedCategory.value=listSelectedCategories
+            _selectedCategory.value = listSelectedCategories
         }
     }
 
-    fun deleteCategory(id:Int){
+    fun deleteCategory(id: Int) {
         viewModelScope.launch {
             val deleteCategorias = mutableListOf<Category>()
             _selectedCategory.value?.let { deleteCategorias.addAll(it) }
             val categoriaAEliminar = deleteCategorias.find { it.id == id }
-            if (categoriaAEliminar!=null){
+            if (categoriaAEliminar != null) {
                 deleteCategorias.remove(categoriaAEliminar)
             }
-            _selectedCategory.value=deleteCategorias
+            _selectedCategory.value = deleteCategorias
         }
     }
-    fun deleteCategories(id:Int){
+
+    fun deleteCategories(id: Int) {
         viewModelScope.launch {
             categoriesDao.deleteCategory(id)
             refreshCategories()
         }
     }
-    fun deleteCategoryRecord(id:Int){
+
+    fun deleteCategoryRecord(id: Int) {
         viewModelScope.launch {
             recordCategoriesdao.deleteCategory(id)
         }
     }
 
     init {
-        _selectedCategory.value= mutableListOf()
+        _selectedCategory.value = mutableListOf()
     }
-    fun insertRecord(image:String,sentence:String,idIdiom:String){
+
+    fun insertRecord(image: String, sentence: String, idIdiom: String) {
         viewModelScope.launch {
-            val record=Records(0,sentence,image,idIdiom)
+            val record = Records(0, sentence, image, idIdiom)
             recordsDao.insertRecord(record)
             getRecordDB(sentence)
         }
     }
-    fun getRecordDB(sentence: String){
+
+    fun getRecordDB(sentence: String) {
         viewModelScope.launch {
-            _listRecordDB.value= mutableListOf()
-            _listRecordDB.value=recordsDao.getRecord(sentence)
-            listRecordDB.value?.last()?.let { selectedCategory.value?.let { it1 ->
-                insertRecordCategory(it.id,
-                    it1
-                )
-            } }
-        }
-    }
-    fun insertRecordCategory(id: Int,category:MutableList<Category>){
-        viewModelScope.launch {
-            for ( i in category){
-                recordCategoriesdao.insertCategoryRecord(id,i.id)
+            _listRecordDB.value = mutableListOf()
+            _listRecordDB.value = recordsDao.getRecord(sentence)
+            listRecordDB.value?.last()?.let {
+                selectedCategory.value?.let { it1 ->
+                    insertRecordCategory(
+                        it.id,
+                        it1
+                    )
+                }
             }
-            listRecords.value?.let { insertTraslation(it ,id) }
         }
     }
-    fun insertTraslation(record:MutableList<Records>,idRecord:Int){
+
+    fun insertRecordCategory(id: Int, category: MutableList<Category>) {
         viewModelScope.launch {
-            for((index,i) in record.withIndex()){
-                if(index==0)continue
-                val translation=Translations(0,i.sentence,i.idIdiom,idRecord)
+            for (i in category) {
+                recordCategoriesdao.insertCategoryRecord(id, i.id)
+            }
+            listRecords.value?.let { insertTraslation(it, id) }
+        }
+    }
+
+    fun insertTraslation(record: MutableList<Records>, idRecord: Int) {
+        viewModelScope.launch {
+            for ((index, i) in record.withIndex()) {
+                if (index == 0) continue
+                val translation = Translations(0, i.sentence, i.idIdiom, idRecord)
                 translationsDao.insertTranslation(translation)
             }
         }
 
     }
-    }
+}
 
 class NewRecordViewModelFactory(
     private val idiomsDao: IdiomsDao,
@@ -172,7 +192,13 @@ class NewRecordViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewRecordViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return NewRecordViewModel(idiomsDao,categoriesDao,recordCategoriesdao,recordsDao,translationsDao) as T
+            return NewRecordViewModel(
+                idiomsDao,
+                categoriesDao,
+                recordCategoriesdao,
+                recordsDao,
+                translationsDao
+            ) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }

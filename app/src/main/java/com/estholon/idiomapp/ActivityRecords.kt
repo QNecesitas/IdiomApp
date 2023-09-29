@@ -23,8 +23,14 @@ class ActivityRecords : AppCompatActivity() {
 
     //View Model
     private val viewModel: RecordViewModel by viewModels {
-        RecordViewModelFactory((application as IdiomApp).database.recordsDao(),(application as IdiomApp).database.idiomsDao())
+        RecordViewModelFactory(
+            (application as IdiomApp).database.recordsDao(),
+            (application as IdiomApp).database.idiomsDao(),
+            (application as IdiomApp).database.translationsDao(),
+        )
     }
+
+
 
     //Recycler
     private lateinit var alRecord: MutableList<Records>
@@ -112,17 +118,17 @@ class ActivityRecords : AppCompatActivity() {
 
 
         //Spinner
-        val spinnerPersonalizado = binding.spinnerPersonalizado
+        val customSpinner = binding.customSpinner
 
         viewModel.listIdioms.observe(this) { items ->
-            // Actualiza el adaptador del Spinner cuando cambian los elementos
+            // Updating the adapter
             val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
-            spinnerPersonalizado.adapter = adapter
+            customSpinner.adapter = adapter
 
         }
 
-        spinnerPersonalizado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        customSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>? ,
                 view: View? ,
@@ -130,7 +136,7 @@ class ActivityRecords : AppCompatActivity() {
                 id: Long
             ) {
 
-                val selectedItem = spinnerPersonalizado.selectedItem as Idioms
+                val selectedItem = customSpinner.selectedItem as Idioms
 
                 binding.search.setQuery("",false)
                 // Accede al ID del objeto seleccionado

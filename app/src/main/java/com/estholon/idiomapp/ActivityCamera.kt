@@ -96,6 +96,7 @@ class ActivityCamera : AppCompatActivity() {
 
 
     }
+
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -129,12 +130,10 @@ class ActivityCamera : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Foto guardada en: ${imageFile.absolutePath}"
                     val file = ImageTools.createTempImageFile(
                         this@ActivityCamera,
                         ImageTools.getHoraActual("yyMMddHHmmss")
                     )
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     cutImage(Uri.fromFile(imageFile), Uri.fromFile(file))
                 }
             }

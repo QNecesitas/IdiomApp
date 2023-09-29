@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--General container-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,137 +28,193 @@
                 android:background="?attr/colorOnPrimary"
                 android:fitsSystemWindows="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/nuevo_registro"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="20sp"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <!--Menu-->
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivIconSetting"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/baseline_menu_24"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?attr/colorPrimary" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/ivIconSetting"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="20dp"
-                    android:src="@drawable/baseline_menu_24"
-                    android:visibility="visible"
-                    app:tint="?attr/colorPrimary" />
+                    <!--Title-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/nuevo_registro"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="@dimen/text_h"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.appcompat.widget.Toolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
+        <!--General Container-->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/addRecord"
             app:layout_constraintTop_toBottomOf="@id/AppBar">
 
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="12dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="8dp"
-            app:cardMaxElevation="8dp"
-            app:contentPadding="0dp"
-            android:layout_gravity="center"
-            android:id="@+id/cv_add_image">
-
-            <ImageView
+            <!--Line separator Up-->
+            <View
+                android:id="@+id/viewUp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/outline_image_24"
-                android:contentDescription="@string/adicionar_imagen"
-                android:id="@+id/iv_addimage"/>
-        </androidx.cardview.widget.CardView>
+                android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="?attr/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <!--Image-->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_add_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_margin="12dp"
-                android:text="@string/traducciones"
-                android:textSize="16sp"
-                android:textStyle="bold">
+                app:cardCornerRadius="8dp"
+                app:cardElevation="8dp"
+                app:cardMaxElevation="8dp"
+                app:contentPadding="0dp"
+                app:layout_constraintBottom_toTopOf="@id/ll_container_translations"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            </TextView>
+                <ImageView
+                    android:id="@+id/iv_addimage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/adicionar_imagen"
+                    android:src="@drawable/outline_image_24" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_language"
+            </androidx.cardview.widget.CardView>
+
+            <!--Translation-->
+            <LinearLayout
+                android:id="@+id/ll_container_translations"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="12dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/add_language"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/a_adir_otro_idioma"
-                android:textSize="16sp"
-                android:textStyle="normal">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/ll_container_categories"
+                app:layout_constraintTop_toBottomOf="@id/cv_add_image">
 
-            </TextView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:text="@string/categor_as"
-                android:textSize="16sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:scrollbars="horizontal">
-
-                <!--Chip group-->
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_margin="12dp"
+                    android:text="@string/traducciones"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/text_m"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="12dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/add_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    app:singleSelection="false">
+                    android:background="@drawable/redonden_square_button_outline"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/a_adir_otro_idioma"
+                    android:textSize="@dimen/text_s"
+                    android:textStyle="normal">
 
+                </TextView>
 
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/add_label"
-                android:layout_width="wrap_content"
+            <!--Categories-->
+            <LinearLayout
+                android:id="@+id/ll_container_categories"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/a_adir_otra_etiqueta"
-                android:textSize="16sp"
-                android:textStyle="normal">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_container_translations">
 
-            </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/categor_as"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/text_m"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:scrollbars="horizontal">
+
+                    <!--Chip group-->
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:singleSelection="false">
 
 
-        </LinearLayout>
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
 
+                <TextView
+                    android:id="@+id/add_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/redonden_square_button_outline"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/a_adir_otra_etiqueta"
+                    android:textSize="@dimen/text_s"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--Btn Add record-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addRecord"
             android:layout_width="match_parent"
@@ -166,7 +223,7 @@
             android:background="@drawable/button_redonded"
             android:text="@string/crear_registro"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_s"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -175,6 +232,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--Navigation-->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
@@ -182,6 +240,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/navigation_menu"/>
+        app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

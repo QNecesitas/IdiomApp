@@ -10,11 +10,13 @@ import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.database.CategoriesDao
 import com.estholon.idiomapp.database.IdiomsDao
+import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.database.RecordsDao
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val categoriesDao: CategoriesDao,
-                    private val idiomsDao: IdiomsDao) : ViewModel() {
-
+                    private val idiomsDao: IdiomsDao,
+                    private val recordCategoriesDao: Record_CategoriesDao) : ViewModel() {
     //List category
     private val _listCategory = MutableLiveData<MutableList<Category>>()
     val listCategory: LiveData<MutableList<Category>> get() = _listCategory
@@ -97,19 +99,35 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
             _listCategory.value = categoriesDao.fetchCategories()
         }
     }
+
+
+    //Delete categorie
+    fun deleteCategories(id:Int){
+        viewModelScope.launch {
+            categoriesDao.deleteCategory(id)
+            refreshCategories()
+        }
+    }
+    fun deleteCategoryRecord(id:Int){
+        viewModelScope.launch {
+            recordCategoriesDao.deleteCategory(id)
+        }
+    }
+
 }
 
 
 
 class HomeViewModelFactory(
     private val categoryDao: CategoriesDao,
-    private val idiomsDao: IdiomsDao
+    private val idiomsDao: IdiomsDao,
+    private val recordCategoriesDao: Record_CategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(categoryDao, idiomsDao ) as T
+            return HomeViewModel(categoryDao, idiomsDao , recordCategoriesDao) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }

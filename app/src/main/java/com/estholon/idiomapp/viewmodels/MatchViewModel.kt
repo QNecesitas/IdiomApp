@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.estholon.idiomapp.data.CardMatch
+import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
-import com.estholon.idiomapp.data.WritingCard
-import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.database.WritingCardDao
+import com.estholon.idiomapp.database.Record_CategoriesDao
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
