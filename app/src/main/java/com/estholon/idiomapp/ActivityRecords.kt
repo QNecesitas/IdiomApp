@@ -85,6 +85,14 @@ class ActivityRecords : AppCompatActivity() {
         binding.recycler.setHasFixedSize(true)
         alRecord = mutableListOf()
         adapterSentence = SentenceAdapter(this)
+        adapterSentence.setOnClickLister(object: SentenceAdapter.OnCLickListener{
+            override fun onClick(record: Records) {
+                val intent = Intent(this@ActivityRecords, ActivityEditRecord::class.java)
+                intent.putExtra("idRecord",record.id)
+                startActivity(intent)
+            }
+
+        })
         binding.recycler.adapter = adapterSentence
 
 

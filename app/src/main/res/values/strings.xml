@@ -77,4 +77,7 @@
     <string name="Traduccion">Traducción</string>
     <string name="idioma">Idioma</string>
     <string name="MenuPrincipal">Menú Principal</string>
+    <string name="permisos_no_concedidos">Los permisos no fueron concedidos</string>
+    <string name="tomar_foto">Tomar foto</string>
+    <string name="girar_c_mara">Girar cámara</string>
 </resources>

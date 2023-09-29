@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
@@ -29,7 +28,6 @@ import java.util.Locale
 
 
 
-typealias LumaListener = (luma: Double) -> Unit
 class ActivityCamera : AppCompatActivity() {
 
     private lateinit var viewBinding: ActivityCameraBinding
@@ -192,7 +190,6 @@ class ActivityCamera : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =
@@ -215,7 +212,7 @@ class ActivityCamera : AppCompatActivity() {
                 startCamera()
             } else {
                 Toast.makeText(this,
-                    "No se otorgaron los permisos para usar la cámara",
+                    R.string.permisos_no_concedidos,
                     Toast.LENGTH_SHORT).show()
                 finish()
             }

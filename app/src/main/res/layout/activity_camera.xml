@@ -11,32 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="50dp"
         android:id="@+id/image_capture_button"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="50dp"
-        android:elevation="10dp"
+        app:cardElevation="12dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/baseline_camera_24"
-        app:tint="?attr/colorOnPrimary" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/tomar_foto"
+            android:src="@drawable/baseline_camera_24"
+            android:translationZ="12dp" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <ImageView
         android:id="@+id/camera_option"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="50dp"
+        android:contentDescription="@string/girar_c_mara"
         android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/image_capture_button"
         android:src="@drawable/baseline_cameraswitch_24"
-        app:tint="?attr/colorOnPrimary"
-        />
-
+        android:translationZ="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/image_capture_button"
+        app:layout_constraintStart_toEndOf="@id/image_capture_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image_capture_button"
+        app:tint="?attr/colorOnPrimary" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

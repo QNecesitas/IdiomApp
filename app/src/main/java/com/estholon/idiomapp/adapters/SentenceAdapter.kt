@@ -18,6 +18,9 @@ import java.util.Locale
 class SentenceAdapter(private val context: Context) :
     ListAdapter<Records , SentenceViewHolder>(DiffCallback) {
 
+    private var onCLickListener: OnCLickListener? = null
+
+
     //Speech
     private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES")){}
     private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US")){}
@@ -36,7 +39,8 @@ class SentenceAdapter(private val context: Context) :
             textToSpeechEn: TextToSpeech,
             textToSpeechDe: TextToSpeech,
             textToSpeechPt: TextToSpeech,
-            textToSpeechFr: TextToSpeech
+            textToSpeechFr: TextToSpeech,
+            onCLickListener: OnCLickListener?
         )   {
 
             //Declare
@@ -89,6 +93,8 @@ class SentenceAdapter(private val context: Context) :
 
             binding.tvSentence.text = sentence
 
+            binding.root.setOnClickListener { onCLickListener?.onClick(record) }
+
         }
     }
 
@@ -115,7 +121,8 @@ class SentenceAdapter(private val context: Context) :
             textToSpeechEn,
             textToSpeechDe,
             textToSpeechPt,
-            textToSpeechFr
+            textToSpeechFr,
+            onCLickListener
         )
     }
 
@@ -132,5 +139,12 @@ class SentenceAdapter(private val context: Context) :
         }
     }
 
+    interface OnCLickListener{
+        fun onClick(record: Records)
+    }
+
+    fun setOnClickLister(onCLickListener: OnCLickListener?){
+        this.onCLickListener = onCLickListener
+    }
 
 }
