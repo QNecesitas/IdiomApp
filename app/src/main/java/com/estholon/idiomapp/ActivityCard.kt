@@ -36,6 +36,7 @@ class ActivityCard : AppCompatActivity() {
         CardViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?)   {
         super.onCreate(savedInstanceState)
         binding = ActivityCardBinding.inflate(layoutInflater)

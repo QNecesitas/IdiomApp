@@ -52,23 +52,34 @@ class ActivityMatch : AppCompatActivity() {
         viewModel.matchRecord.observe(this){
             Log.e("XXX","${viewModel.matchRecord.value}")
             adapterMatch.submitList(it)
+            adapterMatch.notifyDataSetChanged()
+            if (viewModel.matchRecord.value?.isEmpty() == true){
+                chronometer.stop()
+                finishGame()
+            }
         }
 
 
+        //Activate chronometer
+        chronometer = binding.chronometer
+        chronometer.start()
 
-        chronometer=binding.chronometer
-        binding.chronometer.setOnClickListener {
-            chronometer.start()
-        }
+        adapterMatch.setClickSelector(object:MatchAdapter.ITouchSelector{
+            override fun onClickSelector(id: Int,sentence:String,state:String,position:Int) {
+                viewModel.getMatchSelected(id,sentence,position)
+            }
+
+        })
+
 
 
 
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
             if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
             } else {
-                binding.drawerLayout.openDrawer(GravityCompat.START);
+                binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
         val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_new_record)
@@ -109,13 +120,24 @@ class ActivityMatch : AppCompatActivity() {
 
     }
 
-    //TODO Hay que hacer que al finalizar se reincicie el progreso de ResultGame
+    fun finishGame(){
+        chronometer.stop()
+        val tiempoTranscurrido = SystemClock.elapsedRealtime() - chronometer.base
+        val segundosTotales = tiempoTranscurrido / 1000
+        val minutos = (segundosTotales / 60).toInt()
+        val segundos = (segundosTotales % 60).toInt()
+        val intent=Intent(this,ActivityResultGame::class.java)
+        intent.putExtra("result_time","${minutos}:${segundos} minutos")
+        intent.putExtra("result_errors",viewModel.error)
+        startActivity(intent)
+
+    }
 
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             finish()
         }

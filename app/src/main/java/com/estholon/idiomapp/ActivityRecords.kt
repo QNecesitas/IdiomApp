@@ -10,14 +10,11 @@ import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.SentenceAdapter
 import com.estholon.idiomapp.adapters.SpinnerAdapter
-import com.estholon.idiomapp.auxiliary.TextToSpeech
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.ActivityRecordsBinding
-import com.estholon.idiomapp.databinding.RecyclerGetSentencesBinding
 import com.estholon.idiomapp.viewmodels.RecordViewModel
 import com.estholon.idiomapp.viewmodels.RecordViewModelFactory
-import java.util.Locale
 
 class ActivityRecords : AppCompatActivity() {
 
@@ -44,9 +41,9 @@ class ActivityRecords : AppCompatActivity() {
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
             }else{
-                binding.drawerLayout.openDrawer(GravityCompat.START);
+                binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
         val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_record)
@@ -173,7 +170,7 @@ class ActivityRecords : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         }else{
             finish()
         }

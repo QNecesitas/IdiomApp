@@ -65,4 +65,8 @@
     <color name="orange_wrong">#FF3D00</color>
     <color name="orange_wrong_backg">#FF5925</color>
     <color name="green_right_back">#00E676</color>
+    <color name="orange_transparent">#92FF5722</color>
+    <color name="red_transparent">#BFDF0404</color>
+    <color name="verde_transparent">#AB3EC543</color>
+
 </resources>
