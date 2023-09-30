@@ -1,5 +1,6 @@
 package com.estholon.idiomapp
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +29,8 @@ class ActivityResultGame : AppCompatActivity() {
         }
 
         binding.btnRepetir.setOnClickListener {
+            val intent = Intent()
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
 

@@ -52,7 +52,7 @@ class MatchViewModel(
         }
     }
 
-    fun getAllCategoryRelationsBD(category: MutableList<Category>) {
+    private fun getAllCategoryRelationsBD(category: MutableList<Category>) {
         viewModelScope.launch {
             _listRecordCategory.value = mutableListOf()
             _listRecordCategory.value = recordCategoriesdao.fetchRecordCategory()
@@ -60,7 +60,7 @@ class MatchViewModel(
         }
     }
 
-    fun getRecordCategoryFiltered(
+    private fun getRecordCategoryFiltered(
         categoriesSelected: MutableList<Category> ,
         recordCategories: MutableList<Record_Categories>
     ) {
@@ -87,7 +87,7 @@ class MatchViewModel(
 
     }
 
-    fun getCardFilteredRandom(
+    private fun getCardFilteredRandom(
         card: MutableList<WritingCard> ,
         recorCategory: MutableList<Record_Categories>
     ) {
@@ -119,7 +119,7 @@ class MatchViewModel(
     }
 
 
-    fun getWithOutCategories() {
+    private fun getWithOutCategories() {
         if (listCard.value!!.isNotEmpty()) {
             listCard.value?.shuffle()
             if (listCard.value!!.size >= 4) {
@@ -135,28 +135,30 @@ class MatchViewModel(
         listGetMatch()
     }
 
-    fun listGetMatch() {
+    private fun listGetMatch() {
         val listMatch = mutableListOf<CardMatch>()
-        for (matchRandom in cardSelected.value!!) {
-            listMatch.add(
-                CardMatch(
-                    matchRandom.id ,
-                    matchRandom.sentence ,
-                    matchRandom.idiomSentence ,
-                    "Nada"
+        if(cardSelected.value!=null) {
+            for (matchRandom in cardSelected.value!!) {
+                listMatch.add(
+                    CardMatch(
+                        matchRandom.id,
+                        matchRandom.sentence,
+                        matchRandom.idiomSentence,
+                        "Nada"
+                    )
                 )
-            )
-            listMatch.add(
-                CardMatch(
-                    matchRandom.id ,
-                    matchRandom.translation ,
-                    matchRandom.idiomTranslation ,
-                    "Nada"
+                listMatch.add(
+                    CardMatch(
+                        matchRandom.id,
+                        matchRandom.translation,
+                        matchRandom.idiomTranslation,
+                        "Nada"
+                    )
                 )
-            )
+            }
+            listMatch.shuffle()
+            _matchRecord.value = listMatch
         }
-        listMatch.shuffle()
-        _matchRecord.value = listMatch
     }
 
     fun getMatchSelected(id: Int , position: Int,idIdiom: String) {
