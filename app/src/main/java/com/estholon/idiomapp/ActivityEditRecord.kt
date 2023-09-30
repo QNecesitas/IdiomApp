@@ -18,8 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.estholon.idiomapp.adapters.EditSentenceAdapter
 import com.estholon.idiomapp.auxiliary.ImageTools
+import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
@@ -45,7 +48,13 @@ class ActivityEditRecord : AppCompatActivity() {
 
     //View Model
     private val viewModel: EditRecordViewModel by viewModels {
-        EditRecordViewModelFactory((application as IdiomApp).database.recordsDao(),(application as IdiomApp).database.translationsDao(),(application as IdiomApp).database.record_categoriesDao(),(application as IdiomApp).database.idiomsDao(),(application as IdiomApp).database.categoriesDao())
+        EditRecordViewModelFactory(
+            (application as IdiomApp).database.recordsDao(),
+            (application as IdiomApp).database.translationsDao(),
+            (application as IdiomApp).database.record_categoriesDao(),
+            (application as IdiomApp).database.idiomsDao(),
+            (application as IdiomApp).database.categoriesDao()
+        )
     }
 
     //Recycler
@@ -57,8 +66,12 @@ class ActivityEditRecord : AppCompatActivity() {
         binding = ActivityEditRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         //get id from ActivityRecord
-        val idRecord=intent.getIntExtra("idRecord",0)
+        val idRecord = intent.getIntExtra("idRecord", 0)
+
+
 
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
@@ -68,8 +81,6 @@ class ActivityEditRecord : AppCompatActivity() {
                 binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
-        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_new_record)
-        itemToInvisible.isVisible = false
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_record -> {
@@ -100,49 +111,56 @@ class ActivityEditRecord : AppCompatActivity() {
             true
         }
 
+
+
         //Recycler
         binding.rvLanguage.setHasFixedSize(true)
         alRecord = mutableListOf()
-        adapterSentence = EditSentenceAdapter(this , mutableListOf())
+        adapterSentence = EditSentenceAdapter(this, mutableListOf())
         binding.rvLanguage.adapter = adapterSentence
-        adapterSentence.setSpinnerListener(object:EditSentenceAdapter.SpinnerListener{
-            override fun onSpinnerClick(idiom: String,position:Int) {
-                viewModel.listRecords.value?.get(position)?.idIdiom=idiom
+
+        adapterSentence.setSpinnerListener(object : EditSentenceAdapter.SpinnerListener {
+            override fun onSpinnerClick(idiom: String, position: Int) {
+                if(viewModel.isFirstTime) {
+                    viewModel.isFirstTime = false
+                }else{
+                    viewModel.listRecords.value?.get(position)?.idIdiom = idiom
+                }
             }
         })
-        adapterSentence.setTextChanged(object:EditSentenceAdapter.ITouchTextChanged{
-            override fun onTextChanged(text: String , position: Int) {
-                viewModel.listRecords.value?.get(position)?.sentence=text
+
+        adapterSentence.setTextChanged(object : EditSentenceAdapter.ITouchTextChanged {
+            override fun onTextChanged(text: String, position: Int) {
+                viewModel.listRecords.value?.get(position)?.sentence = text
             }
 
         })
+
+
 
         //Observe
-        viewModel.listPhoto.observe(this){
-            val image=viewModel.listRecords.value?.get(0)?.image
-            val imageUri= Uri.parse(image)
-            binding.ivAddimage.setImageURI(imageUri)
-            this.uriImageCut=Uri.parse(image)
-        }
+
         viewModel.listRecords.observe(this) {
             viewModel.listIdioms.value?.let { it1 -> adapterSentence.setIdiomList(it1.toList() as MutableList<Idioms>) }
             adapterSentence.submitList(it)
+            Glide.with(this)
+                .load(Uri.parse(it[0].image))
+                .error(R.drawable.outline_image_24)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(binding.ivAddimage)
 
         }
 
-        viewModel.listCategorySelected.observe(this){
-            otherRefreshChipGroup(it)
-        }
-
-
-
-        viewModel.listIdioms.observe(this){
-            viewModel.getRecord(idRecord)
+        viewModel.listCategorySelected.observe(this) {
+            refreshSelectedChipGroup(it)
         }
 
         viewModel.listCategory.observe(this) {
-            refreshChipGroup(it)
+            refreshGeneralChipGroup(it)
         }
+
 
         //Results launchers
         galleryLauncher =
@@ -155,6 +173,8 @@ class ActivityEditRecord : AppCompatActivity() {
                 imageReceivedCamera(result)
             }
 
+
+
         //Listeners
         binding.ivAddimage.setOnClickListener {
             val popupMenu = PopupMenu(applicationContext, binding.cvAddImage)
@@ -164,10 +184,12 @@ class ActivityEditRecord : AppCompatActivity() {
                     R.id.menu_add_gallery -> {
                         choiceGalleryImage()
                     }
+
                     R.id.menu_delete -> {
                         binding.ivAddimage.setImageDrawable(this.getDrawable(R.drawable.outline_image_24))
                         uriImageCut = null
                     }
+
                     R.id.menu_add_camera -> {
                         val intent = Intent(this, ActivityCamera::class.java)
                         cameraLauncher.launch(intent)
@@ -177,10 +199,11 @@ class ActivityEditRecord : AppCompatActivity() {
             }
             popupMenu.show()
         }
+
         binding.addLanguage.setOnClickListener {
-            if((viewModel.listRecords.value?.size ?: 6) < 5) {
+            if ((viewModel.listRecords.value?.size ?: 6) < 5) {
                 viewModel.addDateLIstSentence()
-            }else{
+            } else {
                 FancyToast.makeText(
                     this@ActivityEditRecord,
                     getString(R.string.maximo_traducciones),
@@ -190,43 +213,79 @@ class ActivityEditRecord : AppCompatActivity() {
                 ).show()
             }
         }
+
         binding.addLabel.setOnClickListener {
             liAddCategory()
         }
+
         binding.addRecord.setOnClickListener {
-            if (viewModel.listRecords.value!=null) {
-                if(this.uriImageCut==null){
-                    this.uriImageCut= Uri.parse("no")
+            if (viewModel.listRecords.value != null) {
+                if (this.uriImageCut == null) {
+                    this.uriImageCut = Uri.parse("no")
                 }
                 addRecordToBD(
-                    this.uriImageCut.toString() ,
-                    viewModel.listRecords.value!![0].sentence ,
+                    this.uriImageCut.toString(),
+                    viewModel.listRecords.value!![0].sentence,
                     viewModel.listRecords.value!![0].idIdiom,
                     idRecord
-
                 )
             }
         }
+
         binding.ivDelete.setOnClickListener {
             alertDeleteRecord(idRecord)
         }
-        adapterSentence.setClickDelete(object :EditSentenceAdapter.ITouchDelete{
-            override fun onClickDelete(record: Records,position:Int) {
-                viewModel.deleteSentence(record.id)
+
+        adapterSentence.setClickDelete(object : EditSentenceAdapter.ITouchDelete {
+            override fun onClickDelete(record: Records, position: Int) {
+                 viewModel.deleteSentence(record.id)
             }
 
         })
 
-        viewModel.getAllIdioms()
+
+
+        //Start thread
+        viewModel.getAllInitialInformation(idRecord)
     }
-    private fun otherRefreshChipGroup(list : MutableList<Category>){
-        binding.chipGroup.removeAllViews()
-        for (e in list){
+
+
+
+    //Categories logic
+    private fun refreshGeneralChipGroup(allCategories: MutableList<Category>) {
+        liCategoryBinding.chipGroup.removeAllViews()
+        val selectCategoriesList = viewModel.listCategorySelected.value
+        for (e in allCategories) {
             val chip = Chip(this)
             chip.text = e.categories
             chip.isCheckable = true
             chip.isCloseIconVisible = true
-            chip.setOnCloseIconClickListener{
+            if(selectCategoriesList?.contains(e) == true){
+                chip.isChecked = true
+            }
+            chip.setOnCloseIconClickListener {
+                alertDelete(chip, e.id)
+            }
+            chip.setOnCheckedChangeListener { _, b ->
+                if(b){
+                    viewModel.selectedCategory(e.id, e.categories)
+                }else{
+                    viewModel.deleteCategory(e.id)
+                }
+            }
+            liCategoryBinding.chipGroup.addView(chip)
+
+        }
+    }
+
+    private fun refreshSelectedChipGroup(list: MutableList<Category>) {
+        binding.chipGroup.removeAllViews()
+        for (e in list) {
+            val chip = Chip(this)
+            chip.text = e.categories
+            chip.isCheckable = true
+            chip.isCloseIconVisible = true
+            chip.setOnCloseIconClickListener {
                 viewModel.deleteCategory(e.id)
             }
 
@@ -234,6 +293,65 @@ class ActivityEditRecord : AppCompatActivity() {
 
         }
     }
+
+    private fun liAddCategory() {
+        val inflater = LayoutInflater.from(binding.root.context)
+        liCategoryBinding = LiAddCategoryBinding.inflate(inflater)
+        val builder = AlertDialog.Builder(binding.root.context)
+        builder.setView(liCategoryBinding.root)
+        val alertDialog = builder.create()
+
+        viewModel.refreshCategories()
+
+        liCategoryBinding.ivAdd.setOnClickListener {
+            if (liCategoryBinding.tiet.text.toString().isNotEmpty()) {
+                viewModel.addCategory(liCategoryBinding.tiet.text.toString())
+                liCategoryBinding.tiet.setText("")
+            }
+        }
+
+        liCategoryBinding.ivClose.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        //Finished
+        alertDialog.setCancelable(false)
+        alertDialog.window!!.setGravity(Gravity.CENTER)
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+    }
+
+    private fun alertDelete(chip: Chip, id: Int) {
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle(getString(R.string.Esta_seguro_borrar))
+        builder.setMessage(R.string.al_borrar)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
+            //finish the activity
+            deleteChip(chip, id)
+            dialog.dismiss()
+        }
+        builder.setNegativeButton(R.string.Cancelar) { dialog, _ ->
+            //finish the activity
+            dialog.dismiss()
+        }
+
+        //create the alert dialog and show it
+        builder.create().show()
+    }
+
+    private fun deleteChip(chip: Chip, id: Int) {
+        liCategoryBinding.chipGroup.removeView(chip)
+        viewModel.deleteCategoryRecord(id)
+        viewModel.deleteCategories(id)
+        viewModel.deleteCategory(id)
+    }
+
+
+
     //Image logic
     private fun choiceGalleryImage() {
         val galleryIntent =
@@ -256,7 +374,7 @@ class ActivityEditRecord : AppCompatActivity() {
             } else {
                 FancyToast.makeText(
                     this@ActivityEditRecord,
-                    getString(R.string.error_al_obtener_la_imagen,),
+                    getString(R.string.error_al_obtener_la_imagen),
                     FancyToast.LENGTH_SHORT,
                     FancyToast.ERROR,
                     false
@@ -266,7 +384,7 @@ class ActivityEditRecord : AppCompatActivity() {
         } else {
             FancyToast.makeText(
                 this@ActivityEditRecord,
-                getString(R.string.error_al_obtener_la_imagen,),
+                getString(R.string.error_al_obtener_la_imagen),
                 FancyToast.LENGTH_SHORT,
                 FancyToast.ERROR,
                 false
@@ -285,14 +403,7 @@ class ActivityEditRecord : AppCompatActivity() {
             } else {
                 FancyToast.makeText(
                     this@ActivityEditRecord,
-                    getString(R.string.maximo_traducciones),
-                    FancyToast.LENGTH_SHORT,
-                    FancyToast.WARNING,
-                    false
-                ).show()
-                FancyToast.makeText(
-                    this@ActivityEditRecord,
-                    getString(R.string.error_al_obtener_la_imagen,),
+                    getString(R.string.error_al_obtener_la_imagen),
                     FancyToast.LENGTH_SHORT,
                     FancyToast.WARNING,
                     false
@@ -302,7 +413,7 @@ class ActivityEditRecord : AppCompatActivity() {
         } else {
             FancyToast.makeText(
                 this@ActivityEditRecord,
-                getString(R.string.error_al_obtener_la_imagen,),
+                getString(R.string.error_al_obtener_la_imagen),
                 FancyToast.LENGTH_SHORT,
                 FancyToast.ERROR,
                 false
@@ -337,89 +448,13 @@ class ActivityEditRecord : AppCompatActivity() {
         }
     }
     //Categories logic
-    private fun liAddCategory(){
-        val inflater = LayoutInflater.from(binding.root.context)
-        liCategoryBinding = LiAddCategoryBinding.inflate(inflater)
-        val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(liCategoryBinding.root)
-        val alertDialog = builder.create()
 
-        viewModel.refreshCategories()
 
-        liCategoryBinding.ivAdd.setOnClickListener{
-            if(liCategoryBinding.tiet.text.toString().isNotEmpty()){
-                viewModel.addCategory(liCategoryBinding.tiet.text.toString())
-                liCategoryBinding.tiet.setText("")
-            }
-        }
 
-        liCategoryBinding.ivClose.setOnClickListener{
-            alertDialog.dismiss()
-        }
-
-        //Finished
-        alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-
-    }
-//TODO los chips no se estan dando cuenta que hay una lista de categoria y no se ponen checkeados
-    private fun refreshChipGroup(list : MutableList<Category>){
-        liCategoryBinding.chipGroup.removeAllViews()
-        val selectCategory= viewModel.listCategorySelected.value?: emptyList()
-        for (e in list){
-            val chip = Chip(this)
-            chip.text = e.categories
-            chip.isCheckable = true
-            chip.isCloseIconVisible = true
-            chip.isChecked = selectCategory.any { it.categories == e.categories }
-            chip.setOnCloseIconClickListener{
-                alertDelete(chip,e.id)
-            }
-            chip.setOnClickListener {
-                if (chip.isChecked){
-                    viewModel.selectedCategory(e.id,e.categories)
-                } else{
-                    viewModel.deleteCategory(e.id)
-                }
-            }
-            liCategoryBinding.chipGroup.addView(chip)
-
-        }
-    }
-
-    private fun alertDelete(chip: Chip, id:Int) {
-        //init alert dialog
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setCancelable(false)
-        builder.setTitle(getString(R.string.Esta_seguro_borrar))
-        builder.setMessage(R.string.al_borrar)
-        //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
-            //finish the activity
-            deleteChip(chip,id)
-            dialog.dismiss()
-        }
-        builder.setNegativeButton(R.string.Cancelar){ dialog , _ ->
-            //finish the activity
-            dialog.dismiss()
-        }
-
-        //create the alert dialog and show it
-        builder.create().show()
-    }
-
-    private fun deleteChip(chip: Chip, id:Int){
-        liCategoryBinding.chipGroup.removeView(chip)
-        viewModel.deleteCategoryRecord(id)
-        viewModel.deleteCategories(id)
-        viewModel.deleteCategory(id)
-    }
 
     //Accept button
-    private fun addRecordToBD(image:String,sentence:String,idIdiom:String,idRecord:Int){
-        if(isInformationGood()) {
+    private fun addRecordToBD(image: String, sentence: String, idIdiom: String, idRecord: Int) {
+        if (isInformationGood()) {
             viewModel.deleteRecord(idRecord)
             viewModel.insertRecord(image, sentence, idIdiom)
             val intent = Intent()
@@ -427,42 +462,46 @@ class ActivityEditRecord : AppCompatActivity() {
             finish()
         }
     }
-    private fun isInformationGood(): Boolean{
+
+    private fun isInformationGood(): Boolean {
         var emptyElement = false
         var repeatedElements = false
         val idiomsSelected = mutableListOf<String>()
 
-        if(viewModel.listRecords.value != null) {
+        if (viewModel.listRecords.value != null) {
             for (element in viewModel.listRecords.value!!) {
-                if(element.sentence.isBlank()){
+                if (element.sentence.isBlank()) {
                     emptyElement = true
                 }
-                if(idiomsSelected.contains(element.idIdiom)){
+                if (idiomsSelected.contains(element.idIdiom)) {
                     repeatedElements = true
-                }else{
+                } else {
                     idiomsSelected.add(element.idIdiom)
                 }
             }
         }
 
-        if(emptyElement){
+        if (emptyElement) {
             FancyToast.makeText(
                 this@ActivityEditRecord,
                 getString(R.string.no_debe_espacios_vacios),
                 FancyToast.LENGTH_LONG,
                 FancyToast.ERROR,
-                false).show()
-        }else if(repeatedElements){
+                false
+            ).show()
+        } else if (repeatedElements) {
             FancyToast.makeText(
                 this@ActivityEditRecord,
                 getString(R.string.no_debe_idiomas),
                 FancyToast.LENGTH_LONG,
                 FancyToast.ERROR,
-                false).show()
+                false
+            ).show()
         }
 
         return (!emptyElement) && (!repeatedElements)
     }//Activity utils
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -505,6 +544,7 @@ class ActivityEditRecord : AppCompatActivity() {
             finish()
         }
     }
+
     private fun alertDeleteRecord(idRecord: Int) {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(this)
@@ -512,13 +552,13 @@ class ActivityEditRecord : AppCompatActivity() {
         builder.setTitle(getString(R.string.Esta_seguro_borrar_record))
         builder.setMessage(R.string.al_borrar_record)
         //set listeners for dialog buttons
-        builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
+        builder.setPositiveButton(R.string.Aceptar) { dialog, _ ->
             //finish the activity
-           viewModel.deleteRecord(idRecord)
+            viewModel.deleteRecord(idRecord)
             dialog.dismiss()
             finish()
         }
-        builder.setNegativeButton(R.string.Cancelar){ dialog , _ ->
+        builder.setNegativeButton(R.string.Cancelar) { dialog, _ ->
             //finish the activity
             dialog.dismiss()
         }

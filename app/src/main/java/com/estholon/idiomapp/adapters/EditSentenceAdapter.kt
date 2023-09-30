@@ -69,6 +69,7 @@ class EditSentenceAdapter(private val context: Context , private var idioms: Mut
             }
             binding.ivClose.setOnClickListener { clickDelete?.onClickDelete(record,adapterPosition) }
 
+
             val idiomExtracted = idioms.find { it.id == record.idIdiom }
             idioms.remove(idiomExtracted)
             idiomExtracted?.let { idioms.add(0, it) }
@@ -92,7 +93,6 @@ class EditSentenceAdapter(private val context: Context , private var idioms: Mut
                         onSpinnerListener?.onSpinnerClick(selectedId,adapterPosition)
                         when (selectedId) {
                             "ES" -> {
-
                                 textToSpeech = textToSpeechEs
                             }
 
@@ -132,6 +132,7 @@ class EditSentenceAdapter(private val context: Context , private var idioms: Mut
             binding.etSentence.doOnTextChanged { text, start, before, count ->
                 textChanged?.onTextChanged(text.toString(),adapterPosition)
             }
+
         }
     }
 

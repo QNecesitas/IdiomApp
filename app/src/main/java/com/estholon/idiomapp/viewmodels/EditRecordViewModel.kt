@@ -19,28 +19,32 @@ import com.estholon.idiomapp.database.TranslationsDao
 import kotlinx.coroutines.launch
 
 class EditRecordViewModel(private val recordsDao: RecordsDao,private val translationsDao: TranslationsDao, private val recordCategoriesdao: Record_CategoriesDao,private val idiomsDao: IdiomsDao,private val categoriesDao: CategoriesDao):ViewModel() {
+    var isFirstTime = true
 
-    //List Idiom
     private val _listRecords = MutableLiveData<MutableList<Records>>()
     val listRecords: LiveData<MutableList<Records>> get() = _listRecords
 
-    //List Idiom
-    private val _listTranslation = MutableLiveData<MutableList<Translations>>()
-    val listTranslation: LiveData<MutableList<Translations>> get() = _listTranslation
 
-    //List Idiom
-    private val _listCategories = MutableLiveData<MutableList<Record_Categories>>()
-    val listCategories: LiveData<MutableList<Record_Categories>> get() = _listCategories
+    private val _listTranslationsById = MutableLiveData<MutableList<Translations>>()
+    private val listTranslationById: LiveData<MutableList<Translations>> get() = _listTranslationsById
 
-    //List Idiom
-    private val _listAuxiliar = MutableLiveData<MutableList<Records>>()
-    val listAuxiliar: LiveData<MutableList<Records>> get() = _listAuxiliar
 
-    //List Idiom
-    private val _listIdioms = MutableLiveData<MutableList<Idioms>>()
-    val listIdioms: LiveData<MutableList<Idioms>> get() = _listIdioms
+    private val _listRecordCategoriesById = MutableLiveData<MutableList<Record_Categories>>()
+    private val listRecordCategoriesById: LiveData<MutableList<Record_Categories>> get() = _listRecordCategoriesById
 
-    //List Idiom
+
+    private val _listCategoriesSelected = MutableLiveData<MutableList<Category>>()
+    private val listCategoriesSelected: LiveData<MutableList<Category>> get() = _listCategoriesSelected
+
+
+    private val _recordById = MutableLiveData<Records>()
+    private val recordById: LiveData<Records> get() = _recordById
+
+
+    private val _listAllIdioms = MutableLiveData<MutableList<Idioms>>()
+    val listIdioms: LiveData<MutableList<Idioms>> get() = _listAllIdioms
+
+
     private val _listCategorySelected = MutableLiveData<MutableList<Category>>()
     val listCategorySelected: LiveData<MutableList<Category>> get() = _listCategorySelected
 
@@ -48,77 +52,86 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     private val _listCategory = MutableLiveData<MutableList<Category>>()
     val listCategory: LiveData<MutableList<Category>> get() = _listCategory
 
-    //List category
-    private val _listAuxiliarCategory = MutableLiveData<MutableList<Category>>()
-    val listAuxiliarCategory: LiveData<MutableList<Category>> get() = _listAuxiliarCategory
 
     private var i = 150000
 
     //List Idiom
     private val _listRecordDB = MutableLiveData<MutableList<Records>>()
-    val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
+    private val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
 
     //List category
-    private val _listAllCategory = MutableLiveData<MutableList<Category>>()
-    val listAllCategory: LiveData<MutableList<Category>> get() = _listAllCategory
+    private val _listAllCategories = MutableLiveData<MutableList<Category>>()
+    private val listAllCategory: LiveData<MutableList<Category>> get() = _listAllCategories
     //List category
     private val _listPhoto = MutableLiveData<MutableList<Records>>()
     val listPhoto: LiveData<MutableList<Records>> get() = _listPhoto
 
     init {
-        _listAuxiliarCategory.value= mutableListOf()
+        _listCategoriesSelected.value= mutableListOf()
     }
-    fun getAllIdioms() {
+
+
+
+    //Fill information about records
+    fun getAllInitialInformation(idRecord: Int) {
         viewModelScope.launch {
-            _listIdioms.value = mutableListOf()
-            _listIdioms.value = idiomsDao.fetchIdioms()
+            _listAllIdioms.value = idiomsDao.fetchIdioms()
+            _recordById.value = recordsDao.fetchRecordForId(idRecord)
+            _listTranslationsById.value = translationsDao.fetchTranslationforId(idRecord)
+            _listRecordCategoriesById.value = recordCategoriesdao.fetchCategoriesforId(idRecord)
+            _listAllCategories.value = categoriesDao.fetchCategories()
+
+            fillRecordsWithTranslations(idRecord)
         }
     }
 
-    fun getRecord(idRecord: Int) {
-        var iterador=idRecord + 1
-        listAuxiliar.value?.clear()
-        //get date for Record of the all table
+    private fun fillRecordsWithTranslations(idRecord: Int) {
         viewModelScope.launch {
-            _listAuxiliar.value = mutableListOf()
-            _listAuxiliar.value = recordsDao.fetchRecordforId(idRecord)
-            _listTranslation.value = mutableListOf()
-            _listTranslation.value = translationsDao.fetchTranslationforId(idRecord)
-            _listCategories.value = mutableListOf()
-            _listCategories.value = recordCategoriesdao.fetchCategoriesforId(idRecord)
-            _listAllCategory.value = categoriesDao.fetchCategories()
-            //Join the ListRecord with the ListTranslation
-            if (listTranslation.value?.isNotEmpty() == true) {
-                //TODO Aqui la lista auxiliar esta recorriendo la lista translation buscando a su pareja por id y añadiendola,pero me devuelve doble los elementos que coge en traslation
-                for (translation in listTranslation.value!!) {
-                    listAuxiliar.value!!.add(
-                        Records(
-                            iterador++  ,
-                            translation.sentence ,
-                            "no" ,
-                            translation.idIdiom
+            val auxiliaryList = mutableListOf<Records>()
+            var iterator= idRecord
+
+            _recordById.value?.let { auxiliaryList.add(it) }
+
+            if(listTranslationById.value != null) {
+                if (listTranslationById.value?.isNotEmpty() == true) {
+                    for (translation in listTranslationById.value!!) {
+                        auxiliaryList.add(
+                            Records(
+                                ++iterator,
+                                translation.sentence,
+                                "no",
+                                translation.idIdiom
+                            )
                         )
-                    )
+                    }
                 }
+                _listRecords.value = auxiliaryList
             }
-            _listRecords.value = _listAuxiliar.value
-            _listPhoto.value = _listAuxiliar.value
-            if (listCategories.value?.isNotEmpty() == true && listAllCategory.value?.isNotEmpty() == true) {
-                for (categoryRecord in listCategories.value!!) {
-                    for (category in listAllCategory.value!!) {
-                        if (categoryRecord.idCategories == category.id) {
-                            _listAuxiliarCategory.value?.add(category)
-                        }
+            fillCategories()
+        }
+
+    }
+
+
+
+    //Fill information about categories
+    private fun fillCategories(){
+        val auxiliaryList = mutableListOf<Category>()
+        if (listRecordCategoriesById.value?.isNotEmpty() == true && listAllCategory.value?.isNotEmpty() == true) {
+            for (categorySelected in listRecordCategoriesById.value!!) {
+                for (categoryFromAll in listAllCategory.value!!) {
+                    if (categorySelected.idCategories == categoryFromAll.id) {
+                        auxiliaryList.add(categoryFromAll)
                     }
                 }
             }
-            _listCategorySelected.value = listAuxiliarCategory.value
-            listAuxiliarCategory.value?.clear()
         }
-
-
+        _listCategorySelected.value = auxiliaryList
     }
 
+
+
+    //Other operations wth Cardni
     fun deleteCategory(id: Int) {
         viewModelScope.launch {
             val deleteCategorias = mutableListOf<Category>()

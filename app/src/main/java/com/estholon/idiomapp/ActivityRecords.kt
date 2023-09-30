@@ -24,6 +24,7 @@ class ActivityRecords : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecordsBinding
     private lateinit var newRecordLauncher: ActivityResultLauncher<Intent>
+    private lateinit var editRecordLauncher: ActivityResultLauncher<Intent>
 
 
     //View Model
@@ -94,7 +95,7 @@ class ActivityRecords : AppCompatActivity() {
             override fun onClick(record: Records) {
                 val intent = Intent(this@ActivityRecords, ActivityEditRecord::class.java)
                 intent.putExtra("idRecord",record.id)
-                startActivity(intent)
+                editRecordLauncher.launch(intent)
             }
 
         })
@@ -179,6 +180,11 @@ class ActivityRecords : AppCompatActivity() {
 
         //Thread
         newRecordLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                recordReturn(result)
+            }
+
+        editRecordLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 recordReturn(result)
             }

@@ -3,7 +3,6 @@ package com.estholon.idiomapp.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Records
 
 @Dao
@@ -22,7 +21,7 @@ interface RecordsDao {
     suspend fun getRecord(sentence: String):MutableList<Records>
 
     @Query("SELECT * FROM Records WHERE id=:id")
-    suspend fun fetchRecordforId(id:Int):MutableList<Records>
+    suspend fun fetchRecordForId(id:Int):Records
 
     @Query("DELETE FROM Records WHERE id=:id")
     suspend fun deleteRecord(id:Int)
