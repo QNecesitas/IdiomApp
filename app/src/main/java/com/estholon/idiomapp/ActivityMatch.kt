@@ -44,19 +44,21 @@ class ActivityMatch : AppCompatActivity() {
 
          //Observes
         viewModel.listCard.observe(this){
-            if (viewModel.listCard.value!!.isEmpty() || viewModel.listCard.value!!.size <=4 ){
+            if (viewModel.listCard.value!!.isEmpty() || viewModel.listCard.value!!.size <4 ){
                 binding.clListNull.visibility= View.VISIBLE
                 binding.chronometer.visibility=View.GONE
             }
         }
         viewModel.matchRecord.observe(this){
-            Log.e("XXX","${viewModel.matchRecord.value}")
             adapterMatch.submitList(it)
             adapterMatch.notifyDataSetChanged()
             if (viewModel.matchRecord.value?.isEmpty() == true){
                 chronometer.stop()
                 finishGame()
             }
+        }
+        binding.mbReturn.setOnClickListener {
+            finish()
         }
 
 
@@ -65,8 +67,8 @@ class ActivityMatch : AppCompatActivity() {
         chronometer.start()
 
         adapterMatch.setClickSelector(object:MatchAdapter.ITouchSelector{
-            override fun onClickSelector(id: Int,sentence:String,state:String,position:Int) {
-                viewModel.getMatchSelected(id,sentence,position)
+            override fun onClickSelector(id: Int,idIdiom:String,position:Int) {
+                viewModel.getMatchSelected(id,position,idIdiom)
             }
 
         })

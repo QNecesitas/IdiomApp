@@ -160,7 +160,7 @@ class MatchViewModel(
         _matchRecord.value = listMatch
     }
 
-    fun getMatchSelected(id: Int , sentence: String , position: Int) {
+    fun getMatchSelected(id: Int , position: Int,idIdiom: String) {
         //Fill auxiliary list with the 8 elements from matchRecord
         viewModelScope.launch {
             val auxiliaryList = mutableListOf<CardMatch>()
@@ -176,7 +176,7 @@ class MatchViewModel(
                 //If the list with selected elements contains any
                 val selected = matchSelected.value!![0]
 
-                if (id == selected.id && sentence != selected.sentence) {
+                if (id == selected.id && idIdiom != selected.idIdiom) {
                     //If the the ids are the same but not is the selected (The selected is the good response)
                     auxiliaryList[position].state = "Seleccionado"
                     _matchRecord.value = auxiliaryList
