@@ -93,6 +93,7 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
         }
 
     }
+
     fun deleteCategory(id: Int) {
         viewModelScope.launch {
             val deleteCategorias = mutableListOf<Record_Categories>()

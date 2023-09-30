@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
@@ -71,7 +72,11 @@ class ActivityCard : AppCompatActivity() {
 
         viewModel.state.observe(this) {
             when (it) {
-                CardViewModel.StateTime.START -> binding.cvAddImage.visibility = View.VISIBLE
+                CardViewModel.StateTime.START -> {
+                    binding.cvAddImage.visibility = View.VISIBLE
+                    val animation = AnimationUtils.loadAnimation(this,R.anim.bring_down)
+                    binding.cvAddImage.startAnimation(animation)
+                }
                 CardViewModel.StateTime.FIRST_WORLD ->{
                     binding.clSentence.visibility = View.VISIBLE
                     viewModel.writingCardSelected.value?.get(0)
@@ -87,6 +92,8 @@ class ActivityCard : AppCompatActivity() {
                     binding.cvAddImage.visibility = View.INVISIBLE
                     binding.clSentence.visibility = View.INVISIBLE
                     binding.clSentence1.visibility = View.INVISIBLE
+                    val animation = AnimationUtils.loadAnimation(this,R.anim.bring_up)
+                    binding.cvAddImage.startAnimation(animation)
                     viewModel.nextCard()
                     viewModel.timeToShow()
                 }

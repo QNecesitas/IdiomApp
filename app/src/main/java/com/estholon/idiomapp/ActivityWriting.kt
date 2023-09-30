@@ -108,7 +108,7 @@ class ActivityWriting : AppCompatActivity() {
                 binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
-        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_record)
+        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_writing)
         itemToInvisible.isVisible = false
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -354,14 +354,19 @@ class ActivityWriting : AppCompatActivity() {
     private fun nextCard(){
         binding.etResponse.setText("")
         binding.CLGradeResponse.visibility = View.GONE
+        binding.btnResolve.visibility = View.VISIBLE
+        binding.btnCheck.visibility = View.VISIBLE
         viewModel.nextCard()
     }
 
     private fun lastCard(){
         binding.etResponse.setText("")
         binding.CLGradeResponse.visibility = View.GONE
+        binding.btnResolve.visibility = View.VISIBLE
+        binding.btnCheck.visibility = View.VISIBLE
         viewModel.lastCard()
     }
+
 
 
     //Logic Game
@@ -376,18 +381,25 @@ class ActivityWriting : AppCompatActivity() {
         val anim = AnimationUtils.loadAnimation(this,R.anim.slide_up)
         binding.CLGradeResponse.startAnimation(anim)
 
-        if(binding.etResponse.text.toString().trim().equals( response?.trim(),false)){
+        if(binding.etResponse.text.toString().trim().equals( response?.trim(),true)){
             viewModel.rights ++
             binding.CLGradeResponse.background = AppCompatResources.getDrawable(this,R.drawable.backg_grade_right)
             binding.exclamation.text = getString(R.string.felicidades);
             binding.responseIs.text = getString(R.string.La_respuesta_es_correcta);
             binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights);
+            binding.solveElevate.visibility = View.GONE
+            binding.btnResolve.visibility = View.GONE
+            binding.btnCheck.visibility = View.GONE
         }else{
             viewModel.errors ++
             binding.CLGradeResponse.background = AppCompatResources.getDrawable(this,R.drawable.backg_grade_wrong)
             binding.exclamation.text = getString(R.string.ups);
             binding.responseIs.text = getString(R.string.La_respuesta_es_incorrecta);
             binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights);
+            binding.solveElevate.visibility = View.VISIBLE
+            binding.solveElevate.setOnClickListener { resolveExercise() }
+            binding.btnResolve.visibility = View.GONE
+            binding.btnCheck.visibility = View.GONE
         }
     }
 

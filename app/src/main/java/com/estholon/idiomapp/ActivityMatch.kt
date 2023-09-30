@@ -1,20 +1,21 @@
 package com.estholon.idiomapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
 import android.widget.Chronometer
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.MatchAdapter
-import com.estholon.idiomapp.adapters.SentenceAdapter
 import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.ActivityMatchBinding
-import com.estholon.idiomapp.databinding.ActivityNewRecordsBinding
 import com.estholon.idiomapp.viewmodels.MatchViewModel
 import com.estholon.idiomapp.viewmodels.MatchViewModelFactory
 
@@ -22,7 +23,7 @@ class ActivityMatch : AppCompatActivity() {
     private lateinit var binding: ActivityMatchBinding
     private lateinit var chronometer: Chronometer
 
-    private val viewModel:MatchViewModel by viewModels() {
+    private val viewModel:MatchViewModel by viewModels {
         MatchViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
     }
 
@@ -30,6 +31,10 @@ class ActivityMatch : AppCompatActivity() {
     private lateinit var alRecord: MutableList<Records>
     private lateinit var adapterMatch: MatchAdapter
 
+    //Finish
+    private lateinit var resultGameLauncher: ActivityResultLauncher<Intent>
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMatchBinding.inflate(layoutInflater)
@@ -74,8 +79,6 @@ class ActivityMatch : AppCompatActivity() {
         })
 
 
-
-
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
             if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -84,7 +87,7 @@ class ActivityMatch : AppCompatActivity() {
                 binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
-        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_new_record)
+        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_match )
         itemToInvisible.isVisible = false
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -117,24 +120,36 @@ class ActivityMatch : AppCompatActivity() {
         }
 
 
+        //Result
+        resultGameLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                launcherReturned(result)
+            }
 
         viewModel.getAllCardsBD(InformationIntent.itemIdiomLeft.id, InformationIntent.itemIdiomRight.id, InformationIntent.categoriesSelectedList)
 
     }
 
-    fun finishGame(){
+    private fun finishGame(){
         chronometer.stop()
         val tiempoTranscurrido = SystemClock.elapsedRealtime() - chronometer.base
         val segundosTotales = tiempoTranscurrido / 1000
         val minutos = (segundosTotales / 60).toInt()
         val segundos = (segundosTotales % 60).toInt()
-        val intent=Intent(this,ActivityResultGame::class.java)
-        intent.putExtra("result_time","${minutos}:${segundos} minutos")
-        intent.putExtra("result_errors",viewModel.error)
-        startActivity(intent)
+        val tiempoFormateado = String.format("%02d:%02d", minutos, segundos)
+
+        val intent = Intent(this, ActivityResultGame::class.java)
+        intent.putExtra("result_time", tiempoFormateado)
+        intent.putExtra("result_errors", viewModel.error)
+        resultGameLauncher.launch(intent)
 
     }
 
+    private fun launcherReturned(result: ActivityResult){
+        viewModel.getAllCardsBD(InformationIntent.itemIdiomLeft.id, InformationIntent.itemIdiomRight.id, InformationIntent.categoriesSelectedList)
+        chronometer.base = SystemClock.elapsedRealtime()
+        chronometer.start()
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {

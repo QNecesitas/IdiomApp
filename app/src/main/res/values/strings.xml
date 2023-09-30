@@ -52,6 +52,7 @@
     <string name="Pronunciar">Pronunciar</string>
     <string name="agregue_traducci_n">Agregue traducción</string>
     <string name="no_existen_palabras_con_los_datos_introducidos">No existen registros con los idiomas o categorías seleccionadas</string>
+    <string name="no_existen_suficientes_registros">No existen suficientes registros con los idiomas o categorías seleccionadas. Se necesitan al menos 4 parejas de idiomas</string>
     <string name="nuevo_registro">Nuevo Registro</string>
     <string name="editar_registro">Editar registro</string>
     <string name="Felicidades">¡Felicidades!</string>
@@ -86,4 +87,5 @@
     <string name="_1_0x">1.0X</string>
     <string name="iniciar">Iniciar</string>
     <string name="vacio">Vacío</string>
+    <string name="ver_soluci_n">Ver solución</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
@@ -36,12 +37,30 @@ class WritingViewModel(
     fun getAllCardsBD(idIdiomI: String, idIdiomD: String, category: MutableList<Category>) {
         viewModelScope.launch {
             _listWritingCard.value = writingCardDao.fetchCard(idIdiomI, idIdiomD)
+            repairInvertedInfoListWritingCard()
             if (listWritingCard.value!!.isNotEmpty()) {
                 if (category.isNotEmpty()) {
                     getAllCategoryRelationsBD(category)
                 } else {
                     getWithOutCategories()
                 }
+            }
+        }
+    }
+
+    private fun repairInvertedInfoListWritingCard(){
+        val newList = mutableListOf<WritingCard>()
+        _listWritingCard.value?.let { newList.addAll(it) }
+        for(element in newList){
+            if(element.idiomSentence != InformationIntent.itemIdiomLeft.id){
+                //Idiom
+                val auxIdiom = element.idiomSentence
+                element.idiomSentence = element.idiomTranslation
+                element.idiomTranslation = auxIdiom
+                //Text
+                val auxText = element.sentence
+                element.sentence = element.translation
+                element.translation = auxText
             }
         }
     }
