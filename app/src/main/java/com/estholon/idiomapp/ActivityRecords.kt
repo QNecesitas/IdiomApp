@@ -3,9 +3,13 @@ package com.estholon.idiomapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.SearchView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.SentenceAdapter
@@ -19,6 +23,7 @@ import com.estholon.idiomapp.viewmodels.RecordViewModelFactory
 class ActivityRecords : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecordsBinding
+    private lateinit var newRecordLauncher: ActivityResultLauncher<Intent>
 
 
     //View Model
@@ -167,12 +172,17 @@ class ActivityRecords : AppCompatActivity() {
         //Listeners
         binding.addRecord.setOnClickListener {
             val intent=Intent(this,ActivityNewRecords::class.java)
-            startActivity(intent)
+            newRecordLauncher.launch(intent)
         }
 
 
 
         //Thread
+        newRecordLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                recordReturn(result)
+            }
+
         viewModel.getAllIdioms()
 
         viewModel.getAllRecord()
@@ -188,6 +198,11 @@ class ActivityRecords : AppCompatActivity() {
         }else{
             finish()
         }
+    }
+
+    private fun recordReturn(result: ActivityResult) {
+        viewModel.getAllIdioms()
+        viewModel.getAllRecord()
     }
 
 }

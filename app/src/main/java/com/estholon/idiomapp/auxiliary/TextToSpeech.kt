@@ -1,13 +1,8 @@
 package com.estholon.idiomapp.auxiliary
 
 import android.content.Context
-import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.os.PersistableBundle
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatCallback
 import com.estholon.idiomapp.R
 import java.util.Locale
@@ -30,6 +25,14 @@ open class TextToSpeech(
             isAvailable = false
         }
 
+    }
+
+    fun setSpeechRate(rate: Double) {
+        if (isAvailable) {
+            textToSpeech.setSpeechRate(rate.toFloat())
+        } else {
+            // Maneja el caso en el que la síntesis de voz no está disponible
+        }
     }
 
     fun speak(text: String) {

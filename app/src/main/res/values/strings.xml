@@ -80,4 +80,10 @@
     <string name="permisos_no_concedidos">Los permisos no fueron concedidos</string>
     <string name="tomar_foto">Tomar foto</string>
     <string name="girar_c_mara">Girar cámara</string>
+    <string name="maximo_traducciones">Máximo de traducciones alcanzado</string>
+    <string name="no_debe_espacios_vacios">No deben haber traducciones vacías</string>
+    <string name="no_debe_idiomas">No deben haber idiomas de traducciones repetidos</string>
+    <string name="_1_0x">1.0X</string>
+    <string name="iniciar">Iniciar</string>
+    <string name="vacio">Vacío</string>
 </resources>

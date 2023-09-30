@@ -108,7 +108,7 @@ class ActivityWriting : AppCompatActivity() {
                 binding.drawerLayout.openDrawer(GravityCompat.START)
             }
         }
-        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_new_record)
+        val itemToInvisible = binding.navigationView.menu.findItem(R.id.menu_record)
         itemToInvisible.isVisible = false
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -149,6 +149,7 @@ class ActivityWriting : AppCompatActivity() {
 
 
     }
+
     private fun fillOutCard(){
         val image=viewModel.writingCardSelected.value?.get(0)?.image
         val imageUri= Uri.parse(image)

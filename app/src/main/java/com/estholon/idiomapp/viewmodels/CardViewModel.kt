@@ -1,5 +1,6 @@
 package com.estholon.idiomapp.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,20 +14,23 @@ import com.estholon.idiomapp.database.Record_CategoriesDao
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class CardViewModel(private val writingCardDao: WritingCardDao, private val recordCategoriesdao: Record_CategoriesDao):ViewModel() {
+class CardViewModel(
+    private val writingCardDao: WritingCardDao,
+    private val recordCategoriesdao: Record_CategoriesDao
+) : ViewModel() {
 
     //List category
     private val _listWritingCard = MutableLiveData<MutableList<WritingCard>>()
     val listWritingCard: LiveData<MutableList<WritingCard>> get() = _listWritingCard
 
     private val _listRecordCategory = MutableLiveData<MutableList<Record_Categories>>()
-    val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
+    private val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
     var iterador = 0
 
     private val _writing_cardSelected = MutableLiveData<MutableList<WritingCard>>()
     val writingCardSelected: LiveData<MutableList<WritingCard>> get() = _writing_cardSelected
 
-    enum class StateTime { START , FIRST_WORLD , SECOND_WORLD , FINISH }
+    enum class StateTime { START, FIRST_WORLD, SECOND_WORLD, FINISH }
 
     private val _state = MutableLiveData<StateTime>()
     val state: LiveData<StateTime> get() = _state
@@ -40,14 +44,18 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
 
     init {
         _speed.value = 1.0
-        _playStop.value=true
+        _playStop.value = false
     }
 
 
+    fun setPlayStop(isPlay: Boolean) {
+        _playStop.value = isPlay
+    }
+
     //Obtain info
-    fun getAllCardsBD(idIdiomI: String , idIdiomD: String , category: MutableList<Category>) {
+    fun getAllCardsBD(idIdiomI: String, idIdiomD: String, category: MutableList<Category>) {
         viewModelScope.launch {
-            _listWritingCard.value = writingCardDao.fetchCard(idIdiomI , idIdiomD)
+            _listWritingCard.value = writingCardDao.fetchCard(idIdiomI, idIdiomD)
             if (listWritingCard.value!!.isNotEmpty()) {
                 if (category.isNotEmpty()) {
                     getAllCategoryRelationsBD(category)
@@ -58,16 +66,16 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
         }
     }
 
-    fun getAllCategoryRelationsBD(category: MutableList<Category>) {
+    private fun getAllCategoryRelationsBD(category: MutableList<Category>) {
         viewModelScope.launch {
             _listRecordCategory.value = mutableListOf()
             _listRecordCategory.value = recordCategoriesdao.fetchRecordCategory()
-            listRecordCategory.value?.let { getRecordCategoryFiltered(category , it) }
+            listRecordCategory.value?.let { getRecordCategoryFiltered(category, it) }
         }
     }
 
-    fun getRecordCategoryFiltered(
-        categoriesSelected: MutableList<Category> ,
+    private fun getRecordCategoryFiltered(
+        categoriesSelected: MutableList<Category>,
         recordCategories: MutableList<Record_Categories>
     ) {
         viewModelScope.launch {
@@ -83,8 +91,8 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
             listRecordCategory.value?.addAll(recordCategoryFiltered)
             listWritingCard.value?.let {
                 listRecordCategory.value?.let { it1 ->
-                    getCardFilteredRandom(
-                        it ,
+                    Companion.getCardFilteredRandom(
+                        this@CardViewModel, it,
                         it1
                     )
                 }
@@ -93,31 +101,7 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
 
     }
 
-    fun getCardFilteredRandom(
-        card: MutableList<WritingCard> ,
-        recorCategory: MutableList<Record_Categories>
-    ) {
-        viewModelScope.launch {
-            val listWritingCardFilter = mutableListOf<WritingCard>()
-            for (list in card) {
-                for (element in recorCategory) {
-                    if (list.id == element.idRecord) {
-                        listWritingCardFilter.add(list)
-                    }
-                }
-            }
-            _listWritingCard.value?.clear()
-            _listWritingCard.value = listWritingCardFilter
-            if (listWritingCard.value!!.isNotEmpty()) {
-                listWritingCard.value?.shuffle()
-                val cardSelectedList = mutableListOf<WritingCard>()
-                listWritingCard.value?.let { cardSelectedList.add(it.get(0)) }
-                _writing_cardSelected.value = cardSelectedList
-            }
-        }
-    }
-
-    fun getWithOutCategories() {
+    private fun getWithOutCategories() {
         listWritingCard.value?.shuffle()
         val cardSelectedList = mutableListOf<WritingCard>()
         listWritingCard.value?.let { cardSelectedList.add(it.get(0)) }
@@ -162,15 +146,16 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
         viewModelScope.launch {
             val time = 2000 / speed.value!!
             val delayTime: Long = time.toLong()
-            _state.value = StateTime.START
-            delay(delayTime)
-            _state.value = StateTime.FIRST_WORLD
-            delay(delayTime)
-            _state.value = StateTime.SECOND_WORLD
-            delay(delayTime)
-            _state.value = StateTime.FINISH
-            delay(delayTime)
+            if (playStop.value == true) _state.value = StateTime.START
+            if(playStop.value == true) delay(delayTime)
+            if (playStop.value == true) _state.value = StateTime.FIRST_WORLD
+            if(playStop.value == true) delay(delayTime)
+            if (playStop.value == true) _state.value = StateTime.SECOND_WORLD
+            if(playStop.value == true) delay(delayTime)
+            if (playStop.value == true) _state.value = StateTime.FINISH
+            if(playStop.value == true) delay(delayTime)
         }
+
 
     }
 
@@ -189,13 +174,33 @@ class CardViewModel(private val writingCardDao: WritingCardDao, private val reco
             }
         }
     }
+
+    companion object {
+        private fun getCardFilteredRandom(
+            cardViewModel: CardViewModel, card: MutableList<WritingCard>,
+            recorCategory: MutableList<Record_Categories>
+        ) {
+            cardViewModel.viewModelScope.launch {
+                val listWritingCardFilter = mutableListOf<WritingCard>()
+                for (list in card) {
+                    for (element in recorCategory) {
+                        if (list.id == element.idRecord) {
+                            listWritingCardFilter.add(list)
+                        }
+                    }
+                }
+                cardViewModel._listWritingCard.value?.clear()
+                cardViewModel._listWritingCard.value = listWritingCardFilter
+                if (cardViewModel.listWritingCard.value!!.isNotEmpty()) {
+                    cardViewModel.listWritingCard.value?.shuffle()
+                    val cardSelectedList = mutableListOf<WritingCard>()
+                    cardViewModel.listWritingCard.value?.let { cardSelectedList.add(it.get(0)) }
+                    cardViewModel._writing_cardSelected.value = cardSelectedList
+                }
+            }
+        }
+    }
 }
-
-
-
-
-
-
 
 
 class CardViewModelFactory(
@@ -206,7 +211,7 @@ class CardViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CardViewModel(writingCardDao,recordCategoriesdao ) as T
+            return CardViewModel(writingCardDao, recordCategoriesdao) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }

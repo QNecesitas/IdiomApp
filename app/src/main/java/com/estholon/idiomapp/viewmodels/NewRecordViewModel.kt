@@ -1,6 +1,5 @@
 package com.estholon.idiomapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -145,7 +144,7 @@ class NewRecordViewModel(
         }
     }
 
-    fun getRecordDB(sentence: String) {
+    private fun getRecordDB(sentence: String) {
         viewModelScope.launch {
             _listRecordDB.value = mutableListOf()
             _listRecordDB.value = recordsDao.getRecord(sentence)
@@ -160,16 +159,16 @@ class NewRecordViewModel(
         }
     }
 
-    fun insertRecordCategory(id: Int, category: MutableList<Category>) {
+    private fun insertRecordCategory(id: Int, category: MutableList<Category>) {
         viewModelScope.launch {
             for (i in category) {
                 recordCategoriesdao.insertCategoryRecord(id, i.id)
             }
-            listRecords.value?.let { insertTraslation(it, id) }
+            listRecords.value?.let { insertTranslation(it, id) }
         }
     }
 
-    fun insertTraslation(record: MutableList<Records>, idRecord: Int) {
+    private fun insertTranslation(record: MutableList<Records>, idRecord: Int) {
         viewModelScope.launch {
             for ((index, i) in record.withIndex()) {
                 if (index == 0) continue

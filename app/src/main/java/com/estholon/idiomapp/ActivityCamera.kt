@@ -1,6 +1,7 @@
 package com.estholon.idiomapp
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -271,10 +272,12 @@ class ActivityCamera : AppCompatActivity() {
     }
     private fun imageCropped(data: Intent?) {
         if (data != null) {
+
+            val intent = Intent()
             this.uriImageCut = UCrop.getOutput(data)
-            val intent = Intent(this, ActivityNewRecords::class.java)
             intent.putExtra("imageUri", this.uriImageCut.toString())
-            startActivity(intent)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 

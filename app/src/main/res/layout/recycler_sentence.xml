@@ -39,6 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
+                android:maxLength="1000"
                 android:id="@+id/et_sentence"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

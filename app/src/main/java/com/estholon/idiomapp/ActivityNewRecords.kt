@@ -5,13 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.icu.text.AlphabeticIndex.Record
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +23,7 @@ import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.AddSentenceAdapter
 import com.estholon.idiomapp.auxiliary.ImageTools
 import com.estholon.idiomapp.data.Category
+import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.ActivityNewRecordsBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
@@ -38,6 +40,7 @@ class ActivityNewRecords : AppCompatActivity() {
 
     //Results launchers
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
 
     private var uriImageCut: Uri? = null
 
@@ -59,7 +62,6 @@ class ActivityNewRecords : AppCompatActivity() {
         binding = ActivityNewRecordsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val imageUri = intent.getStringExtra("imageUri")
 
         //NavigationDrawer
         binding.ivIconSetting.setOnClickListener {
@@ -101,6 +103,8 @@ class ActivityNewRecords : AppCompatActivity() {
             true
         }
 
+
+
         //Recycler
         binding.rvLanguage.setHasFixedSize(true)
         alRecord = mutableListOf()
@@ -119,7 +123,8 @@ class ActivityNewRecords : AppCompatActivity() {
         })
 
 
-        //Observe
+
+        //Observers
         viewModel.listRecords.observe(this) {
             viewModel.listIdioms.value?.let { it1 -> adapterSentence.setIdiomList(it1.toList()) }
             adapterSentence.submitList(it)
@@ -128,47 +133,64 @@ class ActivityNewRecords : AppCompatActivity() {
         viewModel.listIdioms.observe(this){
             viewModel.getAllSentences()
         }
-        //Observe
+
         viewModel.listCategory.observe(this) {
             refreshChipGroup(it)
         }
+
         viewModel.selectedCategory.observe(this){
             otherRefreshChipGroup(it)
         }
 
 
-        // Comprobar si la URI no es nula
-        if (imageUri != null) {
-            // Cargar la imagen en la ImageView
-            this.uriImageCut = Uri.parse(imageUri)
-            binding.ivAddimage.setImageURI(this.uriImageCut)
-        }
 
         //Results launchers
         galleryLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                imageReceived(result)
+                imageReceivedGallery(result)
             }
 
+        cameraLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                imageReceivedCamera(result)
+            }
+
+
+
+        //Listeners
         binding.ivAddimage.setOnClickListener {
             val popupMenu = PopupMenu(applicationContext, binding.cvAddImage)
             popupMenu.menuInflater.inflate(R.menu.menu_add_image, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                if (menuItem.itemId == R.id.menu_add_gallery) {
-                    choiceGalleryImage()
-                } else if (menuItem.itemId == R.id.menu_delete) {
-                    binding.ivAddimage.setImageDrawable(this.getDrawable(R.drawable.baseline_add_photo_alternate_24))
-                    uriImageCut = null
-                } else if (menuItem.itemId == R.id.menu_add_camera) {
-                    val intent = Intent(this, ActivityCamera::class.java)
-                    startActivity(intent)
+                when (menuItem.itemId) {
+                    R.id.menu_add_gallery -> {
+                        choiceGalleryImage()
+                    }
+                    R.id.menu_delete -> {
+                        binding.ivAddimage.setImageDrawable(this.getDrawable(R.drawable.outline_image_24))
+                        uriImageCut = null
+                    }
+                    R.id.menu_add_camera -> {
+                        val intent = Intent(this, ActivityCamera::class.java)
+                        cameraLauncher.launch(intent)
+                    }
                 }
                 false
             }
             popupMenu.show()
         }
         binding.addLanguage.setOnClickListener {
-            viewModel.addDateLIstSentence()
+            if((viewModel.listRecords.value?.size ?: 6) < 5) {
+                viewModel.addDateLIstSentence()
+            }else{
+                FancyToast.makeText(
+                    this@ActivityNewRecords,
+                    getString(R.string.maximo_traducciones),
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.WARNING,
+                    false
+                ).show()
+            }
         }
         binding.addLabel.setOnClickListener {
             liAddCategory()
@@ -184,7 +206,6 @@ class ActivityNewRecords : AppCompatActivity() {
                     viewModel.listRecords.value!![0].idIdiom
 
                 )
-                finish()
             }
         }
         adapterSentence.setClickDelete(object :AddSentenceAdapter.ITouchDelete{
@@ -199,13 +220,16 @@ class ActivityNewRecords : AppCompatActivity() {
 
     }
 
+
+
+    //Image logic
     private fun choiceGalleryImage() {
         val galleryIntent =
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         galleryLauncher.launch(galleryIntent)
     }
 
-    private fun imageReceived(result: ActivityResult) {
+    private fun imageReceivedGallery(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             val contentUri = data?.data
@@ -218,18 +242,58 @@ class ActivityNewRecords : AppCompatActivity() {
             if (contentUri != null) {
                 cutImage(contentUri, Uri.fromFile(file))
             } else {
-                Toast.makeText(
+                FancyToast.makeText(
                     this@ActivityNewRecords,
-                    R.string.error_al_obtener_la_imagen,
-                    Toast.LENGTH_SHORT
+                    getString(R.string.error_al_obtener_la_imagen,),
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.ERROR,
+                    false
                 ).show()
             }
 
         } else {
-            Toast.makeText(
+            FancyToast.makeText(
                 this@ActivityNewRecords,
-                R.string.error_al_obtener_la_imagen,
-                Toast.LENGTH_SHORT
+                getString(R.string.error_al_obtener_la_imagen,),
+                FancyToast.LENGTH_SHORT,
+                FancyToast.ERROR,
+                false
+            ).show()
+        }
+    }
+
+    private fun imageReceivedCamera(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val contentUri = data?.extras?.getString("imageUri")
+
+            if (contentUri != null) {
+                this.uriImageCut = Uri.parse(contentUri)
+                binding.ivAddimage.setImageURI(this.uriImageCut)
+            } else {
+                FancyToast.makeText(
+                    this@ActivityNewRecords,
+                    getString(R.string.maximo_traducciones),
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.WARNING,
+                    false
+                ).show()
+                FancyToast.makeText(
+                    this@ActivityNewRecords,
+                    getString(R.string.error_al_obtener_la_imagen,),
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.WARNING,
+                    false
+                ).show()
+            }
+
+        } else {
+            FancyToast.makeText(
+                this@ActivityNewRecords,
+                getString(R.string.error_al_obtener_la_imagen,),
+                FancyToast.LENGTH_SHORT,
+                FancyToast.ERROR,
+                false
             ).show()
         }
     }
@@ -244,10 +308,12 @@ class ActivityNewRecords : AppCompatActivity() {
                 )
                 .start(this)
         } catch (e: Exception) {
-            Toast.makeText(
+            FancyToast.makeText(
                 this@ActivityNewRecords,
-                getString(R.string.error),
-                Toast.LENGTH_SHORT
+                getString(R.string.error_al_obtener_la_imagen),
+                FancyToast.LENGTH_SHORT,
+                FancyToast.ERROR,
+                false
             ).show()
         }
     }
@@ -259,47 +325,9 @@ class ActivityNewRecords : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_CANCELED) {
-            return
-        }
-
-        //UCrop
-        if (requestCode == UCrop.REQUEST_CROP) {
 
 
-            if (data != null) {
-                imageCropped(data)
-            } else {
-                Toast.makeText(
-                    this@ActivityNewRecords,
-                    getString(R.string.error_al_obtener_la_imagen),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-        if (requestCode == UCrop.RESULT_ERROR) {
-            FancyToast.makeText(
-                this@ActivityNewRecords,
-                getString(R.string.error_al_obtener_la_imagen),
-                FancyToast.LENGTH_SHORT,
-                FancyToast.ERROR,
-                false
-            ).show()
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            finish()
-        }
-    }
-
+    //Categories logic
     private fun liAddCategory(){
         val inflater = LayoutInflater.from(binding.root.context)
         liCategoryBinding = LiAddCategoryBinding.inflate(inflater)
@@ -386,7 +414,7 @@ class ActivityNewRecords : AppCompatActivity() {
         for (e in list){
             val chip = Chip(this)
             chip.text = e.categories
-            chip.isCheckable = true
+            chip.isCheckable = false
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener{
                viewModel.deleteCategory(e.id)
@@ -396,9 +424,99 @@ class ActivityNewRecords : AppCompatActivity() {
 
         }
     }
-    fun addRecordToBD(image:String,sentence:String,idIdiom:String){
-        viewModel.insertRecord(image,sentence,idIdiom)
 
+
+
+    //Accept button
+    private fun addRecordToBD(image:String,sentence:String,idIdiom:String){
+        if(isInformationGood()) {
+            viewModel.insertRecord(image, sentence, idIdiom)
+            val intent = Intent()
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
+    }
+
+    private fun isInformationGood(): Boolean{
+        var emptyElement = false
+        var repeatedElements = false
+        val idiomsSelected = mutableListOf<String>()
+
+        if(viewModel.listRecords.value != null) {
+            for (element in viewModel.listRecords.value!!) {
+                if(element.sentence.isBlank()){
+                    emptyElement = true
+                }
+                if(idiomsSelected.contains(element.idIdiom)){
+                    repeatedElements = true
+                }else{
+                    idiomsSelected.add(element.idIdiom)
+                }
+            }
+        }
+
+        if(emptyElement){
+            FancyToast.makeText(
+                this@ActivityNewRecords,
+                getString(R.string.no_debe_espacios_vacios),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false).show()
+        }else if(repeatedElements){
+            FancyToast.makeText(
+                this@ActivityNewRecords,
+                getString(R.string.no_debe_idiomas),
+                FancyToast.LENGTH_LONG,
+                FancyToast.ERROR,
+                false).show()
+        }
+
+        return (!emptyElement) && (!repeatedElements)
+    }
+
+
+    //Activity utils
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_CANCELED) {
+            return
+        }
+
+        //UCrop
+        if (requestCode == UCrop.REQUEST_CROP) {
+
+
+            if (data != null) {
+                imageCropped(data)
+            } else {
+                FancyToast.makeText(
+                    this@ActivityNewRecords,
+                    getString(R.string.error_al_obtener_la_imagen),
+                    FancyToast.LENGTH_SHORT,
+                    FancyToast.ERROR,
+                    false
+                ).show()
+            }
+        }
+        if (requestCode == UCrop.RESULT_ERROR) {
+            FancyToast.makeText(
+                this@ActivityNewRecords,
+                getString(R.string.error_al_obtener_la_imagen),
+                FancyToast.LENGTH_SHORT,
+                FancyToast.ERROR,
+                false
+            ).show()
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            finish()
+        }
     }
 
 }
