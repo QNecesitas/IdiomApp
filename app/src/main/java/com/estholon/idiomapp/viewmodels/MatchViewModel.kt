@@ -9,7 +9,6 @@ import com.estholon.idiomapp.data.CardMatch
 import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
-import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.database.WritingCardDao
 import com.estholon.idiomapp.database.Record_CategoriesDao
 import kotlinx.coroutines.delay

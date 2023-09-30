@@ -1,5 +1,6 @@
 package com.estholon.idiomapp.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,22 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     private val _listAuxiliarCategory = MutableLiveData<MutableList<Category>>()
     val listAuxiliarCategory: LiveData<MutableList<Category>> get() = _listAuxiliarCategory
 
+    private var i = 150000
+
+    //List Idiom
+    private val _listRecordDB = MutableLiveData<MutableList<Records>>()
+    val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
+
+    //List category
+    private val _listAllCategory = MutableLiveData<MutableList<Category>>()
+    val listAllCategory: LiveData<MutableList<Category>> get() = _listAllCategory
+    //List category
+    private val _listPhoto = MutableLiveData<MutableList<Records>>()
+    val listPhoto: LiveData<MutableList<Records>> get() = _listPhoto
+
+    init {
+        _listAuxiliarCategory.value= mutableListOf()
+    }
     fun getAllIdioms() {
         viewModelScope.launch {
             _listIdioms.value = mutableListOf()
@@ -59,6 +76,8 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     }
 
     fun getRecord(idRecord: Int) {
+        var iterador=idRecord + 1
+        listAuxiliar.value?.clear()
         //get date for Record of the all table
         viewModelScope.launch {
             _listAuxiliar.value = mutableListOf()
@@ -67,41 +86,156 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
             _listTranslation.value = translationsDao.fetchTranslationforId(idRecord)
             _listCategories.value = mutableListOf()
             _listCategories.value = recordCategoriesdao.fetchCategoriesforId(idRecord)
-            _listCategory.value = mutableListOf()
-            _listCategory.value = categoriesDao.fetchCategories()
-
+            _listAllCategory.value = categoriesDao.fetchCategories()
             //Join the ListRecord with the ListTranslation
-            for (translation in listTranslation.value!!) {
-                _listAuxiliar.value!!.add(
-                    Records(
-                        translation.idRecord ,
-                        translation.sentence ,
-                        "no" ,
-                        translation.idIdiom
+            if (listTranslation.value?.isNotEmpty() == true) {
+                //TODO Aqui la lista auxiliar esta recorriendo la lista translation buscando a su pareja por id y añadiendola,pero me devuelve doble los elementos que coge en traslation
+                for (translation in listTranslation.value!!) {
+                    listAuxiliar.value!!.add(
+                        Records(
+                            iterador++  ,
+                            translation.sentence ,
+                            "no" ,
+                            translation.idIdiom
+                        )
                     )
-                )
+                }
             }
             _listRecords.value = _listAuxiliar.value
-            for (categoryRecord in listCategories.value!!) {
-                for (category in listCategory.value!!){
-                    if (categoryRecord.idCategories==category.id){
-                        _listAuxiliarCategory.value?.add(category)
+            _listPhoto.value = _listAuxiliar.value
+            if (listCategories.value?.isNotEmpty() == true && listAllCategory.value?.isNotEmpty() == true) {
+                for (categoryRecord in listCategories.value!!) {
+                    for (category in listAllCategory.value!!) {
+                        if (categoryRecord.idCategories == category.id) {
+                            _listAuxiliarCategory.value?.add(category)
+                        }
                     }
                 }
             }
-            _listCategorySelected.value=listAuxiliarCategory.value
+            _listCategorySelected.value = listAuxiliarCategory.value
+            listAuxiliarCategory.value?.clear()
         }
+
 
     }
     fun deleteCategory(id: Int) {
         viewModelScope.launch {
-            val deleteCategorias = mutableListOf<Record_Categories>()
-            _listCategories.value?.let { deleteCategorias.addAll(it) }
-            val categoriaAEliminar = deleteCategorias.find { it.idCategories == id }
+            val deleteCategorias = mutableListOf<Category>()
+            _listCategorySelected.value?.let { deleteCategorias.addAll(it) }
+            val categoriaAEliminar = deleteCategorias.find { it.id == id }
             if (categoriaAEliminar != null) {
                 deleteCategorias.remove(categoriaAEliminar)
             }
-            _listCategories.value = deleteCategorias
+            _listCategorySelected.value = deleteCategorias
+        }
+    }
+
+    fun addDateLIstSentence() {
+        viewModelScope.launch {
+            val addListRecord = mutableListOf<Records>()
+            _listRecords.value?.let { addListRecord.addAll(it) }
+            addListRecord.add(Records(i++, "", "no", "ES"))
+            _listRecords.value = addListRecord
+        }
+    }
+    fun deleteSentence(id: Int) {
+        viewModelScope.launch {
+            val deleteSentences = mutableListOf<Records>()
+            _listRecords.value?.let { deleteSentences.addAll(it) }
+            val sentenceAEliminar = deleteSentences.find { it.id == id }
+            if (sentenceAEliminar != null) {
+                deleteSentences.remove(sentenceAEliminar)
+            }
+            _listRecords.value = deleteSentences
+        }
+    }
+    fun refreshCategories() {
+        viewModelScope.launch {
+            _listCategory.value = mutableListOf()
+            _listCategory.value = categoriesDao.fetchCategories()
+        }
+    }
+
+    fun addCategory(newCategory: String) {
+        viewModelScope.launch {
+
+
+            val category = Category(0, newCategory)
+
+            categoriesDao.insertCategory(category)
+
+            refreshCategories()
+
+        }
+    }
+    fun selectedCategory(id: Int, categories: String) {
+        viewModelScope.launch {
+            val listSelectedCategories = mutableListOf<Category>()
+            _listCategorySelected.value?.add(Category(id, categories))
+            _listCategorySelected.value?.let { listSelectedCategories.addAll(it) }
+            _listCategorySelected.value = listSelectedCategories
+        }
+    }
+
+    fun deleteCategoryRecord(id: Int) {
+        viewModelScope.launch {
+            recordCategoriesdao.deleteCategory(id)
+        }
+    }
+
+    fun deleteCategories(id: Int) {
+        viewModelScope.launch {
+            categoriesDao.deleteCategory(id)
+            refreshCategories()
+        }
+    }
+
+    fun insertRecord(image: String, sentence: String, idIdiom: String) {
+        viewModelScope.launch {
+            val record = Records(0, sentence, image, idIdiom)
+            recordsDao.insertRecord(record)
+            getRecordDB(sentence)
+        }
+    }
+    private fun getRecordDB(sentence: String) {
+        viewModelScope.launch {
+            _listRecordDB.value = mutableListOf()
+            _listRecordDB.value = recordsDao.getRecord(sentence)
+            listRecordDB.value?.last()?.let {
+                listCategorySelected.value?.let { it1 ->
+                    insertRecordCategory(
+                        it.id,
+                        it1
+                    )
+                }
+            }
+        }
+    }
+
+    private fun insertRecordCategory(id: Int, category: MutableList<Category>) {
+        viewModelScope.launch {
+            for (i in category) {
+                recordCategoriesdao.insertCategoryRecord(id, i.id)
+            }
+            listRecords.value?.let { insertTranslation(it, id) }
+        }
+    }
+    private fun insertTranslation(record: MutableList<Records>, idRecord: Int) {
+        viewModelScope.launch {
+            for ((index, i) in record.withIndex()) {
+                if (index == 0) continue
+                val translation = Translations(0, i.sentence, i.idIdiom, idRecord)
+                translationsDao.insertTranslation(translation)
+            }
+        }
+
+    }
+
+    fun deleteRecord(idRecord:Int){
+        viewModelScope.launch {
+            recordsDao.deleteRecord(idRecord)
+            translationsDao.deleteTranslation(idRecord)
+            recordCategoriesdao.deleteRecordCategory(idRecord)
         }
     }
 }

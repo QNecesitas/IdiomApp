@@ -86,4 +86,6 @@
     <string name="_1_0x">1.0X</string>
     <string name="iniciar">Iniciar</string>
     <string name="vacio">Vacío</string>
+    <string name="Esta_seguro_borrar_record">Eliminar Registro</string>
+    <string name="al_borrar_record">¿Estás seguro de eliminar este registro?</string>
 </resources>

@@ -24,4 +24,7 @@ interface RecordsDao {
     @Query("SELECT * FROM Records WHERE id=:id")
     suspend fun fetchRecordforId(id:Int):MutableList<Records>
 
+    @Query("DELETE FROM Records WHERE id=:id")
+    suspend fun deleteRecord(id:Int)
+
 }

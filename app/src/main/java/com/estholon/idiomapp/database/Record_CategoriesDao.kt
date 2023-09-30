@@ -18,4 +18,7 @@ interface Record_CategoriesDao {
 
     @Query("SELECT * FROM Record_Categories WHERE idRecord=:id")
     suspend fun fetchCategoriesforId(id:Int):MutableList<Record_Categories>
+
+    @Query("DELETE FROM Record_Categories WHERE idRecord=:id")
+    suspend fun deleteRecordCategory(id:Int)
 }
