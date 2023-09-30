@@ -21,4 +21,7 @@ interface RecordsDao {
     @Query("SELECT * FROM Records WHERE sentence=:sentence")
     suspend fun getRecord(sentence: String):MutableList<Records>
 
+    @Query("SELECT * FROM Records WHERE id=:id")
+    suspend fun fetchRecordforId(id:Int):MutableList<Records>
+
 }

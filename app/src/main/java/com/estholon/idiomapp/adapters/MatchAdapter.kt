@@ -47,7 +47,7 @@ class MatchAdapter(private val context: Context) :
 
 
             binding.root.setOnClickListener {
-                clickSelector?.onClickSelector(record.id,record.sentence,record.state,adapterPosition)
+                clickSelector?.onClickSelector(record.id,record.idIdiom,adapterPosition)
             }
 
             when(record.state){
@@ -168,7 +168,7 @@ class MatchAdapter(private val context: Context) :
     }
 
     interface ITouchSelector {
-        fun onClickSelector(id:Int,sentence:String,state:String,position: Int)
+        fun onClickSelector(id:Int,idIdiom:String,position: Int)
     }
 
     fun setClickSelector(clickSelector: ITouchSelector?) {

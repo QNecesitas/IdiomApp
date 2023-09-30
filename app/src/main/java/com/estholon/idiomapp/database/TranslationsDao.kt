@@ -16,4 +16,6 @@ import com.estholon.idiomapp.data.Translations
  @Query("SELECT idRecord AS id ,sentence, 'no' AS image, idIdiom  FROM Translations")
  suspend fun fetchTranslationsAsRecords(): MutableList<Records>
 
+ @Query("SELECT * FROM Translations WHERE idRecord=:id")
+ suspend fun fetchTranslationforId(id:Int):MutableList<Translations>
 }

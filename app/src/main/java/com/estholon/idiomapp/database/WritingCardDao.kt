@@ -6,7 +6,6 @@ import com.estholon.idiomapp.data.WritingCard
 
 @Dao
 interface WritingCardDao {
-
-    g
+    
     suspend fun fetchCard(idIdiomI:String,idIdiomD: String):MutableList<WritingCard>
 }
