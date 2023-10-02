@@ -399,7 +399,13 @@ class ActivityEditRecord : AppCompatActivity() {
 
             if (contentUri != null) {
                 this.uriImageCut = Uri.parse(contentUri)
-                binding.ivAddimage.setImageURI(this.uriImageCut)
+                Glide.with(this)
+                    .load(this.uriImageCut)
+                    .error(R.drawable.outline_image_24)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(binding.ivAddimage)
             } else {
                 FancyToast.makeText(
                     this@ActivityEditRecord,
@@ -444,7 +450,13 @@ class ActivityEditRecord : AppCompatActivity() {
     private fun imageCropped(data: Intent?) {
         if (data != null) {
             this.uriImageCut = UCrop.getOutput(data)
-            binding.ivAddimage.setImageURI(this.uriImageCut)
+            Glide.with(this)
+                .load(this.uriImageCut)
+                .error(R.drawable.outline_image_24)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(binding.ivAddimage)
         }
     }
     //Categories logic

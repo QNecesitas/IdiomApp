@@ -21,27 +21,37 @@
         tools:targetApi="31">
         <activity
             android:name=".ActivityResultGame"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"/>
         <activity
             android:name=".ActivityEditRecord"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ActivityCard"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ActivityCamera"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"/>
         <activity
             android:name=".ActivityMatch"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"/>
         <activity
             android:name=".ActivityWriting"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="screenSize|orientation"/>
         <activity
             android:name=".ActivityNewRecords"
             android:configChanges="screenSize|orientation"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ActivityRecords"
             android:configChanges="screenSize|orientation"
@@ -51,7 +61,8 @@
             android:name=".ActivityHome"
             android:screenOrientation="portrait"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing"
+            android:configChanges="screenSize|orientation"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

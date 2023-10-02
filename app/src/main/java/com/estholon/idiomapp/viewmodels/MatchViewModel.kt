@@ -196,6 +196,7 @@ class MatchViewModel(
                     //If the id are the same and is the selected (The selected is already selected)
                     _matchSelected.value?.clear()
                     auxiliaryList[position].state = "Nada"
+                    _matchRecord.value = auxiliaryList
 
                 } else {
                     //If the ids are not the same (The selected is the bad response)
