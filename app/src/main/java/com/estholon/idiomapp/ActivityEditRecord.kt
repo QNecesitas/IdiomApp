@@ -66,6 +66,8 @@ class ActivityEditRecord : AppCompatActivity() {
         binding = ActivityEditRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        var firstLoaded=false
+
 
 
         //get id from ActivityRecord
@@ -143,13 +145,16 @@ class ActivityEditRecord : AppCompatActivity() {
         viewModel.listRecords.observe(this) {
             viewModel.listIdioms.value?.let { it1 -> adapterSentence.setIdiomList(it1.toList() as MutableList<Idioms>) }
             adapterSentence.submitList(it)
-            Glide.with(this)
-                .load(Uri.parse(it[0].image))
-                .error(R.drawable.outline_image_24)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(binding.ivAddimage)
+            if (!firstLoaded) {
+                firstLoaded=true
+                Glide.with(this)
+                    .load(Uri.parse(it[0].image))
+                    .error(R.drawable.outline_image_24)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(binding.ivAddimage)
+            }
 
         }
 
