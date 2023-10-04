@@ -82,17 +82,9 @@ class ActivityCamera : AppCompatActivity() {
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(
                 this, cameraSelector, preview)
-        }catch(_: Exception) {
-
-        }
-
-
-
-
+        }catch(_: Exception) { }
 
         cameraProviderFuture.addListener({} , ContextCompat.getMainExecutor(this))
-
-
 
     }
 
@@ -104,7 +96,7 @@ class ActivityCamera : AppCompatActivity() {
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
 
-        // Get the cache directory for your application
+        // Get the cache directory
         val cacheDir = this.cacheDir
 
         // Create a subdirectory within the cache directory if it doesn't exist
@@ -131,7 +123,7 @@ class ActivityCamera : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val file = ImageTools.createTempImageFile(
                         this@ActivityCamera,
-                        ImageTools.getHoraActual("yyMMddHHmmss")
+                        ImageTools.getActualHour("yyMMddHHmmss")
                     )
                     cutImage(Uri.fromFile(imageFile), Uri.fromFile(file))
                 }
@@ -141,7 +133,6 @@ class ActivityCamera : AppCompatActivity() {
 
 
     private fun startCamera() {
-
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -177,7 +168,6 @@ class ActivityCamera : AppCompatActivity() {
             }
 
         }, ContextCompat.getMainExecutor(this))
-
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -225,8 +215,8 @@ class ActivityCamera : AppCompatActivity() {
             UCrop.of(uri1 , uri2)
                 .withAspectRatio(3f , 3f)
                 .withMaxResultSize(
-                    ImageTools.ANCHO_DE_FOTO_A_SUBIR ,
-                    ImageTools.ALTO_DE_FOTO_A_SUBIR
+                    ImageTools.WIDTH_OF_PHOTO_TO_UPLOAD ,
+                    ImageTools.HEIGHT_OF_PHOTO_TO_UPLOAD
                 )
                 .start(this)
         } catch (e: Exception) {

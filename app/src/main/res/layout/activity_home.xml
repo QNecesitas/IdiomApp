@@ -21,13 +21,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/idiomapp"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="@dimen/text_h" />
+                android:textSize="@dimen/text_h"
+                android:textStyle="bold" />
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -36,17 +36,16 @@
 
     <!--Container buttons-->
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintTop_toBottomOf="@id/AppBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_max="600sp"
         android:id="@+id/containerButtons"
         android:layout_width="0sp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AppBar"
+        app:layout_constraintWidth_max="600sp">
 
         <!--Button Register-->
         <Button
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/btn_registro"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -58,7 +57,8 @@
             android:text="@string/Registro"
             android:textSize="@dimen/text_h"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <!--Button Card-->
@@ -116,14 +116,14 @@
 
     <!--Container idioms-->
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintBottom_toTopOf="@id/container_categories"
         android:id="@+id/container_idiom"
         android:layout_width="0dp"
-        app:layout_constraintWidth_max="600sp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/container_categories"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/containerButtons"
-        android:layout_height="wrap_content">
+        app:layout_constraintWidth_max="600sp">
 
         <!--tv idioms-->
         <TextView
@@ -147,58 +147,57 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            >
+            app:layout_constraintStart_toStartOf="parent">
 
             <!--tv de-->
             <TextView
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom1"
                 android:id="@+id/tvDe"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/de"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="@dimen/text_s" />
+                android:textSize="@dimen/text_s"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!--spinner Pais 1-->
             <Spinner
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tvA"
-                app:layout_constraintStart_toEndOf="@id/tvDe"
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/spinnerIdiom1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvA"
+                app:layout_constraintStart_toEndOf="@id/tvDe"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!--tv a-->
             <TextView
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom2"
-                app:layout_constraintStart_toEndOf="@id/spinnerIdiom1"
                 android:id="@+id/tvA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/a"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinnerIdiom2"
+                app:layout_constraintStart_toEndOf="@id/spinnerIdiom1"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!--spinner Pais 2-->
             <Spinner
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvA"
                 android:id="@+id/spinnerIdiom2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvA"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -207,13 +206,13 @@
     <!--Container categories-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_categories"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/container_idiom"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="0sp"
-        app:layout_constraintWidth_max="600sp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_idiom"
+        app:layout_constraintWidth_max="600sp">
 
         <!--tv idioms-->
         <TextView
@@ -241,6 +240,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_categorias" />
+
+        <!--Chip group showing the categories-->
+        <HorizontalScrollView
+            app:layout_constraintTop_toBottomOf="@id/tv_introCate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal">
+
+            <!--Chip group-->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:singleSelection="false">
+
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,13 +3,11 @@ package com.estholon.idiomapp.auxiliary
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatCallback
 import com.estholon.idiomapp.R
 import java.util.Locale
 
-open class TextToSpeech(
-    private val context: Context, private val idiomLocale: Locale, private val onInitCallback:
-        () -> Unit
+class TextToSpeech(
+    private val context: Context, private val idiomLocale: Locale
 ) : TextToSpeech.OnInitListener {
 
     private var textToSpeech: TextToSpeech = TextToSpeech(context, this)
@@ -30,8 +28,6 @@ open class TextToSpeech(
     fun setSpeechRate(rate: Double) {
         if (isAvailable) {
             textToSpeech.setSpeechRate(rate.toFloat())
-        } else {
-            // Maneja el caso en el que la síntesis de voz no está disponible
         }
     }
 
@@ -48,11 +44,6 @@ open class TextToSpeech(
                 Toast.LENGTH_LONG
             ).show()
         }
-    }
-
-    fun shutdown() {
-        textToSpeech.stop()
-        textToSpeech.shutdown()
     }
 
 }

@@ -38,7 +38,7 @@ class ActivityCard : AppCompatActivity() {
     private val viewModel: CardViewModel by viewModels {
         CardViewModelFactory(
             (application as IdiomApp).database.cardDao(),
-            (application as IdiomApp).database.record_categoriesDao()
+            (application as IdiomApp).database.recordCategoriesDao()
         )
     }
 
@@ -49,11 +49,11 @@ class ActivityCard : AppCompatActivity() {
         setContentView(binding.root)
 
         //Speech
-        textToSpeechEs = TextToSpeech(this, Locale("es", "ES")) {}
-        textToSpeechEn = TextToSpeech(this, Locale("en", "US")) {}
-        textToSpeechDe = TextToSpeech(this, Locale("de", "DE")) {}
-        textToSpeechPt = TextToSpeech(this, Locale("pt", "BR")) {}
-        textToSpeechFr = TextToSpeech(this, Locale("fr", "FR")) {}
+        textToSpeechEs = TextToSpeech(this, Locale("es", "ES"))
+        textToSpeechEn = TextToSpeech(this, Locale("en", "US"))
+        textToSpeechDe = TextToSpeech(this, Locale("de", "DE"))
+        textToSpeechPt = TextToSpeech(this, Locale("pt", "BR"))
+        textToSpeechFr = TextToSpeech(this, Locale("fr", "FR"))
         textToSpeech = textToSpeechEs
         textToSpeech1 = textToSpeechEs
         textToSpeech = textToSpeechEs
@@ -207,7 +207,6 @@ class ActivityCard : AppCompatActivity() {
         if (InformationIntent.itemIdiomLeft.id == viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
             when (viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
                 "ES" -> {
-
                     textToSpeech = textToSpeechEs
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.spain)
@@ -215,7 +214,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "FR" -> {
-
                     textToSpeech = textToSpeechFr
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.france)
@@ -223,7 +221,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "DE" -> {
-
                     textToSpeech = textToSpeechDe
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.germany)
@@ -231,7 +228,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "PT" -> {
-
                     textToSpeech = textToSpeechPt
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.portugal)
@@ -239,7 +235,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "EN" -> {
-
                     textToSpeech = textToSpeechEn
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.unite)
@@ -251,7 +246,6 @@ class ActivityCard : AppCompatActivity() {
 
             when (viewModel.writingCardSelected.value?.get(0)?.idiomTranslation) {
                 "ES" -> {
-
                     textToSpeech1 = textToSpeechEs
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.spain)
@@ -298,7 +292,6 @@ class ActivityCard : AppCompatActivity() {
         } else {
             when (viewModel.writingCardSelected.value?.get(0)?.idiomTranslation) {
                 "ES" -> {
-
                     textToSpeech = textToSpeechEs
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.spain)
@@ -306,7 +299,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "FR" -> {
-
                     textToSpeech = textToSpeechFr
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.france)
@@ -314,7 +306,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "DE" -> {
-
                     textToSpeech = textToSpeechDe
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.germany)
@@ -322,7 +313,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "PT" -> {
-
                     textToSpeech = textToSpeechPt
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.portugal)
@@ -330,7 +320,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "EN" -> {
-
                     textToSpeech = textToSpeechEn
                     binding.ivIdiom.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.unite)
@@ -342,7 +331,6 @@ class ActivityCard : AppCompatActivity() {
 
             when (viewModel.writingCardSelected.value?.get(0)?.idiomSentence) {
                 "ES" -> {
-
                     textToSpeech1 = textToSpeechEs
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.spain)
@@ -350,7 +338,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "FR" -> {
-
                     textToSpeech1 = textToSpeechFr
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.france)
@@ -358,7 +345,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "DE" -> {
-
                     textToSpeech1 = textToSpeechDe
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.germany)
@@ -366,7 +352,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "PT" -> {
-
                     textToSpeech1 = textToSpeechPt
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.portugal)
@@ -374,7 +359,6 @@ class ActivityCard : AppCompatActivity() {
                 }
 
                 "EN" -> {
-
                     textToSpeech1 = textToSpeechEn
                     binding.ivIdiom1.setImageDrawable(
                         AppCompatResources.getDrawable(this, R.drawable.unite)

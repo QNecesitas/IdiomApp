@@ -11,7 +11,7 @@ import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.data.Translations
 import com.estholon.idiomapp.database.CategoriesDao
 import com.estholon.idiomapp.database.IdiomsDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import com.estholon.idiomapp.database.RecordsDao
 import com.estholon.idiomapp.database.TranslationsDao
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class NewRecordViewModel(
     private val idiomsDao: IdiomsDao,
     private val categoriesDao: CategoriesDao,
-    private val recordCategoriesdao: Record_CategoriesDao,
+    private val recordCategoriesDao: RecordCategoriesDao,
     private val recordsDao: RecordsDao,
     private val translationsDao: TranslationsDao
 ) : ViewModel() {
@@ -42,7 +42,7 @@ class NewRecordViewModel(
     val selectedCategory: LiveData<MutableList<Category>> get() = _selectedCategory
 
     private val _listRecordDB = MutableLiveData<MutableList<Records>>()
-    val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
+    private val listRecordDB: LiveData<MutableList<Records>> get() = _listRecordDB
     fun getAllIdioms() {
         viewModelScope.launch {
             _listIdioms.value = mutableListOf()
@@ -70,9 +70,9 @@ class NewRecordViewModel(
         viewModelScope.launch {
             val deleteSentences = mutableListOf<Records>()
             _listRecords.value?.let { deleteSentences.addAll(it) }
-            val sentenceAEliminar = deleteSentences.find { it.id == id }
-            if (sentenceAEliminar != null) {
-                deleteSentences.remove(sentenceAEliminar)
+            val sentenceToDelete = deleteSentences.find { it.id == id }
+            if (sentenceToDelete != null) {
+                deleteSentences.remove(sentenceToDelete)
             }
             _listRecords.value = deleteSentences
         }
@@ -109,13 +109,13 @@ class NewRecordViewModel(
 
     fun deleteCategory(id: Int) {
         viewModelScope.launch {
-            val deleteCategorias = mutableListOf<Category>()
-            _selectedCategory.value?.let { deleteCategorias.addAll(it) }
-            val categoriaAEliminar = deleteCategorias.find { it.id == id }
-            if (categoriaAEliminar != null) {
-                deleteCategorias.remove(categoriaAEliminar)
+            val deleteCategories = mutableListOf<Category>()
+            _selectedCategory.value?.let { deleteCategories.addAll(it) }
+            val categoriesToDelete = deleteCategories.find { it.id == id }
+            if (categoriesToDelete != null) {
+                deleteCategories.remove(categoriesToDelete)
             }
-            _selectedCategory.value = deleteCategorias
+            _selectedCategory.value = deleteCategories
         }
     }
 
@@ -128,7 +128,7 @@ class NewRecordViewModel(
 
     fun deleteCategoryRecord(id: Int) {
         viewModelScope.launch {
-            recordCategoriesdao.deleteCategory(id)
+            recordCategoriesDao.deleteCategory(id)
         }
     }
 
@@ -162,7 +162,7 @@ class NewRecordViewModel(
     private fun insertRecordCategory(id: Int, category: MutableList<Category>) {
         viewModelScope.launch {
             for (i in category) {
-                recordCategoriesdao.insertCategoryRecord(id, i.id)
+                recordCategoriesDao.insertCategoryRecord(id, i.id)
             }
             listRecords.value?.let { insertTranslation(it, id) }
         }
@@ -183,7 +183,7 @@ class NewRecordViewModel(
 class NewRecordViewModelFactory(
     private val idiomsDao: IdiomsDao,
     private val categoriesDao: CategoriesDao,
-    private val recordCategoriesdao: Record_CategoriesDao,
+    private val recordCategoriesDao: RecordCategoriesDao,
     private val recordsDao: RecordsDao,
     private val translationsDao: TranslationsDao
 ) : ViewModelProvider.Factory {
@@ -194,7 +194,7 @@ class NewRecordViewModelFactory(
             return NewRecordViewModel(
                 idiomsDao,
                 categoriesDao,
-                recordCategoriesdao,
+                recordCategoriesDao,
                 recordsDao,
                 translationsDao
             ) as T

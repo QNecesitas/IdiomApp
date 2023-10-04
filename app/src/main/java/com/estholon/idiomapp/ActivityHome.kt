@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +31,7 @@ class ActivityHome : AppCompatActivity() {
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory((application as IdiomApp).database.categoriesDao(),
             (application as IdiomApp).database.idiomsDao(),
-            (application as IdiomApp).database.record_categoriesDao())
+            (application as IdiomApp).database.recordCategoriesDao())
     }
 
 
@@ -107,7 +106,7 @@ class ActivityHome : AppCompatActivity() {
 
         //Observe
         viewModel.listCategory.observe(this) {
-            refreshChipGroup(it)
+            refreshChipGroupInflate(it)
         }
 
         viewModel.listIdiomsLeft.observe(this) { items ->
@@ -134,26 +133,29 @@ class ActivityHome : AppCompatActivity() {
         val inflater = LayoutInflater.from(binding.root.context)
         liCategoryBinding = LiAllCategoryBinding.inflate(inflater)
         val builder = AlertDialog.Builder(binding.root.context)
-        builder.setView(liCategoryBinding!!.root)
+        if(liCategoryBinding != null) {
+            builder.setView(liCategoryBinding!!.root)
+        }
         val alertDialog = builder.create()
 
         viewModel.refreshCategories()
-        Log.e("test1",InformationIntent.categoriesSelectedList.toString())
 
-        liCategoryBinding!!.ivClose.setOnClickListener{
-            alertDialog.dismiss()
+        if(liCategoryBinding!=null) {
+            liCategoryBinding?.ivClose?.setOnClickListener {
+                alertDialog.dismiss()
+            }
         }
 
         //Finished
         alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.window?.setGravity(Gravity.CENTER)
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
 
     }
 
-    private fun refreshChipGroup(list : MutableList<Category>){
-        liCategoryBinding?.chipGroup?.removeAllViews()
+    private fun refreshChipGroupInflate(list : MutableList<Category>){
+        liCategoryBinding?.chipGroupCategories?.removeAllViews()
         for (e in list){
             val chip = Chip(this)
             chip.text = e.categories
@@ -163,20 +165,22 @@ class ActivityHome : AppCompatActivity() {
                 chip.isChecked = true
             }
             chip.setOnCloseIconClickListener{
-                alertDelete(chip, e.id)
+                alertDeleteInflate(chip, e.id)
             }
             chip.setOnCheckedChangeListener { _, b ->
                 if(b){
                     InformationIntent.categoriesSelectedList.add(e)
+                    refreshChipGroupStatic()
                 }else{
                     InformationIntent.categoriesSelectedList.remove(e)
+                    refreshChipGroupStatic()
                 }
             }
-            liCategoryBinding?.chipGroup?.addView(chip)
+            liCategoryBinding?.chipGroupCategories?.addView(chip)
         }
     }
 
-    private fun alertDelete(chip: Chip, id: Int) {
+    private fun alertDeleteInflate(chip: Chip, id: Int) {
         //init alert dialog
         val builder = android.app.AlertDialog.Builder(this)
         builder.setCancelable(false)
@@ -184,12 +188,10 @@ class ActivityHome : AppCompatActivity() {
         builder.setMessage(R.string.al_borrar)
         //set listeners for dialog buttons
         builder.setPositiveButton(R.string.Aceptar) { dialog , _ ->
-            //finish the activity
-            deleteChip(chip, id)
+            deleteChipInflate(chip, id)
             dialog.dismiss()
         }
         builder.setNegativeButton(R.string.Cancelar){ dialog , _ ->
-            //finish the activity
             dialog.dismiss()
         }
 
@@ -197,11 +199,28 @@ class ActivityHome : AppCompatActivity() {
         builder.create().show()
     }
 
-    private fun deleteChip(chip: Chip, id:Int){
-        liCategoryBinding?.chipGroup?.removeView(chip)
+    private fun deleteChipInflate(chip: Chip, id:Int){
+        liCategoryBinding?.chipGroupCategories?.removeView(chip)
         InformationIntent.categoriesSelectedList.removeIf {it.id == id}
         viewModel.deleteCategoryRecord(id)
         viewModel.deleteCategories(id)
+    }
+
+    private fun refreshChipGroupStatic(){
+        binding.chipGroupCategories.removeAllViews()
+        for (e in InformationIntent.categoriesSelectedList){
+            val chip = Chip(this)
+            chip.text = e.categories
+            chip.isCheckable = false
+            chip.isCloseIconVisible = true
+            chip.setOnCloseIconClickListener{
+                InformationIntent.categoriesSelectedList.remove(e)
+                refreshChipGroupStatic()
+            }
+
+            binding.chipGroupCategories.addView(chip)
+
+        }
     }
 
 
@@ -232,6 +251,5 @@ class ActivityHome : AppCompatActivity() {
         //create the alert dialog and show it
         builder.create().show()
     }
-
 
 }

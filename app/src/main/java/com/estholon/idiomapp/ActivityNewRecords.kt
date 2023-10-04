@@ -3,14 +3,11 @@ package com.estholon.idiomapp
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.icu.text.AlphabeticIndex.Record
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
@@ -24,7 +21,6 @@ import androidx.core.view.GravityCompat
 import com.estholon.idiomapp.adapters.AddSentenceAdapter
 import com.estholon.idiomapp.auxiliary.ImageTools
 import com.estholon.idiomapp.data.Category
-import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.databinding.ActivityNewRecordsBinding
 import com.estholon.idiomapp.databinding.LiAddCategoryBinding
@@ -36,6 +32,7 @@ import com.yalantis.ucrop.UCrop
 
 class ActivityNewRecords : AppCompatActivity() {
 
+    //Bindings
     private lateinit var binding: ActivityNewRecordsBinding
     private lateinit var liCategoryBinding:LiAddCategoryBinding
 
@@ -43,13 +40,12 @@ class ActivityNewRecords : AppCompatActivity() {
     private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
     private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
 
+    //Image
     private var uriImageCut: Uri? = null
-
-
 
     //View Model
     private val viewModel: NewRecordViewModel by viewModels {
-        NewRecordViewModelFactory((application as IdiomApp).database.idiomsDao(),(application as IdiomApp).database.categoriesDao(),(application as IdiomApp).database.record_categoriesDao(),(application as IdiomApp).database.recordsDao(),(application as IdiomApp).database.translationsDao())
+        NewRecordViewModelFactory((application as IdiomApp).database.idiomsDao(),(application as IdiomApp).database.categoriesDao(),(application as IdiomApp).database.recordCategoriesDao(),(application as IdiomApp).database.recordsDao(),(application as IdiomApp).database.translationsDao())
     }
 
     //Recycler
@@ -62,6 +58,7 @@ class ActivityNewRecords : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNewRecordsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
 
         //NavigationDrawer
@@ -237,7 +234,7 @@ class ActivityNewRecords : AppCompatActivity() {
 
             val file = ImageTools.createTempImageFile(
                 this@ActivityNewRecords,
-                ImageTools.getHoraActual("yyMMddHHmmss")
+                ImageTools.getActualHour("yyMMddHHmmss")
             )
 
             if (contentUri != null) {
@@ -279,13 +276,6 @@ class ActivityNewRecords : AppCompatActivity() {
                     FancyToast.WARNING,
                     false
                 ).show()
-                FancyToast.makeText(
-                    this@ActivityNewRecords,
-                    getString(R.string.error_al_obtener_la_imagen,),
-                    FancyToast.LENGTH_SHORT,
-                    FancyToast.WARNING,
-                    false
-                ).show()
             }
 
         } else {
@@ -304,8 +294,8 @@ class ActivityNewRecords : AppCompatActivity() {
             UCrop.of(uri1, uri2)
                 .withAspectRatio(3f, 3f)
                 .withMaxResultSize(
-                    ImageTools.ANCHO_DE_FOTO_A_SUBIR,
-                    ImageTools.ALTO_DE_FOTO_A_SUBIR
+                    ImageTools.WIDTH_OF_PHOTO_TO_UPLOAD,
+                    ImageTools.HEIGHT_OF_PHOTO_TO_UPLOAD
                 )
                 .start(this)
         } catch (e: Exception) {
@@ -351,14 +341,14 @@ class ActivityNewRecords : AppCompatActivity() {
 
         //Finished
         alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.window?.setGravity(Gravity.CENTER)
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
 
     }
 
     private fun refreshChipGroup(list : MutableList<Category>){
-        liCategoryBinding.chipGroup.removeAllViews()
+        liCategoryBinding.chipGroupCategories.removeAllViews()
         for (e in list){
             val chip = Chip(this)
             chip.text = e.categories
@@ -377,7 +367,7 @@ class ActivityNewRecords : AppCompatActivity() {
                     viewModel.deleteCategory(e.id)
                 }
             }
-            liCategoryBinding.chipGroup.addView(chip)
+            liCategoryBinding.chipGroupCategories.addView(chip)
 
         }
     }
@@ -404,14 +394,14 @@ class ActivityNewRecords : AppCompatActivity() {
     }
 
     private fun deleteChip(chip: Chip, id:Int){
-        liCategoryBinding.chipGroup.removeView(chip)
+        liCategoryBinding.chipGroupCategories.removeView(chip)
         viewModel.deleteCategoryRecord(id)
         viewModel.deleteCategories(id)
         viewModel.deleteCategory(id)
     }
 
     private fun otherRefreshChipGroup(list : MutableList<Category>){
-        binding.chipGroup.removeAllViews()
+        binding.chipGroupCategories.removeAllViews()
         for (e in list){
             val chip = Chip(this)
             chip.text = e.categories
@@ -421,7 +411,7 @@ class ActivityNewRecords : AppCompatActivity() {
                viewModel.deleteCategory(e.id)
             }
 
-            binding.chipGroup.addView(chip)
+            binding.chipGroupCategories.addView(chip)
 
         }
     }

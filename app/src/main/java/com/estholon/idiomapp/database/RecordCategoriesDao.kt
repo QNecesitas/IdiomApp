@@ -3,10 +3,9 @@ package com.estholon.idiomapp.database
 import androidx.room.Dao
 import androidx.room.Query
 import com.estholon.idiomapp.data.Record_Categories
-import com.estholon.idiomapp.data.Records
 
 @Dao
-interface Record_CategoriesDao {
+interface RecordCategoriesDao {
     @Query("DELETE FROM Record_Categories WHERE idCategories=:id")
     suspend fun deleteCategory(id:Int)
 
@@ -17,7 +16,7 @@ interface Record_CategoriesDao {
     suspend fun fetchRecordCategory():MutableList<Record_Categories>
 
     @Query("SELECT * FROM Record_Categories WHERE idRecord=:id")
-    suspend fun fetchCategoriesforId(id:Int):MutableList<Record_Categories>
+    suspend fun fetchCategoriesForId(id:Int):MutableList<Record_Categories>
 
     @Query("DELETE FROM Record_Categories WHERE idRecord=:id")
     suspend fun deleteRecordCategory(id:Int)

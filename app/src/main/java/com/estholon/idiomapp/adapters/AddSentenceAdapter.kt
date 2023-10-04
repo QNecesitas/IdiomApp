@@ -26,11 +26,11 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
     }
 
     //Speech
-    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES")){}
-    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US")){}
-    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE")){}
-    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR")){}
-    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR")){}
+    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES"))
+    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US"))
+    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE"))
+    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR"))
+    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR"))
 
     private var textChanged:ITouchTextChanged?=null
     private var onSpinnerListener:SpinnerListener?=null
@@ -57,7 +57,7 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
         ) {
 
             //Declare
-            val spinnerPersonalizado = binding.customSpinner
+            val customSpinner = binding.customSpinner
             var textToSpeech = textToSpeechEs
 
 
@@ -68,9 +68,9 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
 
             val adapter = SpinnerAdapter(context , R.layout.custom_spinner , idioms)
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown)
-            spinnerPersonalizado.adapter = adapter
+            customSpinner.adapter = adapter
 
-            spinnerPersonalizado.onItemSelectedListener =
+            customSpinner.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>? ,
@@ -78,9 +78,9 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
                         position: Int ,
                         id: Long
                     ) {
-                        val selectedItem = spinnerPersonalizado.selectedItem as Idioms
+                        val selectedItem = customSpinner.selectedItem as Idioms
 
-                        // Accede al ID del objeto seleccionado
+
                         val selectedId = selectedItem.id
                         onSpinnerListener?.onSpinnerClick(selectedId,adapterPosition)
                         when (selectedId) {
@@ -115,14 +115,12 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
 
                     }
 
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        // Cuando no se selecciona nada en el Spinner
-                    }
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
 
                 }
 
-            binding.etSentence.doOnTextChanged { text, start, before, count ->
+            binding.etSentence.doOnTextChanged { text, _, _, _ ->
                 textChanged?.onTextChanged(text.toString(),adapterPosition)
             }
         }
@@ -138,7 +136,7 @@ class AddSentenceAdapter(private val context: Context, private var idioms: List<
             )
         )
         viewHolder.itemView.setOnClickListener {
-            val position = viewHolder.adapterPosition
+            viewHolder.adapterPosition
         }
         return viewHolder
     }

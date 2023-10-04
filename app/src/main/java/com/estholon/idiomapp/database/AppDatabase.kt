@@ -19,7 +19,7 @@ import com.estholon.idiomapp.data.Translations
 
     abstract fun categoriesDao(): CategoriesDao
     abstract fun idiomsDao(): IdiomsDao
-    abstract fun record_categoriesDao(): Record_CategoriesDao
+    abstract fun recordCategoriesDao(): RecordCategoriesDao
     abstract fun recordsDao():RecordsDao
     abstract fun translationsDao():TranslationsDao
 

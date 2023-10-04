@@ -227,7 +227,7 @@
 
                     <!--Chip group-->
                     <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chipGroup"
+                        android:id="@+id/chip_group_categories"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"

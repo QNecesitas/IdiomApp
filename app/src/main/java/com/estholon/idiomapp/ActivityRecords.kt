@@ -3,11 +3,9 @@ package com.estholon.idiomapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.AdapterView
 import android.widget.SearchView
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -103,7 +101,7 @@ class ActivityRecords : AppCompatActivity() {
 
 
 
-        //Observe
+        //Observers
         viewModel.listRecord.observe(this) {
             adapterSentence.submitList(it)
         }
@@ -133,7 +131,6 @@ class ActivityRecords : AppCompatActivity() {
 
         //Spinner
         val customSpinner = binding.customSpinner
-
         viewModel.listIdioms.observe(this) { items ->
             // Updating the adapter
             val adapter = SpinnerAdapter(this , R.layout.custom_spinner , items)
@@ -141,7 +138,6 @@ class ActivityRecords : AppCompatActivity() {
             customSpinner.adapter = adapter
 
         }
-
         customSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>? ,
@@ -153,7 +149,6 @@ class ActivityRecords : AppCompatActivity() {
                 val selectedItem = customSpinner.selectedItem as Idioms
 
                 binding.search.setQuery("",false)
-                // Accede al ID del objeto seleccionado
                 val selectedId = selectedItem.id
                 if(selectedId=="ALL"){
                     viewModel.getAllRecord()
@@ -163,9 +158,7 @@ class ActivityRecords : AppCompatActivity() {
 
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Cuando no se selecciona nada en el Spinner
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
 
@@ -180,13 +173,13 @@ class ActivityRecords : AppCompatActivity() {
 
         //Thread
         newRecordLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                recordReturn(result)
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                recordReturn()
             }
 
         editRecordLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                recordReturn(result)
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                recordReturn()
             }
 
         viewModel.getAllIdioms()
@@ -206,7 +199,7 @@ class ActivityRecords : AppCompatActivity() {
         }
     }
 
-    private fun recordReturn(result: ActivityResult) {
+    private fun recordReturn() {
         viewModel.getAllIdioms()
         viewModel.getAllRecord()
     }

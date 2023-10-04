@@ -1,23 +1,22 @@
 package com.estholon.idiomapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.estholon.idiomapp.auxiliary.InformationIntent
-import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
+import com.estholon.idiomapp.data.WritingCard
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import com.estholon.idiomapp.database.WritingCardDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CardViewModel(
     private val writingCardDao: WritingCardDao,
-    private val recordCategoriesdao: Record_CategoriesDao
+    private val recordCategoriesdao: RecordCategoriesDao
 ) : ViewModel() {
 
     //List category
@@ -26,10 +25,10 @@ class CardViewModel(
 
     private val _listRecordCategory = MutableLiveData<MutableList<Record_Categories>>()
     private val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
-    var iterador = 0
+    private var iterador = 0
 
-    private val _writing_cardSelected = MutableLiveData<MutableList<WritingCard>>()
-    val writingCardSelected: LiveData<MutableList<WritingCard>> get() = _writing_cardSelected
+    private val _writingCardSelected = MutableLiveData<MutableList<WritingCard>>()
+    val writingCardSelected: LiveData<MutableList<WritingCard>> get() = _writingCardSelected
 
     enum class StateTime { START, FIRST_WORLD, SECOND_WORLD, FINISH }
 
@@ -95,7 +94,7 @@ class CardViewModel(
             listRecordCategory.value?.addAll(recordCategoryFiltered)
             listWritingCard.value?.let {
                 listRecordCategory.value?.let { it1 ->
-                    Companion.getCardFilteredRandom(
+                    getCardFilteredRandom(
                         this@CardViewModel, it,
                         it1
                     )
@@ -108,8 +107,8 @@ class CardViewModel(
     private fun getWithOutCategories() {
         listWritingCard.value?.shuffle()
         val cardSelectedList = mutableListOf<WritingCard>()
-        listWritingCard.value?.let { cardSelectedList.add(it.get(0)) }
-        _writing_cardSelected.value = cardSelectedList
+        listWritingCard.value?.let { cardSelectedList.add(it[0]) }
+        _writingCardSelected.value = cardSelectedList
     }
 
     private fun repairInvertedInfoListWritingCard(){
@@ -134,34 +133,34 @@ class CardViewModel(
     fun nextCard() {
         iterador++
         if (iterador < listWritingCard.value!!.size) {
-            _writing_cardSelected.value?.clear()
+            _writingCardSelected.value?.clear()
             val nextCardList = mutableListOf<WritingCard>()
             listWritingCard.value?.get(iterador)?.let { nextCardList.add(it) }
-            _writing_cardSelected.value = nextCardList
+            _writingCardSelected.value = nextCardList
         } else {
             iterador = 0
             listWritingCard.value?.shuffle()
-            _writing_cardSelected.value?.clear()
+            _writingCardSelected.value?.clear()
             val cardSelectedList = mutableListOf<WritingCard>()
-            listWritingCard.value?.let { cardSelectedList.add(it.get(iterador)) }
-            _writing_cardSelected.value = cardSelectedList
+            listWritingCard.value?.let { cardSelectedList.add(it[iterador]) }
+            _writingCardSelected.value = cardSelectedList
         }
     }
 
     fun lastCard() {
         iterador--
         if (iterador >= 0) {
-            _writing_cardSelected.value?.clear()
+            _writingCardSelected.value?.clear()
             val lastCardList = mutableListOf<WritingCard>()
             listWritingCard.value?.get(iterador)?.let { lastCardList.add(it) }
-            _writing_cardSelected.value = lastCardList
+            _writingCardSelected.value = lastCardList
         } else {
             iterador = listWritingCard.value!!.size - 1
             listWritingCard.value?.shuffle()
-            _writing_cardSelected.value?.clear()
+            _writingCardSelected.value?.clear()
             val cardSelectedList = mutableListOf<WritingCard>()
-            listWritingCard.value?.let { cardSelectedList.add(it.get(iterador)) }
-            _writing_cardSelected.value = cardSelectedList
+            listWritingCard.value?.let { cardSelectedList.add(it[iterador]) }
+            _writingCardSelected.value = cardSelectedList
         }
     }
 
@@ -201,12 +200,12 @@ class CardViewModel(
     companion object {
         private fun getCardFilteredRandom(
             cardViewModel: CardViewModel, card: MutableList<WritingCard>,
-            recorCategory: MutableList<Record_Categories>
+            recordCategory: MutableList<Record_Categories>
         ) {
             cardViewModel.viewModelScope.launch {
                 val listWritingCardFilter = mutableListOf<WritingCard>()
                 for (list in card) {
-                    for (element in recorCategory) {
+                    for (element in recordCategory) {
                         if (list.id == element.idRecord) {
                             listWritingCardFilter.add(list)
                         }
@@ -217,8 +216,8 @@ class CardViewModel(
                 if (cardViewModel.listWritingCard.value!!.isNotEmpty()) {
                     cardViewModel.listWritingCard.value?.shuffle()
                     val cardSelectedList = mutableListOf<WritingCard>()
-                    cardViewModel.listWritingCard.value?.let { cardSelectedList.add(it.get(0)) }
-                    cardViewModel._writing_cardSelected.value = cardSelectedList
+                    cardViewModel.listWritingCard.value?.let { cardSelectedList.add(it[0]) }
+                    cardViewModel._writingCardSelected.value = cardSelectedList
                 }
             }
         }
@@ -228,7 +227,7 @@ class CardViewModel(
 
 class CardViewModelFactory(
     private val writingCardDao: WritingCardDao,
-    private val recordCategoriesdao: Record_CategoriesDao
+    private val recordCategoriesdao: RecordCategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

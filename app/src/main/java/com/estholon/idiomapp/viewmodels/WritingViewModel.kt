@@ -10,12 +10,12 @@ import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
 import com.estholon.idiomapp.database.WritingCardDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import kotlinx.coroutines.launch
 
 class WritingViewModel(
     private val writingCardDao: WritingCardDao,
-    private val recordCategoriesdao: Record_CategoriesDao
+    private val recordCategoriesdao: RecordCategoriesDao
 ) : ViewModel() {
 
     //List category
@@ -171,7 +171,7 @@ class WritingViewModel(
 
 class WritingViewModelFactory(
     private val writingCardDao: WritingCardDao,
-    private val recordCategoriesDao: Record_CategoriesDao
+    private val recordCategoriesDao: RecordCategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

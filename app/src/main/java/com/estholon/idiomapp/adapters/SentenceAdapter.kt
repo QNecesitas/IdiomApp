@@ -22,11 +22,11 @@ class SentenceAdapter(private val context: Context) :
 
 
     //Speech
-    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES")){}
-    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US")){}
-    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE")){}
-    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR")){}
-    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR")){}
+    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES"))
+    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US"))
+    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE"))
+    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR"))
+    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR"))
 
     class SentenceViewHolder(private var binding: RecyclerGetSentencesBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -107,7 +107,7 @@ class SentenceAdapter(private val context: Context) :
             )
         )
         viewHolder.itemView.setOnClickListener {
-            val position = viewHolder.adapterPosition
+            viewHolder.adapterPosition
         }
         return viewHolder
     }
@@ -146,5 +146,7 @@ class SentenceAdapter(private val context: Context) :
     fun setOnClickLister(onCLickListener: OnCLickListener?){
         this.onCLickListener = onCLickListener
     }
+
+
 
 }

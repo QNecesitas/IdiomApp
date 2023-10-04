@@ -10,13 +10,13 @@ import com.estholon.idiomapp.data.WritingCard
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Record_Categories
 import com.estholon.idiomapp.database.WritingCardDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MatchViewModel(
     private val cardDao: WritingCardDao ,
-    private val recordCategoriesdao: Record_CategoriesDao
+    private val recordCategoriesdao: RecordCategoriesDao
 ) : ViewModel() {
 
     //List category
@@ -24,16 +24,16 @@ class MatchViewModel(
     val listCard: LiveData<MutableList<WritingCard>> get() = _listCard
 
     private val _listRecordCategory = MutableLiveData<MutableList<Record_Categories>>()
-    val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
+    private val listRecordCategory: LiveData<MutableList<Record_Categories>> get() = _listRecordCategory
 
     private val _cardSelected = MutableLiveData<MutableList<WritingCard>>()
-    val cardSelected: LiveData<MutableList<WritingCard>> get() = _cardSelected
+    private val cardSelected: LiveData<MutableList<WritingCard>> get() = _cardSelected
 
     private var _matchRecord = MutableLiveData<MutableList<CardMatch>>()
     val matchRecord: LiveData<MutableList<CardMatch>> get() = _matchRecord
 
     private val _matchSelected = MutableLiveData<MutableList<CardMatch>>()
-    val matchSelected: LiveData<MutableList<CardMatch>> get() = _matchSelected
+    private val matchSelected: LiveData<MutableList<CardMatch>> get() = _matchSelected
 
     var error = 0
 
@@ -89,12 +89,12 @@ class MatchViewModel(
 
     private fun getCardFilteredRandom(
         card: MutableList<WritingCard> ,
-        recorCategory: MutableList<Record_Categories>
+        recordCategory: MutableList<Record_Categories>
     ) {
         viewModelScope.launch {
             val listCardFilter = mutableListOf<WritingCard>()
             for (list in card) {
-                for (element in recorCategory) {
+                for (element in recordCategory) {
                     if (list.id == element.idRecord) {
                         listCardFilter.add(list)
                     }
@@ -107,7 +107,7 @@ class MatchViewModel(
                 if (listCard.value!!.size >= 4) {
                     val cardSelectedList = mutableListOf<WritingCard>()
                     for (i in 0 until 4) {
-                        listCard.value?.let { cardSelectedList.add(it.get(i)) }
+                        listCard.value?.let { cardSelectedList.add(it[i]) }
                     }
                     _cardSelected.value = cardSelectedList
                 }
@@ -125,7 +125,7 @@ class MatchViewModel(
             if (listCard.value!!.size >= 4) {
                 val cardSelectedList = mutableListOf<WritingCard>()
                 for (i in 0 until 4) {
-                    listCard.value?.let { cardSelectedList.add(it.get(i)) }
+                    listCard.value?.let { cardSelectedList.add(it[i]) }
                 }
                 _cardSelected.value = cardSelectedList
             }
@@ -235,7 +235,7 @@ class MatchViewModel(
 
 class MatchViewModelFactory(
     private val cardDao: WritingCardDao ,
-    private val recordCategoriesdao: Record_CategoriesDao
+    private val recordCategoriesdao: RecordCategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

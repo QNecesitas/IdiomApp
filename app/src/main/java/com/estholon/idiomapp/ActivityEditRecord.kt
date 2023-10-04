@@ -8,7 +8,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupMenu
@@ -17,12 +16,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.estholon.idiomapp.adapters.EditSentenceAdapter
 import com.estholon.idiomapp.auxiliary.ImageTools
-import com.estholon.idiomapp.auxiliary.InformationIntent
 import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
@@ -36,8 +35,8 @@ import com.yalantis.ucrop.UCrop
 
 class ActivityEditRecord : AppCompatActivity() {
 
+    //Bindings
     private lateinit var binding: ActivityEditRecordBinding
-
     private lateinit var liCategoryBinding: LiAddCategoryBinding
 
     //Results launchers
@@ -51,7 +50,7 @@ class ActivityEditRecord : AppCompatActivity() {
         EditRecordViewModelFactory(
             (application as IdiomApp).database.recordsDao(),
             (application as IdiomApp).database.translationsDao(),
-            (application as IdiomApp).database.record_categoriesDao(),
+            (application as IdiomApp).database.recordCategoriesDao(),
             (application as IdiomApp).database.idiomsDao(),
             (application as IdiomApp).database.categoriesDao()
         )
@@ -67,10 +66,8 @@ class ActivityEditRecord : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
         //get id from ActivityRecord
         val idRecord = intent.getIntExtra("idRecord", 0)
-
 
 
         //NavigationDrawer
@@ -112,7 +109,6 @@ class ActivityEditRecord : AppCompatActivity() {
         }
 
 
-
         //Recycler
         binding.rvLanguage.setHasFixedSize(true)
         alRecord = mutableListOf()
@@ -121,9 +117,9 @@ class ActivityEditRecord : AppCompatActivity() {
 
         adapterSentence.setSpinnerListener(object : EditSentenceAdapter.SpinnerListener {
             override fun onSpinnerClick(idiom: String, position: Int) {
-                if(viewModel.isFirstTime) {
+                if (viewModel.isFirstTime) {
                     viewModel.isFirstTime = false
-                }else{
+                } else {
                     viewModel.listRecords.value?.get(position)?.idIdiom = idiom
                 }
             }
@@ -135,7 +131,6 @@ class ActivityEditRecord : AppCompatActivity() {
             }
 
         })
-
 
 
         //Observe
@@ -174,7 +169,6 @@ class ActivityEditRecord : AppCompatActivity() {
             }
 
 
-
         //Listeners
         binding.ivAddimage.setOnClickListener {
             val popupMenu = PopupMenu(applicationContext, binding.cvAddImage)
@@ -186,7 +180,12 @@ class ActivityEditRecord : AppCompatActivity() {
                     }
 
                     R.id.menu_delete -> {
-                        binding.ivAddimage.setImageDrawable(this.getDrawable(R.drawable.outline_image_24))
+                        binding.ivAddimage.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                this@ActivityEditRecord,
+                                R.drawable.outline_image_24
+                            )
+                        )
                         uriImageCut = null
                     }
 
@@ -238,11 +237,10 @@ class ActivityEditRecord : AppCompatActivity() {
 
         adapterSentence.setClickDelete(object : EditSentenceAdapter.ITouchDelete {
             override fun onClickDelete(record: Records, position: Int) {
-                 viewModel.deleteSentence(record.id)
+                viewModel.deleteSentence(record.id)
             }
 
         })
-
 
 
         //Start thread
@@ -250,36 +248,35 @@ class ActivityEditRecord : AppCompatActivity() {
     }
 
 
-
     //Categories logic
     private fun refreshGeneralChipGroup(allCategories: MutableList<Category>) {
-        liCategoryBinding.chipGroup.removeAllViews()
+        liCategoryBinding.chipGroupCategories.removeAllViews()
         val selectCategoriesList = viewModel.listCategorySelected.value
         for (e in allCategories) {
             val chip = Chip(this)
             chip.text = e.categories
             chip.isCheckable = true
             chip.isCloseIconVisible = true
-            if(selectCategoriesList?.contains(e) == true){
+            if (selectCategoriesList?.contains(e) == true) {
                 chip.isChecked = true
             }
             chip.setOnCloseIconClickListener {
                 alertDelete(chip, e.id)
             }
             chip.setOnCheckedChangeListener { _, b ->
-                if(b){
+                if (b) {
                     viewModel.selectedCategory(e.id, e.categories)
-                }else{
+                } else {
                     viewModel.deleteCategory(e.id)
                 }
             }
-            liCategoryBinding.chipGroup.addView(chip)
+            liCategoryBinding.chipGroupCategories.addView(chip)
 
         }
     }
 
     private fun refreshSelectedChipGroup(list: MutableList<Category>) {
-        binding.chipGroup.removeAllViews()
+        binding.chipGroupCategories.removeAllViews()
         for (e in list) {
             val chip = Chip(this)
             chip.text = e.categories
@@ -289,7 +286,7 @@ class ActivityEditRecord : AppCompatActivity() {
                 viewModel.deleteCategory(e.id)
             }
 
-            binding.chipGroup.addView(chip)
+            binding.chipGroupCategories.addView(chip)
 
         }
     }
@@ -316,8 +313,8 @@ class ActivityEditRecord : AppCompatActivity() {
 
         //Finished
         alertDialog.setCancelable(false)
-        alertDialog.window!!.setGravity(Gravity.CENTER)
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.window?.setGravity(Gravity.CENTER)
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog.show()
 
     }
@@ -344,12 +341,11 @@ class ActivityEditRecord : AppCompatActivity() {
     }
 
     private fun deleteChip(chip: Chip, id: Int) {
-        liCategoryBinding.chipGroup.removeView(chip)
+        liCategoryBinding.chipGroupCategories.removeView(chip)
         viewModel.deleteCategoryRecord(id)
         viewModel.deleteCategories(id)
         viewModel.deleteCategory(id)
     }
-
 
 
     //Image logic
@@ -366,7 +362,7 @@ class ActivityEditRecord : AppCompatActivity() {
 
             val file = ImageTools.createTempImageFile(
                 this@ActivityEditRecord,
-                ImageTools.getHoraActual("yyMMddHHmmss")
+                ImageTools.getActualHour("yyMMddHHmmss")
             )
 
             if (contentUri != null) {
@@ -432,8 +428,8 @@ class ActivityEditRecord : AppCompatActivity() {
             UCrop.of(uri1, uri2)
                 .withAspectRatio(3f, 3f)
                 .withMaxResultSize(
-                    ImageTools.ANCHO_DE_FOTO_A_SUBIR,
-                    ImageTools.ALTO_DE_FOTO_A_SUBIR
+                    ImageTools.WIDTH_OF_PHOTO_TO_UPLOAD,
+                    ImageTools.HEIGHT_OF_PHOTO_TO_UPLOAD
                 )
                 .start(this)
         } catch (e: Exception) {
@@ -459,9 +455,6 @@ class ActivityEditRecord : AppCompatActivity() {
                 .into(binding.ivAddimage)
         }
     }
-    //Categories logic
-
-
 
 
     //Accept button
@@ -512,7 +505,7 @@ class ActivityEditRecord : AppCompatActivity() {
         }
 
         return (!emptyElement) && (!repeatedElements)
-    }//Activity utils
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

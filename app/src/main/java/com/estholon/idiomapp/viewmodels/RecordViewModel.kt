@@ -1,6 +1,5 @@
 package com.estholon.idiomapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.data.Records
-import com.estholon.idiomapp.data.Translations
 import com.estholon.idiomapp.database.IdiomsDao
 import com.estholon.idiomapp.database.RecordsDao
 import com.estholon.idiomapp.database.TranslationsDao
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class RecordViewModel(
@@ -36,11 +33,11 @@ class RecordViewModel(
     fun getAllRecord() {
         viewModelScope.launch {
             _listRecord.value = mutableListOf()
-            val auxiliarList = mutableListOf<Records>()
-            auxiliarList.addAll(recordDao.fetchRecord())
-            auxiliarList.addAll(translationsDao.fetchTranslationsAsRecords())
-            auxiliarList.sortBy { it.sentence.lowercase() }
-            _listRecord.value = auxiliarList
+            val auxiliaryList = mutableListOf<Records>()
+            auxiliaryList.addAll(recordDao.fetchRecord())
+            auxiliaryList.addAll(translationsDao.fetchTranslationsAsRecords())
+            auxiliaryList.sortBy { it.sentence.lowercase() }
+            _listRecord.value = auxiliaryList
         }
     }
 
@@ -72,10 +69,10 @@ class RecordViewModel(
         viewModelScope.launch {
             val records = recordDao.fetchRecord()
             val translationsAsRecord = translationsDao.fetchTranslationsAsRecords()
-            val auxiliarList = mutableListOf<Records>()
-            auxiliarList.addAll(records)
-            auxiliarList.addAll(translationsAsRecord)
-            val auxListFiltered = auxiliarList.filter { it.idIdiom == id }.toMutableList()
+            val auxiliaryList = mutableListOf<Records>()
+            auxiliaryList.addAll(records)
+            auxiliaryList.addAll(translationsAsRecord)
+            val auxListFiltered = auxiliaryList.filter { it.idIdiom == id }.toMutableList()
             _listRecord.value = auxListFiltered
 
         }

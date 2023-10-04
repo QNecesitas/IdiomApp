@@ -10,13 +10,12 @@ import com.estholon.idiomapp.data.Category
 import com.estholon.idiomapp.data.Idioms
 import com.estholon.idiomapp.database.CategoriesDao
 import com.estholon.idiomapp.database.IdiomsDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
-import com.estholon.idiomapp.database.RecordsDao
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val categoriesDao: CategoriesDao,
                     private val idiomsDao: IdiomsDao,
-                    private val recordCategoriesDao: Record_CategoriesDao) : ViewModel() {
+                    private val recordCategoriesDao: RecordCategoriesDao) : ViewModel() {
     //List category
     private val _listCategory = MutableLiveData<MutableList<Category>>()
     val listCategory: LiveData<MutableList<Category>> get() = _listCategory
@@ -32,9 +31,9 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
     private val _listIdiomsLeft = MutableLiveData<MutableList<Idioms>>()
     val listIdiomsLeft: LiveData<MutableList<Idioms>> get() = _listIdiomsLeft
 
-    private var lastPositionRight = 0;
+    private var lastPositionRight = 0
 
-    private var lastPositionLeft = 0;
+    private var lastPositionLeft = 0
 
     fun getAllIdioms() {
         viewModelScope.launch {
@@ -81,18 +80,6 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
         filterIdioms()
     }
 
-    fun addCategory(newCategory: String){
-        viewModelScope.launch {
-
-
-            val category = Category( 0, newCategory)
-
-            categoriesDao.insertCategory(category)
-
-            refreshCategories()
-
-        }
-    }
     fun refreshCategories() {
         viewModelScope.launch {
             _listCategory.value = mutableListOf()
@@ -101,7 +88,7 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
     }
 
 
-    //Delete categorie
+    //Delete category
     fun deleteCategories(id:Int){
         viewModelScope.launch {
             categoriesDao.deleteCategory(id)
@@ -121,7 +108,7 @@ class HomeViewModel(private val categoriesDao: CategoriesDao,
 class HomeViewModelFactory(
     private val categoryDao: CategoriesDao,
     private val idiomsDao: IdiomsDao,
-    private val recordCategoriesDao: Record_CategoriesDao
+    private val recordCategoriesDao: RecordCategoriesDao
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

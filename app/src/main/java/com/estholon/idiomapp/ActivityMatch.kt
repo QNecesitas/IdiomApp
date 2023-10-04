@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -24,7 +23,7 @@ class ActivityMatch : AppCompatActivity() {
     private lateinit var chronometer: Chronometer
 
     private val viewModel:MatchViewModel by viewModels {
-        MatchViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
+        MatchViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.recordCategoriesDao())
     }
 
     //Recycler
@@ -122,8 +121,8 @@ class ActivityMatch : AppCompatActivity() {
 
         //Result
         resultGameLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                launcherReturned(result)
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                launcherReturned()
             }
 
         viewModel.getAllCardsBD(InformationIntent.itemIdiomLeft.id, InformationIntent.itemIdiomRight.id, InformationIntent.categoriesSelectedList)
@@ -132,20 +131,20 @@ class ActivityMatch : AppCompatActivity() {
 
     private fun finishGame(){
         chronometer.stop()
-        val tiempoTranscurrido = SystemClock.elapsedRealtime() - chronometer.base
-        val segundosTotales = tiempoTranscurrido / 1000
-        val minutos = (segundosTotales / 60).toInt()
-        val segundos = (segundosTotales % 60).toInt()
-        val tiempoFormateado = String.format("%02d:%02d", minutos, segundos)
+        val passedTime = SystemClock.elapsedRealtime() - chronometer.base
+        val totalSeconds = passedTime / 1000
+        val totalMinutes = (totalSeconds / 60).toInt()
+        val seconds = (totalSeconds % 60).toInt()
+        val formatText = String.format("%02d:%02d", totalMinutes, seconds)
 
         val intent = Intent(this, ActivityResultGame::class.java)
-        intent.putExtra("result_time", tiempoFormateado)
+        intent.putExtra("result_time", formatText)
         intent.putExtra("result_errors", viewModel.error)
         resultGameLauncher.launch(intent)
 
     }
 
-    private fun launcherReturned(result: ActivityResult){
+    private fun launcherReturned() {
         viewModel.getAllCardsBD(InformationIntent.itemIdiomLeft.id, InformationIntent.itemIdiomRight.id, InformationIntent.categoriesSelectedList)
         chronometer.base = SystemClock.elapsedRealtime()
         chronometer.start()

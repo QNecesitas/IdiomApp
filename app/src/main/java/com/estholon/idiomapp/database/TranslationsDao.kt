@@ -17,7 +17,7 @@ import com.estholon.idiomapp.data.Translations
  suspend fun fetchTranslationsAsRecords(): MutableList<Records>
 
  @Query("SELECT * FROM Translations WHERE idRecord=:id")
- suspend fun fetchTranslationforId(id:Int):MutableList<Translations>
+ suspend fun fetchTranslationForId(id:Int):MutableList<Translations>
 
  @Query("DELETE FROM Translations WHERE idRecord=:id")
  suspend fun deleteTranslation(id:Int)

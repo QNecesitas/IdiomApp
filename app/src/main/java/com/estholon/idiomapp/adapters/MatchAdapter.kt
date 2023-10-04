@@ -18,11 +18,11 @@ import java.util.Locale
 class MatchAdapter(private val context: Context) :
     ListAdapter<CardMatch , MatchAdapter.MatchViewHolder>(DiffCallback) {
     //Speech
-    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES")){}
-    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US")){}
-    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE")){}
-    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR")){}
-    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR")){}
+    private var textToSpeechEs : TextToSpeech = TextToSpeech(context, Locale("es","ES"))
+    private var textToSpeechEn : TextToSpeech = TextToSpeech(context, Locale("en","US"))
+    private var textToSpeechDe : TextToSpeech = TextToSpeech(context, Locale("de","DE"))
+    private var textToSpeechPt : TextToSpeech = TextToSpeech(context, Locale("pt","BR"))
+    private var textToSpeechFr : TextToSpeech = TextToSpeech(context, Locale("fr","FR"))
 
     private var clickSelector: ITouchSelector? = null
 

@@ -16,7 +16,6 @@ import com.estholon.idiomapp.auxiliary.TextToSpeech
 import com.estholon.idiomapp.databinding.ActivityWritingBinding
 import com.estholon.idiomapp.viewmodels.WritingViewModel
 import com.estholon.idiomapp.viewmodels.WritingViewModelFactory
-import java.io.File
 import java.util.Locale
 
 class ActivityWriting : AppCompatActivity() {
@@ -35,7 +34,7 @@ class ActivityWriting : AppCompatActivity() {
 
     //viewModel
     private val viewModel: WritingViewModel by viewModels{
-        WritingViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.record_categoriesDao())
+        WritingViewModelFactory((application as IdiomApp).database.cardDao(),(application as IdiomApp).database.recordCategoriesDao())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +44,11 @@ class ActivityWriting : AppCompatActivity() {
 
 
         //Speech
-        textToSpeechEs= TextToSpeech(this, Locale("es","ES")){}
-        textToSpeechEn= TextToSpeech(this, Locale("en","US")){}
-        textToSpeechDe= TextToSpeech(this, Locale("de","DE")){}
-        textToSpeechPt= TextToSpeech(this, Locale("pt","BR")){}
-        textToSpeechFr= TextToSpeech(this, Locale("fr","FR")){}
+        textToSpeechEs= TextToSpeech(this, Locale("es","ES"))
+        textToSpeechEn= TextToSpeech(this, Locale("en","US"))
+        textToSpeechDe= TextToSpeech(this, Locale("de","DE"))
+        textToSpeechPt= TextToSpeech(this, Locale("pt","BR"))
+        textToSpeechFr= TextToSpeech(this, Locale("fr","FR"))
         textToSpeech=textToSpeechEs
         textToSpeech1=textToSpeechEs
         textToSpeech=textToSpeechEs
@@ -384,18 +383,18 @@ class ActivityWriting : AppCompatActivity() {
         if(binding.etResponse.text.toString().trim().equals( response?.trim(),true)){
             viewModel.rights ++
             binding.CLGradeResponse.background = AppCompatResources.getDrawable(this,R.drawable.backg_grade_right)
-            binding.exclamation.text = getString(R.string.felicidades);
-            binding.responseIs.text = getString(R.string.La_respuesta_es_correcta);
-            binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights);
+            binding.exclamation.text = getString(R.string.felicidades)
+            binding.responseIs.text = getString(R.string.La_respuesta_es_correcta)
+            binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights)
             binding.solveElevate.visibility = View.GONE
             binding.btnResolve.visibility = View.GONE
             binding.btnCheck.visibility = View.GONE
         }else{
             viewModel.errors ++
             binding.CLGradeResponse.background = AppCompatResources.getDrawable(this,R.drawable.backg_grade_wrong)
-            binding.exclamation.text = getString(R.string.ups);
-            binding.responseIs.text = getString(R.string.La_respuesta_es_incorrecta);
-            binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights);
+            binding.exclamation.text = getString(R.string.ups)
+            binding.responseIs.text = getString(R.string.La_respuesta_es_incorrecta)
+            binding.errorRights.text = getString(R.string.Errores_aciertos,viewModel.errors,viewModel.rights)
             binding.solveElevate.visibility = View.VISIBLE
             binding.solveElevate.setOnClickListener { resolveExercise() }
             binding.btnResolve.visibility = View.GONE

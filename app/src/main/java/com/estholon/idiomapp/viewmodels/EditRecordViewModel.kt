@@ -1,6 +1,5 @@
 package com.estholon.idiomapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,12 +12,12 @@ import com.estholon.idiomapp.data.Records
 import com.estholon.idiomapp.data.Translations
 import com.estholon.idiomapp.database.CategoriesDao
 import com.estholon.idiomapp.database.IdiomsDao
-import com.estholon.idiomapp.database.Record_CategoriesDao
+import com.estholon.idiomapp.database.RecordCategoriesDao
 import com.estholon.idiomapp.database.RecordsDao
 import com.estholon.idiomapp.database.TranslationsDao
 import kotlinx.coroutines.launch
 
-class EditRecordViewModel(private val recordsDao: RecordsDao,private val translationsDao: TranslationsDao, private val recordCategoriesdao: Record_CategoriesDao,private val idiomsDao: IdiomsDao,private val categoriesDao: CategoriesDao):ViewModel() {
+class EditRecordViewModel(private val recordsDao: RecordsDao, private val translationsDao: TranslationsDao, private val recordCategoriesDao: RecordCategoriesDao, private val idiomsDao: IdiomsDao, private val categoriesDao: CategoriesDao):ViewModel() {
     var isFirstTime = true
 
     private val _listRecords = MutableLiveData<MutableList<Records>>()
@@ -33,12 +32,8 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     private val listRecordCategoriesById: LiveData<MutableList<Record_Categories>> get() = _listRecordCategoriesById
 
 
-    private val _listCategoriesSelected = MutableLiveData<MutableList<Category>>()
-    private val listCategoriesSelected: LiveData<MutableList<Category>> get() = _listCategoriesSelected
-
 
     private val _recordById = MutableLiveData<Records>()
-    private val recordById: LiveData<Records> get() = _recordById
 
 
     private val _listAllIdioms = MutableLiveData<MutableList<Idioms>>()
@@ -62,13 +57,6 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     //List category
     private val _listAllCategories = MutableLiveData<MutableList<Category>>()
     private val listAllCategory: LiveData<MutableList<Category>> get() = _listAllCategories
-    //List category
-    private val _listPhoto = MutableLiveData<MutableList<Records>>()
-    val listPhoto: LiveData<MutableList<Records>> get() = _listPhoto
-
-    init {
-        _listCategoriesSelected.value= mutableListOf()
-    }
 
 
 
@@ -77,8 +65,8 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
         viewModelScope.launch {
             _listAllIdioms.value = idiomsDao.fetchIdioms()
             _recordById.value = recordsDao.fetchRecordForId(idRecord)
-            _listTranslationsById.value = translationsDao.fetchTranslationforId(idRecord)
-            _listRecordCategoriesById.value = recordCategoriesdao.fetchCategoriesforId(idRecord)
+            _listTranslationsById.value = translationsDao.fetchTranslationForId(idRecord)
+            _listRecordCategoriesById.value = recordCategoriesDao.fetchCategoriesForId(idRecord)
             _listAllCategories.value = categoriesDao.fetchCategories()
 
             fillRecordsWithTranslations(idRecord)
@@ -131,16 +119,16 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
 
 
 
-    //Other operations wth Cardni
+    //Other operations wth Car
     fun deleteCategory(id: Int) {
         viewModelScope.launch {
-            val deleteCategorias = mutableListOf<Category>()
-            _listCategorySelected.value?.let { deleteCategorias.addAll(it) }
-            val categoriaAEliminar = deleteCategorias.find { it.id == id }
-            if (categoriaAEliminar != null) {
-                deleteCategorias.remove(categoriaAEliminar)
+            val deleteCategories = mutableListOf<Category>()
+            _listCategorySelected.value?.let { deleteCategories.addAll(it) }
+            val categoryToDelete = deleteCategories.find { it.id == id }
+            if (categoryToDelete != null) {
+                deleteCategories.remove(categoryToDelete)
             }
-            _listCategorySelected.value = deleteCategorias
+            _listCategorySelected.value = deleteCategories
         }
     }
 
@@ -156,9 +144,9 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
         viewModelScope.launch {
             val deleteSentences = mutableListOf<Records>()
             _listRecords.value?.let { deleteSentences.addAll(it) }
-            val sentenceAEliminar = deleteSentences.find { it.id == id }
-            if (sentenceAEliminar != null) {
-                deleteSentences.remove(sentenceAEliminar)
+            val sentenceToDelete = deleteSentences.find { it.id == id }
+            if (sentenceToDelete != null) {
+                deleteSentences.remove(sentenceToDelete)
             }
             _listRecords.value = deleteSentences
         }
@@ -193,7 +181,7 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
 
     fun deleteCategoryRecord(id: Int) {
         viewModelScope.launch {
-            recordCategoriesdao.deleteCategory(id)
+            recordCategoriesDao.deleteCategory(id)
         }
     }
 
@@ -229,7 +217,7 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
     private fun insertRecordCategory(id: Int, category: MutableList<Category>) {
         viewModelScope.launch {
             for (i in category) {
-                recordCategoriesdao.insertCategoryRecord(id, i.id)
+                recordCategoriesDao.insertCategoryRecord(id, i.id)
             }
             listRecords.value?.let { insertTranslation(it, id) }
         }
@@ -249,7 +237,7 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
         viewModelScope.launch {
             recordsDao.deleteRecord(idRecord)
             translationsDao.deleteTranslation(idRecord)
-            recordCategoriesdao.deleteRecordCategory(idRecord)
+            recordCategoriesDao.deleteRecordCategory(idRecord)
         }
     }
 }
@@ -257,7 +245,7 @@ class EditRecordViewModel(private val recordsDao: RecordsDao,private val transla
 class EditRecordViewModelFactory(
     private val recordsDao: RecordsDao,
     private val translationsDao: TranslationsDao,
-    private val recordCategoriesdao: Record_CategoriesDao,
+    private val recordCategoriesDao: RecordCategoriesDao,
     private val idiomsDao: IdiomsDao,
     private val categoriesDao: CategoriesDao
 
@@ -266,7 +254,7 @@ class EditRecordViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EditRecordViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return EditRecordViewModel(recordsDao,translationsDao,recordCategoriesdao,idiomsDao,categoriesDao) as T
+            return EditRecordViewModel(recordsDao,translationsDao,recordCategoriesDao,idiomsDao,categoriesDao) as T
         }
         throw IllegalArgumentException("Unknown viewModel class")
     }
