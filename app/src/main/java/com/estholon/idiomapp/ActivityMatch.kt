@@ -140,6 +140,7 @@ class ActivityMatch : AppCompatActivity() {
         val intent = Intent(this, ActivityResultGame::class.java)
         intent.putExtra("result_time", formatText)
         intent.putExtra("result_errors", viewModel.error)
+        viewModel.error=0
         resultGameLauncher.launch(intent)
 
     }

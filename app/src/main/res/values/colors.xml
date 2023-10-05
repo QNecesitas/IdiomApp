@@ -33,5 +33,7 @@
     <color name="orange_transparent">#92FF5722</color>
     <color name="red_transparent">#BFDF0404</color>
     <color name="verde_transparent">#AB3EC543</color>
+    <color name="transparent">#003EC543</color>
+
 
 </resources>

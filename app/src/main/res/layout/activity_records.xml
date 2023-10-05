@@ -94,16 +94,17 @@
                 app:cardMaxElevation="8dp"
                 app:contentPadding="0dp">
 
-                <SearchView
+                <androidx.appcompat.widget.SearchView
                     android:id="@+id/search"
+                    app:queryBackground="@color/transparent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="@string/buscar_registro"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="@string/buscar_registro"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"  />
 
             </androidx.cardview.widget.CardView>
 
