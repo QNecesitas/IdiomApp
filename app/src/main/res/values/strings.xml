@@ -78,4 +78,6 @@
     <string name="ver_soluci_n">Ver solución</string>
     <string name="Esta_seguro_borrar_record">Eliminar Registro</string>
     <string name="al_borrar_record">¿Estás seguro de eliminar este registro?</string>
+    <string name="dato_invalido">La palabra principal o primera palabra no debe estar vacía. Por favor rellene este campo antes de guardar los datos.</string>
+    <string name="informacion_invalida">Información inválida</string>
 </resources>

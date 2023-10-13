@@ -105,6 +105,11 @@ class CardViewModel(
     }
 
     private fun getWithOutCategories() {
+        //Filter by undefined words
+        _listWritingCard.value = listWritingCard.value?.filter {
+            it.translation != "Por definir" && it.translation != "To define" && it.translation != "Definieren" && it.translation != "À définir"
+        }?.toMutableList()
+
         listWritingCard.value?.shuffle()
         val cardSelectedList = mutableListOf<WritingCard>()
         listWritingCard.value?.let { cardSelectedList.add(it[0]) }
@@ -203,7 +208,9 @@ class CardViewModel(
             recordCategory: MutableList<Record_Categories>
         ) {
             cardViewModel.viewModelScope.launch {
-                val listWritingCardFilter = mutableListOf<WritingCard>()
+
+                //Filter by selected categories
+                var listWritingCardFilter = mutableListOf<WritingCard>()
                 for (list in card) {
                     for (element in recordCategory) {
                         if (list.id == element.idRecord) {
@@ -211,6 +218,13 @@ class CardViewModel(
                         }
                     }
                 }
+
+                //Filter by undefined words
+                listWritingCardFilter = listWritingCardFilter.filter {
+                    it.translation != "Por definir" && it.translation != "To define" && it.translation != "Definieren" && it.translation != "À définir"
+                }.toMutableList()
+
+
                 cardViewModel._listWritingCard.value?.clear()
                 cardViewModel._listWritingCard.value = listWritingCardFilter
                 if (cardViewModel.listWritingCard.value!!.isNotEmpty()) {

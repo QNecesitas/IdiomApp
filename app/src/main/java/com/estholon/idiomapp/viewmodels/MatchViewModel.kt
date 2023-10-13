@@ -92,7 +92,7 @@ class MatchViewModel(
         recordCategory: MutableList<Record_Categories>
     ) {
         viewModelScope.launch {
-            val listCardFilter = mutableListOf<WritingCard>()
+            var listCardFilter = mutableListOf<WritingCard>()
             for (list in card) {
                 for (element in recordCategory) {
                     if (list.id == element.idRecord) {
@@ -100,6 +100,12 @@ class MatchViewModel(
                     }
                 }
             }
+            //Filter by undefined words
+            listCardFilter = listCardFilter.filter {
+                it.translation != "Por definir" && it.translation != "To define" && it.translation != "Definieren" && it.translation != "À définir"
+            }.toMutableList()
+
+
             _listCard.value?.clear()
             _listCard.value = listCardFilter
             if (listCard.value!!.isNotEmpty()) {
@@ -120,6 +126,12 @@ class MatchViewModel(
 
 
     private fun getWithOutCategories() {
+        //Filter by undefined words
+        _listCard.value = listCard.value?.filter {
+            it.translation != "Por definir" && it.translation != "To define" && it.translation != "Definieren" && it.translation != "À définir"
+        }?.toMutableList()
+
+
         if (listCard.value!!.isNotEmpty()) {
             listCard.value?.shuffle()
             if (listCard.value!!.size >= 4) {

@@ -1,6 +1,7 @@
 package com.estholon.idiomapp
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -473,43 +474,42 @@ class ActivityEditRecord : AppCompatActivity() {
         }
     }
 
-    private fun isInformationGood(): Boolean {
-        var emptyElement = false
+    private fun isInformationGood(): Boolean{
         var repeatedElements = false
+        var emptyFirstElements = false
         val idiomsSelected = mutableListOf<String>()
 
-        if (viewModel.listRecords.value != null) {
-            for (element in viewModel.listRecords.value!!) {
-                if (element.sentence.isBlank()) {
-                    emptyElement = true
+        //Check if isRepeated and fill the blanks
+        if(viewModel.listRecords.value != null) {
+            for ((index,element) in viewModel.listRecords.value!!.withIndex()) {
+                if(element.sentence.isBlank()){
+                    if(index == 0) continue
+                    element.sentence= isRecordEmpty(element.idIdiom)
                 }
-                if (idiomsSelected.contains(element.idIdiom)) {
+                if(idiomsSelected.contains(element.idIdiom)){
                     repeatedElements = true
-                } else {
+                }else{
                     idiomsSelected.add(element.idIdiom)
                 }
             }
         }
 
-        if (emptyElement) {
-            FancyToast.makeText(
-                this@ActivityEditRecord,
-                getString(R.string.no_debe_espacios_vacios),
-                FancyToast.LENGTH_LONG,
-                FancyToast.ERROR,
-                false
-            ).show()
-        } else if (repeatedElements) {
+
+        if(viewModel.listRecords.value?.get(0)?.sentence?.isBlank() == true){
+            emptyFirstElements = true
+            showAlertDialogWrongInformation()
+        }
+
+        if(repeatedElements){
             FancyToast.makeText(
                 this@ActivityEditRecord,
                 getString(R.string.no_debe_idiomas),
                 FancyToast.LENGTH_LONG,
                 FancyToast.ERROR,
-                false
-            ).show()
+                false).show()
         }
 
-        return (!emptyElement) && (!repeatedElements)
+        return (!repeatedElements && !emptyFirstElements)
     }
 
     @Deprecated("Deprecated in Java")
@@ -546,6 +546,22 @@ class ActivityEditRecord : AppCompatActivity() {
         }
     }
 
+    fun showAlertDialogWrongInformation(){
+        //init alert dialog
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setTitle(R.string.informacion_invalida)
+        builder.setMessage(R.string.dato_invalido)
+        //set listeners for dialog buttons
+        builder.setPositiveButton(R.string.Aceptar) { dialog: DialogInterface? , _: Int ->
+
+            dialog?.dismiss()
+
+        }
+        //create the alert dialog and show it
+        builder.create().show()
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -575,6 +591,28 @@ class ActivityEditRecord : AppCompatActivity() {
 
         //create the alert dialog and show it
         builder.create().show()
+    }
+    private fun isRecordEmpty(idIdiom:String):String{
+        return when(idIdiom){
+            "PT" ->{
+                "Por definir"
+            }
+            "EN" ->{
+                "To define"
+            }
+            "DE" ->{
+                "Definieren"
+            }
+            "FR" ->{
+                "À définir"
+            }
+            "ES"->{
+                "Por definir"
+            }
+            else->{
+                "Por definir"
+            }
+        }
     }
 
 
